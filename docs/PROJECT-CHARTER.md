@@ -1,8 +1,8 @@
-# Across Atlas — project charter
+# across — project charter
 
 ## Purpose
 
-Across Atlas is a personal travel fieldbook rather than a commercial product or public social network. Its role is to help prepare for a journey, provide useful reference during travel, and preserve a selective public record afterwards.
+across is a personal travel fieldbook rather than a commercial product or public social network. Its role is to help prepare for a journey, provide useful reference during travel, and preserve a selective public record afterwards.
 
 ## Content boundary
 

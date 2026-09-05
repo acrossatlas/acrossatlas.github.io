@@ -1,10 +1,19 @@
-# Across Atlas
+# across
 
 A personal travel fieldbook for public guides, trip records, map-based memories, and landscape photography.
 
 ## Current status
 
-Preparation only. No site content, visual design, or framework has been created yet.
+The React prototype includes two home-screen logs, Map and Trip. A separate Ongoing card appears only while the configured journey dates are active; its notebook route now contains the responsive trip-header, itinerary, checklist, album-link, and travel-detail modal framework.
+
+## Local preview
+
+```sh
+npm install
+npm run dev
+```
+
+Create a production build with `npm run build`.
 
 ## Agreed boundaries
 

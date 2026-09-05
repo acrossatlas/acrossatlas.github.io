@@ -15,9 +15,9 @@ Checked on 2026-09-05 (Asia/Shanghai).
 | Git author identity | Configured locally with a GitHub private commit address |
 | GitHub authentication | Authenticated as `acrossatlas` |
 | Remote repository | `acrossatlas/acrossatlas.github.io` |
-| Website framework | Not selected |
-| Website content | Not started |
-| GitHub Pages publishing | Automatically initialized by GitHub; no site content yet |
+| Website framework | React with Vite |
+| Website content | Home prototype with Map and Trip tabs plus a date-gated Ongoing card; notebook content pending |
+| GitHub Pages publishing | Configured through GitHub Actions |
 | Custom domain | Not purchased or configured |
 
 ## Identity
@@ -35,11 +35,10 @@ GitHub CLI is sufficient for repository creation, authentication, remote managem
 - Private-material directories and credential files are excluded from Git.
 - A local pre-commit hook blocks common private paths, credential formats, raw-photo formats, and files larger than 15 MB.
 - Project boundaries distinguish public travel material from private albums and documents.
-- No framework or hosting-specific build configuration has been added, preserving those choices for the planning discussion.
+- The production build is static and remains portable to another static hosting provider.
 
 ## Decisions still required
 
-1. Agree on the information architecture before writing content.
-2. Choose the static-site framework after the architecture is clear.
-3. Decide when to add the first publishable page; the Pages endpoint is currently empty.
-4. Purchase and bind `acrossatlas.cn` only after the local prototype and deployment plan are approved.
+1. Replace fictional journey copy with approved public-safe content.
+2. Refine the Map and Trip views after reviewing the first prototype.
+3. Purchase and bind `acrossatlas.cn` only after the deployment is approved.
