@@ -1,0 +1,31 @@
+#!/bin/sh
+
+set -eu
+
+staged_files=$(git diff --cached --name-only --diff-filter=ACMR)
+
+if [ -z "$staged_files" ]; then
+  exit 0
+fi
+
+blocked_paths=$(printf '%s\n' "$staged_files" | grep -Ei '(^|/)(private|personal|originals|bookings|documents|secrets?|trip-private|raw)(/|$)|(^|/)\.env($|\.)|\.(pem|key|p12|heic|dng|raw)$' || true)
+
+if [ -n "$blocked_paths" ]; then
+  printf '%s\n' 'Commit stopped: private, credential, or original-media paths are staged:' >&2
+  printf '%s\n' "$blocked_paths" >&2
+  exit 1
+fi
+
+max_bytes=15728640
+
+printf '%s\n' "$staged_files" | while IFS= read -r staged_file; do
+  if [ -f "$staged_file" ]; then
+    file_bytes=$(wc -c < "$staged_file" | tr -d ' ')
+    if [ "$file_bytes" -gt "$max_bytes" ]; then
+      printf 'Commit stopped: %s is larger than 15 MB.\n' "$staged_file" >&2
+      exit 1
+    fi
+  fi
+done
+
+git diff --cached --check
