@@ -17,7 +17,7 @@ Checked on 2026-09-05 (Asia/Shanghai).
 | Remote repository | `acrossatlas/acrossatlas.github.io` |
 | Website framework | Not selected |
 | Website content | Not started |
-| GitHub Pages publishing | Not enabled |
+| GitHub Pages publishing | Automatically initialized by GitHub; no site content yet |
 | Custom domain | Not purchased or configured |
 
 ## Identity
@@ -41,5 +41,5 @@ GitHub CLI is sufficient for repository creation, authentication, remote managem
 
 1. Agree on the information architecture before writing content.
 2. Choose the static-site framework after the architecture is clear.
-3. Decide when to enable GitHub Pages publishing.
+3. Decide when to add the first publishable page; the Pages endpoint is currently empty.
 4. Purchase and bind `acrossatlas.cn` only after the local prototype and deployment plan are approved.
