@@ -9,7 +9,7 @@ Checked on 2026-09-05 (Asia/Shanghai).
 | Git | 2.50.1, available |
 | Node.js | 20.20.2, available |
 | npm | 10.8.2, available |
-| GitHub CLI | 2.100.0, installed for this workspace |
+| GitHub access | Authenticated Git and GitHub API available |
 | Git repository | Initialized locally on `main` |
 | Commit-safety hook | Enabled through `.githooks` |
 | Git author identity | Configured locally with a GitHub private commit address |
@@ -17,7 +17,7 @@ Checked on 2026-09-05 (Asia/Shanghai).
 | Remote repository | `acrossatlas/acrossatlas.github.io` |
 | Website framework | React with Vite |
 | Website content | Home prototype with Map and Trip tabs plus a date-gated Ongoing card; notebook content pending |
-| GitHub Pages publishing | Configured through GitHub Actions |
+| GitHub Pages publishing | Published from the root of the `gh-pages` branch |
 | Custom domain | Not purchased or configured |
 
 ## Identity
@@ -28,7 +28,7 @@ Checked on 2026-09-05 (Asia/Shanghai).
 
 ## Integration decision
 
-GitHub CLI is sufficient for repository creation, authentication, remote management, and Pages configuration. A GitHub-specific MCP connection is not required for the planned workflow.
+Authenticated Git handles source and deployment-branch pushes, while the GitHub API manages the Pages source. A GitHub-specific MCP connection is not required for the current workflow.
 
 ## Prepared safeguards
 
