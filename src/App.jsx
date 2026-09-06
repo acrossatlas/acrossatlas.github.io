@@ -48,11 +48,11 @@ const transportRecords = [
     endsOn: '2026-09-27',
     title: 'Lotus Car Rental',
     details: [
-      ['取车', '20260927 · 时间待补充'],
+      ['取车', '09.27 · 时间待补充'],
       ['还车', '日期与时间待补充'],
       ['提车点', 'Lotus Car Rental'],
-      ['预约', '#155816'],
-      ['预订网站', 'lotuscarrental.is/client/manage'],
+      ['预定', '#155816'],
+      ['预定网站', 'lotuscarrental.is/client/manage'],
     ],
   },
   {
@@ -72,10 +72,10 @@ const transportRecords = [
     endsOn: '2026-10-01',
     title: 'Hertz 租车',
     details: [
-      ['取车', '20261001 · 时间待补充'],
+      ['取车', '10.01 · 时间待补充'],
       ['还车', '日期与时间待补充'],
       ['提车点', 'Hertz'],
-      ['预约', '#L52108732E4'],
+      ['预定', '#L52108732E4'],
       ['付款', '未付款'],
       ['备注', 'CAO'],
     ],
@@ -109,78 +109,78 @@ const stayRecords = [
     id: 'netherlands-stay',
     startsOn: '2026-09-25',
     endsOn: '2026-09-26',
-    title: 'Stay in Amsterdam',
-    navigation: 'Amsterdam',
+    title: 'Amsterdam 住宿待确认',
+    navigation: 'Amsterdam 住宿地址待确认',
     checkIn: '入住时间待补充',
     checkOut: '退房时间待补充',
-    reservation: '尚未预约',
-    note: '住宿名称、地址与入住方式待补充',
+    reservation: '尚未预定',
+    note: '预定平台、入住凭证与停车信息待补充',
   },
   {
     id: 'iceland-stay',
     startsOn: '2026-09-27',
-    endsOn: '2026-09-29',
-    title: 'Stay in Reykjavík',
-    navigation: 'Reykjavík',
-    checkIn: '入住时间待补充',
-    checkOut: '退房时间待补充',
+    endsOn: '2026-09-30',
+    title: 'Íbúð í Fossvogi',
+    navigation: 'Kelduland 19, 108 Reykjavík, Iceland',
+    checkIn: '09.27 15:00 后',
+    checkOut: '09.30 12:00 前',
     reservation: 'HMEPFWFFR3',
-    note: 'Airbnb · 未付款',
+    note: 'Airbnb｜钥匙盒自助入住，指南与 Wi‑Fi 于入住前 48 小时显示｜楼外免费停车，车位充足',
   },
   {
     id: 'airport-stay',
     startsOn: '2026-09-30',
     endsOn: '2026-09-30',
-    title: 'Stay at Airport',
+    title: 'Airport 住宿待确认',
     navigation: '机场住宿导航地址待补充',
     checkIn: '入住时间待补充',
     checkOut: '退房时间待补充',
-    reservation: '预约编号待补充',
-    note: '住宿名称、机场与地址待补充',
+    reservation: '预定编号待补充',
+    note: '住宿名称、机场、入住凭证与停车信息待补充',
   },
   {
     id: 'henningsvaer-stay',
     startsOn: '2026-10-01',
-    endsOn: '2026-10-02',
-    title: 'Stay in Henningsvær',
-    navigation: 'Misværveien 2, Vågan, Nordland 8312',
-    checkIn: '入住时间待补充',
-    checkOut: '退房时间待补充',
+    endsOn: '2026-10-03',
+    title: 'Beautiful apartment perfectly located on the pier',
+    navigation: 'Misværveien 2, 8312 Henningsvær, Norway',
+    checkIn: '10.01 15:00 后',
+    checkOut: '10.03 11:00 前',
     reservation: 'HMTYZXPEJB',
-    note: 'Airbnb · 未付款',
+    note: 'Airbnb｜房东亲自迎接，需提前联系 Øystein｜停车位待房东确认',
   },
   {
     id: 'hurtigruten-stay',
     startsOn: '2026-10-03',
-    endsOn: '2026-10-03',
-    title: 'Stay at Hurtigruten',
-    navigation: 'Hurtigruten 登船地点待补充',
-    checkIn: '登船时间待补充',
-    checkOut: '离船时间待补充',
+    endsOn: '2026-10-04',
+    title: 'MS Nordlys',
+    navigation: 'Torget 22, 8300 Svolvær, Norway',
+    checkIn: '10.03 22:15（至少提前 15 分钟到港）',
+    checkOut: '10.04 14:15',
     reservation: '2330704',
-    note: 'Hurtigruten · 已付款',
+    note: 'Hurtigruten 官网｜Svolvær → Tromsø，已付款｜船上住宿，停车不适用',
   },
   {
     id: 'tromso-stay',
     startsOn: '2026-10-04',
-    endsOn: '2026-10-04',
-    title: 'Stay in Tromsø',
-    navigation: 'Tromsø 住宿导航地址待补充',
-    checkIn: '入住时间待补充',
-    checkOut: '退房时间待补充',
-    reservation: '预约编号待补充',
-    note: 'Agoda · 已付款',
+    endsOn: '2026-10-05',
+    title: 'Scandic Ishavshotel',
+    navigation: 'Fredrik Langes gate 2, 9008 Tromsø, Norway',
+    checkIn: '10.04 16:00 后',
+    checkOut: '10.05 12:00 前',
+    reservation: '1753018586',
+    note: 'Agoda｜前台入住，建议准备护照与订单号｜酒店有 4 个收费室外车位，另有 500 米外 Fjellet P-hus',
   },
   {
     id: 'oslo-stay',
     startsOn: '2026-10-05',
     endsOn: '2026-10-05',
-    title: 'Stay in Oslo',
+    title: 'Oslo 住宿待确认',
     navigation: 'Oslo 住宿导航地址待补充',
     checkIn: '入住时间待补充',
     checkOut: '退房时间待补充',
     reservation: '6770573874',
-    note: 'Booking.com · 未付款',
+    note: 'Booking.com｜当前分享链接的订单号与此记录不一致，住宿名称、入住凭证与停车信息待确认',
   },
 ];
 
@@ -197,11 +197,6 @@ function getJourneyDayCount(journey) {
 
 function createJourneyDates(journey) {
   const start = dateFromKey(journey.startsOn);
-  const formatter = new Intl.DateTimeFormat('en', {
-    month: 'short',
-    day: '2-digit',
-    timeZone: 'UTC',
-  });
 
   return Array.from({ length: getJourneyDayCount(journey) }, (_, index) => {
     const date = new Date(start);
@@ -209,7 +204,7 @@ function createJourneyDates(journey) {
 
     return {
       key: date.toISOString().slice(0, 10),
-      label: formatter.format(date),
+      label: `${String(date.getUTCMonth() + 1).padStart(2, '0')}.${String(date.getUTCDate()).padStart(2, '0')}`,
     };
   });
 }
@@ -228,10 +223,10 @@ const placeholderEventTypes = [
     type: '交通',
     title: '交通名称待补充',
     detail: '补充班次、上车地点、换乘方式，以及这一段需要特别注意的信息。',
-    reservationStatus: '已预约',
+    reservationStatus: '已预定',
     paymentStatus: '已付款',
     reservation: {
-      reference: '预约编号待补充',
+      reference: '预定编号待补充',
       time: '使用时间待补充',
       instruction: '取票或使用方式待补充',
     },
@@ -241,10 +236,10 @@ const placeholderEventTypes = [
     title: '住宿名称待补充',
     detail: '用容易辨认的说明补充入住地点、入住方式和住宿相关注意事项。',
     navigation: '住宿导航地址待补充',
-    reservationStatus: '已预约',
+    reservationStatus: '已预定',
     paymentStatus: '未付款',
     reservation: {
-      reference: '预约编号待补充',
+      reference: '预定编号待补充',
       time: '入住时间待补充',
       instruction: '入住凭证与门禁方式待补充',
     },
@@ -254,12 +249,12 @@ const placeholderEventTypes = [
     title: '官方地点名称待补充',
     detail: '这里用熟悉的语言说明地点是什么、为什么前往，以及到达后需要做什么。',
     navigation: '地点导航地址待补充',
-    reservationStatus: '未预约',
+    reservationStatus: '未预定',
   },
   {
     type: '行程',
     title: '自由活动待补充',
-    detail: '不需要预约或付款的普通行程也保留相同的信息节奏，之后可以继续补充说明。',
+    detail: '不需要预定或付款的普通行程也保留相同的信息节奏，之后可以继续补充说明。',
   },
 ];
 
@@ -300,11 +295,12 @@ const journeyDayEvents = {
       startsAt: '17:35',
       endsAt: '07:40',
       detail: '香港出发，经台北转机前往阿姆斯特丹；两段航班号、中转时间与行李直挂待确认。',
-      reservationStatus: '已预约',
+      reservationStatus: '已预定',
+      infoType: 'flight',
       reservation: {
         reference: 'EKG5FB',
-        time: '20260924 17:35 — 20260925 07:40',
-        instruction: '票号 297-9555649633、297-9555649634',
+        time: '09.24 17:35 — 09.25 07:40',
+        instruction: '297-9555649633、297-9555649634',
       },
     },
   ],
@@ -314,9 +310,9 @@ const journeyDayEvents = {
       type: '行程',
       title: '国立博物馆',
       startsAt: '时间待补充',
-      detail: '尚未预约；具体到达时间、预约方式与参观安排待补充。',
+      detail: '尚未预定；具体到达时间、预定方式与参观安排待补充。',
       navigation: '国立博物馆 Amsterdam',
-      reservationStatus: '未预约',
+      reservationStatus: '未预定',
       paymentStatus: '未付款',
     },
     {
@@ -324,19 +320,19 @@ const journeyDayEvents = {
       type: '行程',
       title: 'Van Gogh Museum',
       startsAt: '时间待补充',
-      detail: '需提前两周预约；具体参观时段待补充。',
+      detail: '需提前两周预定；具体参观时段待补充。',
       navigation: 'Van Gogh Museum Amsterdam',
-      reservationStatus: '未预约',
+      reservationStatus: '未预定',
       paymentStatus: '未付款',
     },
     {
       id: 'sep25-amsterdam-stay',
       type: '住宿',
-      title: 'Stay in Amsterdam',
+      title: 'Amsterdam 住宿待确认',
       startsAt: '入住时间待补充',
-      detail: '住宿尚未预约，住宿名称、地址与入住方式待补充。',
-      navigation: 'Amsterdam',
-      reservationStatus: '未预约',
+      detail: '住宿尚未预定，住宿名称、地址、入住方式与停车信息待补充。',
+      navigation: 'Amsterdam 住宿地址待确认',
+      reservationStatus: '未预定',
       paymentStatus: '未付款',
     },
   ],
@@ -344,11 +340,11 @@ const journeyDayEvents = {
     {
       id: 'sep26-amsterdam-stay',
       type: '住宿',
-      title: 'Stay in Amsterdam',
+      title: 'Amsterdam 住宿待确认',
       startsAt: '时间待补充',
       detail: '继续住在 Amsterdam；当天行程与住宿信息待补充。',
-      navigation: 'Amsterdam',
-      reservationStatus: '未预约',
+      navigation: 'Amsterdam 住宿地址待确认',
+      reservationStatus: '未预定',
       paymentStatus: '未付款',
     },
   ],
@@ -360,11 +356,12 @@ const journeyDayEvents = {
       startsAt: '17:00',
       endsAt: '18:15',
       detail: '从阿姆斯特丹飞往雷克雅未克；航班号与机场衔接信息待补充。',
-      reservationStatus: '已预约',
+      reservationStatus: '已预定',
+      infoType: 'flight',
       reservation: {
-        reference: '预约编号待补充',
-        time: '20260927 17:00 — 18:15',
-        instruction: '电子行程单待补充',
+        reference: '订单号待补充',
+        time: '09.27 17:00 — 18:15',
+        instruction: '票号待补充',
       },
     },
     {
@@ -373,26 +370,25 @@ const journeyDayEvents = {
       title: 'Lotus Car Rental',
       startsAt: '取车时间待补充',
       detail: '抵达冰岛后取车；提车点、还车日期与还车时间待补充。',
-      reservationStatus: '已预约',
+      reservationStatus: '已预定',
       reservation: {
         reference: '#155816',
-        time: '20260927 取车时间待补充',
+        time: '09.27 取车时间待补充',
         instruction: 'Lotus 订单管理链接已记录',
       },
     },
     {
       id: 'sep27-reykjavik-stay',
       type: '住宿',
-      title: 'Stay in Reykjavík',
-      startsAt: '入住时间待补充',
-      detail: 'Airbnb 已预约；住宿名称、详细地址与入住方式待补充。',
-      navigation: 'Reykjavík',
-      reservationStatus: '已预约',
-      paymentStatus: '未付款',
+      title: 'Íbúð í Fossvogi',
+      startsAt: '15:00 后',
+      detail: 'Airbnb 钥匙盒自助入住；入住指南与 Wi‑Fi 于入住前 48 小时显示。楼外可免费停车，车位充足。',
+      navigation: 'Kelduland 19, 108 Reykjavík, Iceland',
+      reservationStatus: '已预定',
       reservation: {
         reference: 'HMEPFWFFR3',
-        time: '20260927 — 20260929',
-        instruction: 'Airbnb 行程单已记录',
+        time: '09.27 15:00 — 09.30 12:00',
+        instruction: '钥匙盒自助入住；入住前 48 小时查看指南',
       },
     },
   ],
@@ -410,24 +406,23 @@ const journeyDayEvents = {
       type: '行程',
       title: 'Secret Lagoon',
       startsAt: '时间待补充',
-      detail: '尚未预约；预订页面已记录，具体入场时段待补充。',
+      detail: '尚未预定；预定页面已记录，具体入场时段待补充。',
       navigation: 'Secret Lagoon Iceland',
-      reservationStatus: '未预约',
+      reservationStatus: '未预定',
       paymentStatus: '未付款',
     },
     {
       id: 'sep28-reykjavik-stay',
       type: '住宿',
-      title: 'Stay in Reykjavík',
+      title: 'Íbúð í Fossvogi',
       startsAt: '时间待补充',
       detail: '继续住在 Reykjavík；当天入住相关事项沿用前一晚。',
-      navigation: 'Reykjavík',
-      reservationStatus: '已预约',
-      paymentStatus: '未付款',
+      navigation: 'Kelduland 19, 108 Reykjavík, Iceland',
+      reservationStatus: '已预定',
       reservation: {
         reference: 'HMEPFWFFR3',
-        time: '20260927 — 20260929',
-        instruction: 'Airbnb 行程单已记录',
+        time: '09.27 15:00 — 09.30 12:00',
+        instruction: '钥匙盒自助入住；入住前 48 小时查看指南',
       },
     },
   ],
@@ -443,16 +438,15 @@ const journeyDayEvents = {
     {
       id: 'sep29-reykjavik-stay',
       type: '住宿',
-      title: 'Stay in Reykjavík',
+      title: 'Íbúð í Fossvogi',
       startsAt: '时间待补充',
       detail: '继续住在 Reykjavík；当天入住相关事项沿用前一晚。',
-      navigation: 'Reykjavík',
-      reservationStatus: '已预约',
-      paymentStatus: '未付款',
+      navigation: 'Kelduland 19, 108 Reykjavík, Iceland',
+      reservationStatus: '已预定',
       reservation: {
         reference: 'HMEPFWFFR3',
-        time: '20260927 — 20260929',
-        instruction: 'Airbnb 行程单已记录',
+        time: '09.27 15:00 — 09.30 12:00',
+        instruction: '钥匙盒自助入住；入住前 48 小时查看指南',
       },
     },
   ],
@@ -462,15 +456,15 @@ const journeyDayEvents = {
       type: '行程',
       title: 'Whale watching tour RIB boat',
       startsAt: '时间待补充',
-      detail: '雷克雅未克 RIB 游艇观鲸与海鹦行程；尚未预约，集合点与具体时段待补充。',
+      detail: '雷克雅未克 RIB 游艇观鲸与海鹦行程；尚未预定，集合点与具体时段待补充。',
       navigation: 'Reykjavík whale watching',
-      reservationStatus: '未预约',
+      reservationStatus: '未预定',
       paymentStatus: '未付款',
     },
     {
       id: 'sep30-airport-stay',
       type: '住宿',
-      title: 'Stay at Airport',
+      title: 'Airport 住宿待确认',
       startsAt: '入住时间待补充',
       detail: '机场住宿；酒店名称、机场、导航地址与入住信息待补充。',
       navigation: '机场住宿导航地址待补充',
@@ -483,11 +477,12 @@ const journeyDayEvents = {
       title: 'KEF → SVJ',
       startsAt: '时间待补充',
       detail: '从雷克雅未克前往斯沃尔韦尔；航班号、起降时间与中转信息待补充。',
-      reservationStatus: '已预约',
+      reservationStatus: '已预定',
+      infoType: 'flight',
       reservation: {
-        reference: '预约编号待补充',
-        time: '20261001 · 时间待补充',
-        instruction: '电子行程单待补充',
+        reference: '订单号待补充',
+        time: '10.01 · 时间待补充',
+        instruction: '票号待补充',
       },
     },
     {
@@ -496,27 +491,26 @@ const journeyDayEvents = {
       title: 'Hertz 租车',
       startsAt: '取车时间待补充',
       detail: '抵达挪威后取车；提车点、还车日期与还车时间待补充。',
-      reservationStatus: '已预约',
+      reservationStatus: '已预定',
       paymentStatus: '未付款',
       reservation: {
         reference: '#L52108732E4',
-        time: '20261001 取车时间待补充',
+        time: '10.01 取车时间待补充',
         instruction: 'Hertz 确认单与订单管理链接已记录',
       },
     },
     {
       id: 'oct01-henningsvaer-stay',
       type: '住宿',
-      title: 'Stay in Henningsvær',
-      startsAt: '入住时间待补充',
-      detail: 'Airbnb 已预约；地址为 Misværveien 2，入住方式待补充。',
-      navigation: 'Misværveien 2, Vågan, Nordland 8312',
-      reservationStatus: '已预约',
-      paymentStatus: '未付款',
+      title: 'Beautiful apartment perfectly located on the pier',
+      startsAt: '15:00 后',
+      detail: 'Airbnb 房源位于 Henningsvær 码头；房东亲自迎接，需提前联系 Øystein。停车位待房东确认。',
+      navigation: 'Misværveien 2, 8312 Henningsvær, Norway',
+      reservationStatus: '已预定',
       reservation: {
         reference: 'HMTYZXPEJB',
-        time: '20261001 — 20261002',
-        instruction: 'Airbnb 行程单已记录',
+        time: '10.01 15:00 — 10.03 11:00',
+        instruction: '房东亲自迎接；到达前联系 Øystein',
       },
     },
   ],
@@ -532,16 +526,15 @@ const journeyDayEvents = {
     {
       id: 'oct02-henningsvaer-stay',
       type: '住宿',
-      title: 'Stay in Henningsvær',
+      title: 'Beautiful apartment perfectly located on the pier',
       startsAt: '时间待补充',
       detail: '继续住在 Henningsvær；地址为 Misværveien 2。',
-      navigation: 'Misværveien 2, Vågan, Nordland 8312',
-      reservationStatus: '已预约',
-      paymentStatus: '未付款',
+      navigation: 'Misværveien 2, 8312 Henningsvær, Norway',
+      reservationStatus: '已预定',
       reservation: {
         reference: 'HMTYZXPEJB',
-        time: '20261001 — 20261002',
-        instruction: 'Airbnb 行程单已记录',
+        time: '10.01 15:00 — 10.03 11:00',
+        instruction: '房东亲自迎接；到达前联系 Øystein',
       },
     },
   ],
@@ -557,15 +550,16 @@ const journeyDayEvents = {
     {
       id: 'oct03-hurtigruten',
       type: '住宿',
-      title: 'Stay at Hurtigruten',
-      startsAt: '登船时间待补充',
-      detail: 'Hurtigruten 船上住宿；登船地点、离船时间与舱位信息待补充。',
-      navigation: 'Hurtigruten 登船地点待补充',
-      reservationStatus: '已预约',
+      title: 'MS Nordlys',
+      startsAt: '22:15',
+      endsAt: '14:15',
+      detail: 'Hurtigruten Svolvær → Tromsø 船上住宿；至少提前 15 分钟到港，10.04 14:15 抵达 Tromsø。',
+      navigation: 'Torget 22, 8300 Svolvær, Norway',
+      reservationStatus: '已预定',
       reservation: {
         reference: '2330704',
-        time: '20261003 · 时间待补充',
-        instruction: 'Hurtigruten 订单管理链接已记录',
+        time: '10.03 22:15 — 10.04 14:15',
+        instruction: '凭订单号办理登船；至少提前 15 分钟到港',
       },
     },
   ],
@@ -581,15 +575,15 @@ const journeyDayEvents = {
     {
       id: 'oct04-tromso-stay',
       type: '住宿',
-      title: 'Stay in Tromsø',
-      startsAt: '入住时间待补充',
-      detail: 'Agoda 住宿已预约；住宿名称、地址与入住信息待补充。',
-      navigation: 'Tromsø 住宿导航地址待补充',
-      reservationStatus: '已预约',
+      title: 'Scandic Ishavshotel',
+      startsAt: '16:00 后',
+      detail: 'Agoda 预定，Superior King Room；前台入住建议准备护照和订单号。酒店有收费室外车位，另有 500 米外停车库。',
+      navigation: 'Fredrik Langes gate 2, 9008 Tromsø, Norway',
+      reservationStatus: '已预定',
       reservation: {
-        reference: '预约编号待补充',
-        time: '20261004 · 入住时间待补充',
-        instruction: 'Agoda 订单信息待补充',
+        reference: '1753018586',
+        time: '10.04 16:00 — 10.05 12:00',
+        instruction: '前台出示护照与 Agoda 订单号办理入住',
       },
     },
   ],
@@ -609,25 +603,26 @@ const journeyDayEvents = {
       startsAt: '19:50',
       endsAt: '21:45',
       detail: '搭乘 DY385 从特罗姆瑟飞往奥斯陆；到达后的衔接信息待补充。',
-      reservationStatus: '已预约',
+      reservationStatus: '已预定',
+      infoType: 'flight',
       reservation: {
         reference: 'BA3ZVL',
-        time: '20261005 19:50 — 21:45',
-        instruction: '航班 DY385；英文出行单已记录',
+        time: '10.05 19:50 — 21:45',
+        instruction: '票号待补充',
       },
     },
     {
       id: 'oct05-oslo-stay',
       type: '住宿',
-      title: 'Stay in Oslo',
+      title: 'Oslo 住宿待确认',
       startsAt: '入住时间待补充',
-      detail: 'Booking.com 住宿已预约；住宿名称、地址与入住方式待补充。',
+      detail: 'Booking.com 住宿已预定；当前分享链接的订单号与此记录不一致，住宿名称、地址、入住方式与停车信息待确认。',
       navigation: 'Oslo 住宿导航地址待补充',
-      reservationStatus: '已预约',
+      reservationStatus: '已预定',
       paymentStatus: '未付款',
       reservation: {
         reference: '6770573874',
-        time: '20261005 · 入住时间待补充',
+        time: '10.05 · 入住时间待补充',
         instruction: 'Booking.com 订单与 PDF 已记录',
       },
     },
@@ -640,11 +635,12 @@ const journeyDayEvents = {
       startsAt: '13:45',
       endsAt: '11:45',
       detail: '从奥斯陆出发，经曼谷返回香港；两段航班号、中转时间与行李直挂待确认。',
-      reservationStatus: '已预约',
+      reservationStatus: '已预定',
+      infoType: 'flight',
       reservation: {
         reference: '8EL2FL',
-        time: '20261006 13:45 — 次日 11:45',
-        instruction: '票号 217-6333199177、217-6333199176',
+        time: '10.06 13:45 — 次日 11:45',
+        instruction: '217-6333199177、217-6333199176',
       },
     },
   ],
@@ -771,20 +767,17 @@ function formatEventTime(event) {
 }
 
 function formatDateRange(journey) {
-  const format = new Intl.DateTimeFormat('en', { month: 'short', day: '2-digit' });
-  const start = new Date(`${journey.startsOn}T00:00:00`);
-  const end = new Date(`${journey.endsOn}T00:00:00`);
-
-  return `${format.format(start)} — ${format.format(end)}`;
+  return `${formatShortDate(journey.startsOn)} — ${formatShortDate(journey.endsOn)}`;
 }
 
-function compactDate(date) {
-  return date.replaceAll('-', '');
+function formatShortDate(dateKey) {
+  const [, month, day] = dateKey.split('-');
+  return `${month}.${day}`;
 }
 
 function formatRecordRange(record) {
-  const start = compactDate(record.startsOn);
-  const end = compactDate(record.endsOn);
+  const start = formatShortDate(record.startsOn);
+  const end = formatShortDate(record.endsOn);
   return start === end ? start : `${start} — ${end}`;
 }
 
@@ -1081,7 +1074,7 @@ function StayCard({ record, isRelevant }) {
           <dd>{record.checkOut}</dd>
         </div>
         <div>
-          <dt>预约</dt>
+          <dt>预定</dt>
           <dd>{record.reservation}</dd>
         </div>
         <div>
@@ -1234,20 +1227,20 @@ function DayRouteMap({ day, onOpenStop }) {
 
       <div aria-label="地图缩放" className="map-zoom-controls" role="group">
         <button
-          aria-label="缩小地图"
-          disabled={zoom <= 1}
-          onClick={() => setZoom((currentZoom) => Math.max(1, currentZoom - 0.2))}
-          type="button"
-        >
-          <MinusIcon />
-        </button>
-        <button
           aria-label="放大地图"
           disabled={zoom >= 1.6}
           onClick={() => setZoom((currentZoom) => Math.min(1.6, currentZoom + 0.2))}
           type="button"
         >
           <PlusIcon />
+        </button>
+        <button
+          aria-label="缩小地图"
+          disabled={zoom <= 1}
+          onClick={() => setZoom((currentZoom) => Math.max(1, currentZoom - 0.2))}
+          type="button"
+        >
+          <MinusIcon />
         </button>
       </div>
     </figure>
@@ -1314,17 +1307,90 @@ function CopyableEventTitle({ className, event }) {
   );
 }
 
-function ReservationDetails({ event, showContext = false }) {
-  if (!event.reservation) {
-    const pending = event.reservationStatus === '未预约';
+function getReservationHeading(event) {
+  return event.infoType === 'flight' ? '航班信息' : '预定信息';
+}
 
+function ReservationVoucher({ voucher }) {
+  const [clickCount, setClickCount] = useState(0);
+  const [isOpen, setIsOpen] = useState(false);
+  const clickCountRef = useRef(0);
+  const lastClickRef = useRef(0);
+  const resetTimerRef = useRef(null);
+
+  useEffect(() => () => window.clearTimeout(resetTimerRef.current), []);
+
+  if (!voucher) {
     return (
-      <div className={`reservation-state${pending ? ' is-pending' : ''}`}>
-        <strong>{pending ? '未预约' : '无需预约'}</strong>
-        <p>{pending ? '预约方式和凭证将在这里补充。' : '此项行程没有预约信息。'}</p>
+      <div className="reservation-voucher">
+        <span>二维码或凭证图片</span>
+        <p>待补充</p>
       </div>
     );
   }
+
+  const handleVoucherClick = () => {
+    const clickedAt = Date.now();
+    if (clickedAt - lastClickRef.current > 1200) clickCountRef.current = 0;
+    lastClickRef.current = clickedAt;
+
+    const nextCount = clickCountRef.current + 1;
+    window.clearTimeout(resetTimerRef.current);
+
+    if (nextCount >= 3) {
+      clickCountRef.current = 0;
+      setClickCount(0);
+      setIsOpen(true);
+      return;
+    }
+
+    clickCountRef.current = nextCount;
+    setClickCount(nextCount);
+    resetTimerRef.current = window.setTimeout(() => {
+      clickCountRef.current = 0;
+      setClickCount(0);
+    }, 1200);
+  };
+
+  return (
+    <>
+      <button
+        aria-label={`连续点击三次查看${voucher.alt ?? '预定凭证'}`}
+        className="reservation-voucher reservation-voucher--image"
+        onClick={handleVoucherClick}
+        type="button"
+      >
+        <img alt="" aria-hidden="true" src={voucher.src} />
+        <span>凭证缩略图</span>
+        <p aria-live="polite">{clickCount ? `再点击 ${3 - clickCount} 次查看` : '连续点击 3 次查看'}</p>
+      </button>
+      {isOpen && (
+        <div className="voucher-viewer" onMouseDown={(event) => event.target === event.currentTarget && setIsOpen(false)}>
+          <section aria-label={voucher.alt ?? '预定凭证'} aria-modal="true" role="dialog">
+            <button aria-label="关闭凭证大图" onClick={() => setIsOpen(false)} type="button">
+              <CloseIcon />
+            </button>
+            <img alt={voucher.alt ?? '预定凭证'} src={voucher.fullSrc ?? voucher.src} />
+          </section>
+        </div>
+      )}
+    </>
+  );
+}
+
+function ReservationDetails({ event, showContext = false }) {
+  if (!event.reservation) {
+    const pending = event.reservationStatus === '未预定';
+
+    return (
+      <div className={`reservation-state${pending ? ' is-pending' : ''}`}>
+        <strong>{pending ? '未预定' : '无需预定'}</strong>
+        <p>{pending ? '预定方式和凭证将在这里补充。' : '此项行程没有预定信息。'}</p>
+      </div>
+    );
+  }
+
+  const isFlight = event.infoType === 'flight';
 
   return (
     <div className={`reservation-details${showContext ? '' : ' is-embedded'}`}>
@@ -1337,39 +1403,37 @@ function ReservationDetails({ event, showContext = false }) {
         )}
         <dl className="info-card__details">
           <div>
-            <dt>预约编号</dt>
+            <dt>{isFlight ? '订单号' : '预定编号'}</dt>
             <dd>{event.reservation.reference}</dd>
           </div>
           <div>
-            <dt>使用时间</dt>
+            <dt>{isFlight ? '航班时间' : '使用时间'}</dt>
             <dd>{event.reservation.time}</dd>
           </div>
           <div>
-            <dt>使用方式</dt>
+            <dt>{isFlight ? '票号' : '使用方式'}</dt>
             <dd>{event.reservation.instruction}</dd>
           </div>
         </dl>
       </div>
-      <div className="reservation-voucher">
-        <span>二维码或凭证图片</span>
-        <p>待补充</p>
-      </div>
+      <ReservationVoucher voucher={event.reservation.voucher} />
     </div>
   );
 }
 
 function ReservationModal({ event, onClose }) {
   useModalBehavior(onClose);
+  const heading = getReservationHeading(event);
 
   return (
     <div className="modal-backdrop" onMouseDown={(mouseEvent) => mouseEvent.target === mouseEvent.currentTarget && onClose()}>
       <section aria-labelledby="reservation-modal-title" aria-modal="true" className="journey-modal reservation-modal" role="dialog">
         <header className="journey-modal__header">
           <div>
-            <p>Reservation</p>
-            <h2 id="reservation-modal-title">预约信息</h2>
+            <p>{event.infoType === 'flight' ? 'Flight' : 'Reservation'}</p>
+            <h2 id="reservation-modal-title">{heading}</h2>
           </div>
-          <button aria-label="关闭预约信息" autoFocus onClick={onClose} type="button">
+          <button aria-label={`关闭${heading}`} autoFocus onClick={onClose} type="button">
             <CloseIcon />
           </button>
         </header>
@@ -1404,14 +1468,14 @@ function MapStopModal({ onClose, selection }) {
             <CopyableEventTitle className="map-stop-modal__title-row" event={event} />
             <p>{event.detail}</p>
             <div className="map-stop-modal__alerts">
-              {event.reservationStatus === '未预约' && <span className="event-alert-tag">未预约</span>}
+              {event.reservationStatus === '未预定' && <span className="event-alert-tag">未预定</span>}
               {event.paymentStatus === '未付款' && <span className="event-alert-tag">未付款</span>}
             </div>
           </article>
           <section className="map-stop-modal__reservation" aria-labelledby="map-stop-reservation-title">
             <header>
-              <span>Reservation</span>
-              <h3 id="map-stop-reservation-title">预约信息</h3>
+              <span>{event.infoType === 'flight' ? 'Flight' : 'Reservation'}</span>
+              <h3 id="map-stop-reservation-title">{getReservationHeading(event)}</h3>
             </header>
             <ReservationDetails event={event} />
           </section>
@@ -1428,10 +1492,10 @@ function DayEventCard({ event, onOpenReservation }) {
       <div className="day-event-card__meta">
         <span className="day-event-card__time">{formatEventTime(event)}</span>
         <div className="day-event-card__signals">
-          {event.reservationStatus === '未预约' && <span className="event-alert-tag">未预约</span>}
-          {event.reservationStatus === '已预约' && (
+          {event.reservationStatus === '未预定' && <span className="event-alert-tag">未预定</span>}
+          {event.reservationStatus === '已预定' && (
             <button className="reservation-info-trigger" onClick={() => onOpenReservation(event)} type="button">
-              预约信息
+              {getReservationHeading(event)}
             </button>
           )}
           {event.paymentStatus === '未付款' && <span className="event-alert-tag">未付款</span>}
@@ -1447,18 +1511,20 @@ function DayEventCard({ event, onOpenReservation }) {
 function TodayReservationPreview({ event }) {
   if (!event.reservation) return null;
 
+  const isFlight = event.infoType === 'flight';
+
   return (
     <dl className="today-focus__reservation">
       <div>
-        <dt>预约编号</dt>
+        <dt>{isFlight ? '订单号' : '预定编号'}</dt>
         <dd>{event.reservation.reference}</dd>
       </div>
       <div>
-        <dt>使用时间</dt>
+        <dt>{isFlight ? '航班时间' : '使用时间'}</dt>
         <dd>{event.reservation.time}</dd>
       </div>
       <div>
-        <dt>使用方式</dt>
+        <dt>{isFlight ? '票号' : '使用方式'}</dt>
         <dd>{event.reservation.instruction}</dd>
       </div>
     </dl>
@@ -1484,7 +1550,7 @@ function TodayFocusCard({ dayIndex, focus }) {
           <span aria-hidden="true" className="journey-live-dot" />
           {status}
         </span>
-        {event.reservationStatus === '未预约' && <span className="event-alert-tag">未预约</span>}
+        {event.reservationStatus === '未预定' && <span className="event-alert-tag">未预定</span>}
         {event.paymentStatus === '未付款' && <span className="event-alert-tag">未付款</span>}
       </div>
       <CopyableEventTitle className="today-focus__title-row" event={event} />
