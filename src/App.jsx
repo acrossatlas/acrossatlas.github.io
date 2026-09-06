@@ -160,7 +160,7 @@ const stayRecords = [
     id: 'netherlands-stay',
     startsOn: '2026-09-25',
     endsOn: '2026-09-27',
-    title: 'Hyatt Place Amsterdam Airport',
+    title: '荷兰住宿',
     navigation: 'Rijnlanderweg 800, 2132 NN Hoofddorp, Netherlands',
     checkIn: '09.25 15:00 — 00:00',
     checkOut: '09.27 00:00 — 12:00',
@@ -175,7 +175,7 @@ const stayRecords = [
     id: 'iceland-stay',
     startsOn: '2026-09-27',
     endsOn: '2026-09-30',
-    title: 'Reykjavík Airbnb',
+    title: '雷克雅未克住宿',
     navigation: 'Kelduland 19, 108 Reykjavík, Iceland',
     checkIn: '09.27 15:00 后',
     checkOut: '09.30 12:00 前',
@@ -186,12 +186,12 @@ const stayRecords = [
     id: 'airport-stay',
     startsOn: '2026-09-30',
     endsOn: '2026-09-30',
-    title: 'Airport 住宿待确认',
-    navigation: '机场住宿导航地址待补充',
-    checkIn: '入住时间待补充',
+    title: '机场住宿',
+    navigation: 'Keflavík International Airport, 235 Keflavík, Iceland',
+    checkIn: '09.30 22:00',
     checkOut: '退房时间待补充',
     reservation: '预定编号待补充',
-    note: '住宿名称、机场、入住凭证与停车信息待补充',
+    note: '住在 Keflavík International Airport，便于次日早班机；具体住宿设施与退房方式待补充',
   },
   {
     id: 'henningsvaer-stay',
@@ -401,7 +401,7 @@ const journeyDayEvents = {
     {
       id: 'sep25-amsterdam-stay',
       type: '住宿',
-      title: 'Hyatt Place Amsterdam Airport',
+      title: '荷兰住宿',
       startsAt: '15:00',
       detail: 'Hyatt Place Amsterdam Airport，King Room，2 人；09.25 15:00 后入住，09.27 12:00 前退房。Booking.com 预定，到店付款约 EUR 243.78；酒店内自助停车，首小时免费，过夜 EUR 19.50。',
       navigation: 'Rijnlanderweg 800, 2132 NN Hoofddorp, Netherlands',
@@ -422,8 +422,8 @@ const journeyDayEvents = {
     {
       id: 'sep26-amsterdam-stay',
       type: '住宿',
-      title: 'Hyatt Place Amsterdam Airport',
-      startsAt: '全天',
+      title: '荷兰住宿',
+      startsAt: '22:00',
       detail: '继续住在 Hyatt Place Amsterdam Airport；09.27 12:00 前退房。Booking.com 订单到店付款；酒店内自助停车，过夜 EUR 19.50。',
       navigation: 'Rijnlanderweg 800, 2132 NN Hoofddorp, Netherlands',
       reservationStatus: '已预定',
@@ -483,7 +483,7 @@ const journeyDayEvents = {
     {
       id: 'sep27-reykjavik-stay',
       type: '住宿',
-      title: 'Reykjavík Airbnb',
+      title: '雷克雅未克住宿',
       startsAt: '15:00 后',
       detail: 'Airbnb 钥匙盒自助入住；入住指南与 Wi‑Fi 于入住前 48 小时显示。楼外可免费停车，车位充足。',
       navigation: 'Kelduland 19, 108 Reykjavík, Iceland',
@@ -517,8 +517,8 @@ const journeyDayEvents = {
     {
       id: 'sep28-reykjavik-stay',
       type: '住宿',
-      title: 'Reykjavík Airbnb',
-      startsAt: '时间待补充',
+      title: '雷克雅未克住宿',
+      startsAt: '22:00',
       detail: '继续住在 Reykjavík；当天入住相关事项沿用前一晚。',
       navigation: 'Kelduland 19, 108 Reykjavík, Iceland',
       reservationStatus: '已预定',
@@ -541,8 +541,8 @@ const journeyDayEvents = {
     {
       id: 'sep29-reykjavik-stay',
       type: '住宿',
-      title: 'Reykjavík Airbnb',
-      startsAt: '时间待补充',
+      title: '雷克雅未克住宿',
+      startsAt: '22:00',
       detail: '继续住在 Reykjavík；当天入住相关事项沿用前一晚。',
       navigation: 'Kelduland 19, 108 Reykjavík, Iceland',
       reservationStatus: '已预定',
@@ -578,12 +578,35 @@ const journeyDayEvents = {
       },
     },
     {
+      id: 'sep30-reykjavik-afternoon',
+      type: '行程',
+      title: '雷克雅未克市区',
+      startsAt: '下午',
+      detail: '观鲸结束后在雷克雅未克市区逛逛；具体地点与路线稍后补充。',
+      navigation: 'Reykjavík, Iceland',
+    },
+    {
+      id: 'sep30-lotus-return',
+      type: '交通',
+      title: 'Lotus Car Rental 还车',
+      startsAt: '20:00',
+      detail: '在原取车门店归还 Toyota Yaris（自动挡）；还车前检查油量、个人物品和车辆外观。',
+      navigation: 'Flugvellir 6-10, 230 Keflavík, Iceland',
+      addressLabel: '还车地址',
+      reservationStatus: '已预定',
+      reservation: {
+        reference: '#68LQL6',
+        time: '09.30 20:00',
+        instruction: '在 Lotus Car Rental 原门店还车',
+      },
+    },
+    {
       id: 'sep30-airport-stay',
       type: '住宿',
-      title: 'Airport 住宿待确认',
-      startsAt: '入住时间待补充',
-      detail: '机场住宿；酒店名称、机场、导航地址与入住信息待补充。',
-      navigation: '机场住宿导航地址待补充',
+      title: '机场住宿',
+      startsAt: '22:00',
+      detail: '住在 Keflavík International Airport，便于次日搭乘早班机；具体住宿设施与退房方式待补充。',
+      navigation: 'Keflavík International Airport, 235 Keflavík, Iceland',
     },
   ],
   '2026-10-01': [
@@ -611,9 +634,9 @@ const journeyDayEvents = {
     {
       id: 'oct01-hertz-car',
       type: '交通',
-      title: 'Hertz Svolvær Airport',
+      title: 'Hertz 取车',
       startsAt: '19:00',
-      detail: 'Toyota Yaris Cross 4×4（自动挡），Hertz 异地还车：10.01 19:00 在 Svolvær Airport 取车，10.03 19:00 在 Fiskergata 23 还车；不限公里，柜台支付 3,859.62 NOK。注意预定取车时间早于航班 20:50 抵达，需要调整或确认留车。',
+      detail: '在 Svolvær Airport 提取 Toyota Yaris Cross 4×4（自动挡），不限公里，柜台支付 3,859.62 NOK。预定取车时间早于航班 20:50 抵达，需要调整或确认留车。',
       navigation: 'Svolvær lufthavn, Helle, 8300 Svolvær, Norway',
       addressLabel: '取车地址',
       reservationStatus: '已预定',
@@ -647,16 +670,56 @@ const journeyDayEvents = {
     {
       id: 'oct02-lofoten-west',
       type: '行程',
-      title: 'Lofoten west',
+      title: 'Svinøya',
       startsAt: '时间待补充',
-      detail: '罗弗敦西线；具体停靠点、路线顺序与时间稍后补充。',
-      navigation: 'Lofoten west',
+      detail: '斯沃尔韦尔传统渔村，红色渔民木屋与港口景观适合作为西线出发点。',
+      navigation: 'Svinøya, 8300 Svolvær, Norway',
+    },
+    {
+      id: 'oct02-ramberg-beach',
+      type: '行程',
+      title: 'Ramberg Beach',
+      startsAt: '时间待补充',
+      detail: '白沙、碧蓝海水与高山环绕的北极海滩，适合散步和拍摄开阔海岸风景。',
+      navigation: 'Rambergstranda, 8380 Ramberg, Norway',
+    },
+    {
+      id: 'oct02-hamnoy-bridge',
+      type: '行程',
+      title: 'Hamnøy Bridge',
+      startsAt: '时间待补充',
+      detail: '经典罗弗敦取景位，可从桥边拍摄红色渔屋、海湾与陡峭山峰。',
+      navigation: 'Hamnøy Bridge, E10, 8390 Reine, Norway',
+    },
+    {
+      id: 'oct02-sakrisoy',
+      type: '行程',
+      title: 'Sakrisøy',
+      startsAt: '时间待补充',
+      detail: '以黄色渔屋、木制晒鱼架和海湾景色闻名，也适合作为午餐停靠点。',
+      navigation: 'Sakrisøya, 8390 Reine, Norway',
+    },
+    {
+      id: 'oct02-reine',
+      type: '行程',
+      title: 'Reine',
+      startsAt: '时间待补充',
+      detail: '罗弗敦最具代表性的渔村之一，可看山峰、峡湾和水边木屋组成的明信片景观。',
+      navigation: 'Reine, 8390 Reine, Norway',
+    },
+    {
+      id: 'oct02-a-i-lofoten',
+      type: '行程',
+      title: 'Å',
+      startsAt: '时间待补充',
+      detail: 'E10 公路西端的历史渔村，可看红色渔屋、晒鱼架并了解罗弗敦传统渔业。',
+      navigation: 'Å i Lofoten, 8392 Sørvågen, Norway',
     },
     {
       id: 'oct02-henningsvaer-stay',
       type: '住宿',
       title: 'Henningsvær Airbnb',
-      startsAt: '时间待补充',
+      startsAt: '22:00',
       detail: '继续住在 Henningsvær；地址为 Misværveien 2。',
       navigation: 'Misværveien 2, 8312 Henningsvær, Norway',
       reservationStatus: '已预定',
@@ -671,10 +734,66 @@ const journeyDayEvents = {
     {
       id: 'oct03-lofoten-east',
       type: '行程',
-      title: 'Lofoten east',
+      title: 'Kabelvåg',
       startsAt: '时间待补充',
-      detail: '罗弗敦东线；具体停靠点、路线顺序与时间稍后补充。',
-      navigation: 'Lofoten east',
+      detail: '罗弗敦最古老的聚落之一，可看传统木建筑并了解当地海洋与渔业历史。',
+      navigation: 'Kabelvåg, 8310 Kabelvåg, Norway',
+    },
+    {
+      id: 'oct03-vagan-church',
+      type: '行程',
+      title: 'Vågan Church',
+      startsAt: '时间待补充',
+      detail: '又称 Lofoten Cathedral，是当地醒目的木结构教堂和历史地标。',
+      navigation: 'Kong Øysteins vei 6, 8310 Kabelvåg, Norway',
+    },
+    {
+      id: 'oct03-gimsoya',
+      type: '行程',
+      title: 'Gimsøya',
+      startsAt: '时间待补充',
+      detail: '岛上地势开阔，可观察农田、海岸与北冰洋方向的宽广景观。',
+      navigation: 'Gimsøya, Vågan, Norway',
+    },
+    {
+      id: 'oct03-haukland-beach',
+      type: '行程',
+      title: 'Haukland Beach',
+      startsAt: '时间待补充',
+      detail: '由白沙、青绿色海水和高山构成的海滩，适合散步与风景摄影。',
+      navigation: 'Hauklandstranda, 8370 Leknes, Norway',
+    },
+    {
+      id: 'oct03-unstad-beach',
+      type: '行程',
+      title: 'Unstad Beach',
+      startsAt: '时间待补充',
+      detail: '以悬崖、海浪和北极冲浪文化闻名，可在海边停留并安排简短休息。',
+      navigation: 'Unstad Beach, 8360 Bøstad, Norway',
+    },
+    {
+      id: 'oct03-henningsvaer',
+      type: '行程',
+      title: 'Henningsvær',
+      startsAt: '时间待补充',
+      detail: '由小岛组成的彩色渔村，适合逛港口、街道、画廊并看海岸景观。',
+      navigation: 'Henningsvær, 8312 Henningsvær, Norway',
+    },
+    {
+      id: 'oct03-hertz-return',
+      type: '交通',
+      title: 'Hertz 还车',
+      startsAt: '19:00',
+      detail: '在 Fiskergata 23 归还 Toyota Yaris Cross 4×4（自动挡）；确认油量、个人物品和车辆外观后办理还车。',
+      navigation: 'Fiskergata 23, 8300 Svolvær, Norway',
+      addressLabel: '还车地址',
+      reservationStatus: '已预定',
+      paymentStatus: '未付款',
+      reservation: {
+        reference: '#L52108732E4',
+        time: '10.03 19:00',
+        instruction: '在 Hertz Fiskergata 23 门店办理异地还车并付款',
+      },
     },
     {
       id: 'oct03-hurtigruten',
@@ -792,32 +911,6 @@ const journeyDayEvents = {
           images: [
             '/vouchers/flight-10-06-osl-hkg.jpg',
             '/vouchers/baggage-10-06-osl-bkk.jpg',
-            '/vouchers/baggage-10-07-bkk-hkg.jpg',
-          ],
-        },
-      },
-    },
-  ],
-  '2026-10-07': [
-    {
-      id: 'oct07-bkk-hkg',
-      type: '交通',
-      title: 'BKK → HKG',
-      startsAt: '08:00',
-      endsAt: '11:45',
-      detail: '搭乘泰国国际航空 TG600 从曼谷返回香港；08:00 起飞、11:45 抵达香港机场 T1。行李从奥斯陆直挂，每人托运 23kg、手提 7kg。',
-      reservationStatus: '已预定',
-      infoType: 'flight',
-      reservation: {
-        orderNumber: '1128146096549157',
-        flightNumber: 'TG600',
-        airlineReference: '8EL2FL',
-        time: '10.07 08:00 — 11:45',
-        ticketNumber: '217-6333199177、217-6333199176',
-        voucher: {
-          alt: '10.07 曼谷至香港航班与行李信息',
-          images: [
-            '/vouchers/flight-10-06-osl-hkg.jpg',
             '/vouchers/baggage-10-07-bkk-hkg.jpg',
           ],
         },
@@ -1247,7 +1340,6 @@ function TransportCard({ record, isRelevant }) {
           ))}
         </dl>
       )}
-      {record.voucher && <ReservationVoucher compact voucher={record.voucher} />}
     </article>
   );
 }
@@ -1278,7 +1370,6 @@ function StayCard({ record, isRelevant }) {
           <dd>{record.note}</dd>
         </div>
       </dl>
-      {record.voucher && <ReservationVoucher compact voucher={record.voucher} />}
     </article>
   );
 }
@@ -1491,84 +1582,6 @@ function getReservationHeading(event) {
   return event.infoType === 'flight' ? '航班信息' : '预定信息';
 }
 
-function ReservationVoucher({ compact = false, voucher }) {
-  const [clickCount, setClickCount] = useState(0);
-  const [isOpen, setIsOpen] = useState(false);
-  const clickCountRef = useRef(0);
-  const lastClickRef = useRef(0);
-  const resetTimerRef = useRef(null);
-
-  useEffect(() => () => window.clearTimeout(resetTimerRef.current), []);
-
-  if (!voucher) {
-    return (
-      <div className="reservation-voucher">
-        <span>二维码或凭证图片</span>
-        <p>待补充</p>
-      </div>
-    );
-  }
-
-  const voucherImages = voucher.images ?? [voucher.src];
-  const voucherLabel = voucherImages.length > 1 ? `${voucherImages.length} 张凭证图片` : '凭证图片';
-
-  const handleVoucherClick = () => {
-    const clickedAt = Date.now();
-    if (clickedAt - lastClickRef.current > 3000) clickCountRef.current = 0;
-    lastClickRef.current = clickedAt;
-
-    const nextCount = clickCountRef.current + 1;
-    window.clearTimeout(resetTimerRef.current);
-
-    if (nextCount >= 3) {
-      clickCountRef.current = 0;
-      setClickCount(0);
-      setIsOpen(true);
-      return;
-    }
-
-    clickCountRef.current = nextCount;
-    setClickCount(nextCount);
-    resetTimerRef.current = window.setTimeout(() => {
-      clickCountRef.current = 0;
-      setClickCount(0);
-    }, 3000);
-  };
-
-  return (
-    <>
-      <button
-        aria-label={`连续点击三次查看${voucher.alt ?? '预定凭证'}`}
-        className={`reservation-voucher reservation-voucher--image${compact ? ' is-compact' : ''}`}
-        onClick={handleVoucherClick}
-        type="button"
-      >
-        <img alt="" aria-hidden="true" src={voucherImages[0]} />
-        <span>{voucherLabel}</span>
-        <p aria-live="polite">{clickCount ? `再点击 ${3 - clickCount} 次查看` : '连续点击 3 次查看'}</p>
-      </button>
-      {isOpen && (
-        <div className="voucher-viewer" onMouseDown={(event) => event.target === event.currentTarget && setIsOpen(false)}>
-          <section aria-label={voucher.alt ?? '预定凭证'} aria-modal="true" role="dialog">
-            <button aria-label="关闭凭证大图" onClick={() => setIsOpen(false)} type="button">
-              <CloseIcon />
-            </button>
-            <div className="voucher-viewer__gallery">
-              {voucherImages.map((imageSource, index) => (
-                <img
-                  alt={`${voucher.alt ?? '预定凭证'}${voucherImages.length > 1 ? ` ${index + 1}` : ''}`}
-                  key={imageSource}
-                  src={imageSource}
-                />
-              ))}
-            </div>
-          </section>
-        </div>
-      )}
-    </>
-  );
-}
-
 function ReservationDetails({ event, showContext = false }) {
   if (!event.reservation) {
     const pending = event.reservationStatus === '未预定';
@@ -1613,7 +1626,6 @@ function ReservationDetails({ event, showContext = false }) {
           ))}
         </dl>
       </div>
-      <ReservationVoucher voucher={event.reservation.voucher} />
     </div>
   );
 }
