@@ -54,29 +54,6 @@ const transportRecords = [
     },
   },
   {
-    id: 'iceland-car',
-    kind: '租车',
-    startsOn: '2026-09-27',
-    endsOn: '2026-09-30',
-    title: 'Lotus Car Rental',
-    navigation: 'Flugvellir 6-10, 230 Keflavík, Iceland',
-    addressLabel: '取车地址',
-    details: [
-      ['车型', 'Toyota Yaris（自动挡）'],
-      ['取车', '09.27 · 20:00'],
-      ['还车', '09.30 · 20:00'],
-      ['取还门店', 'Keflavík International Airport'],
-      ['预定', '#68LQL6'],
-      ['保险', 'Silver + Platinum (S) + Wi‑Fi'],
-      ['里程', '无限里程'],
-      ['总计', '53,070 ISK'],
-    ],
-    voucher: {
-      alt: 'Lotus Car Rental 订单截图',
-      images: ['/vouchers/rental-lotus.jpg'],
-    },
-  },
-  {
     id: 'kef-svj-flight',
     kind: '航班',
     startsOn: '2026-10-01',
@@ -94,29 +71,6 @@ const transportRecords = [
     voucher: {
       alt: '10.01 雷克雅未克经奥斯陆和博多至斯沃尔韦尔航班信息',
       images: ['/vouchers/flight-10-01-kef-svj.jpg'],
-    },
-  },
-  {
-    id: 'norway-car',
-    kind: '租车',
-    startsOn: '2026-10-01',
-    endsOn: '2026-10-03',
-    title: 'Hertz Svolvær Airport',
-    navigation: 'Svolvær lufthavn, Helle, 8300 Svolvær, Norway',
-    addressLabel: '取车地址',
-    details: [
-      ['车型', 'Toyota Yaris Cross 4×4（自动挡）'],
-      ['取车', '10.01 · 19:00｜Svolvær Airport'],
-      ['还车', '10.03 · 19:00｜Fiskergata 23'],
-      ['预定', '#L52108732E4'],
-      ['付款', '到店支付 3,859.62 NOK'],
-      ['里程', '无限里程'],
-      ['保险', '车辆碰撞险、超级保险、盗抢险'],
-      ['注意', '取车时间早于航班抵达，需调整或确认留车'],
-    ],
-    voucher: {
-      alt: 'Hertz 挪威租车订单截图',
-      images: ['/vouchers/rental-hertz.jpg'],
     },
   },
   {
@@ -161,7 +115,8 @@ const stayRecords = [
     startsOn: '2026-09-25',
     endsOn: '2026-09-27',
     title: '荷兰住宿',
-    navigation: 'Rijnlanderweg 800, 2132 NN Hoofddorp, Netherlands',
+    navigation: 'Hyatt Place Amsterdam Airport',
+    addressLabel: '酒店名称',
     checkIn: '09.25 15:00 — 00:00',
     checkOut: '09.27 00:00 — 12:00',
     reservation: '5791629773 · PIN 7204',
@@ -197,7 +152,7 @@ const stayRecords = [
     id: 'henningsvaer-stay',
     startsOn: '2026-10-01',
     endsOn: '2026-10-03',
-    title: 'Henningsvær Airbnb',
+    title: '罗弗敦住宿',
     navigation: 'Misværveien 2, 8312 Henningsvær, Norway',
     checkIn: '10.01 15:00 后',
     checkOut: '10.03 11:00 前',
@@ -208,8 +163,9 @@ const stayRecords = [
     id: 'hurtigruten-stay',
     startsOn: '2026-10-03',
     endsOn: '2026-10-04',
-    title: 'MS Nordlys',
+    title: '游轮住宿',
     navigation: 'Torget 22, 8300 Svolvær, Norway',
+    addressLabel: '集合地点',
     checkIn: '10.03 22:15（至少提前 15 分钟到港）',
     checkOut: '10.04 14:15',
     reservation: '2330704',
@@ -219,8 +175,9 @@ const stayRecords = [
     id: 'tromso-stay',
     startsOn: '2026-10-04',
     endsOn: '2026-10-05',
-    title: 'Scandic Ishavshotel',
-    navigation: 'Fredrik Langes gate 2, 9008 Tromsø, Norway',
+    title: '特罗姆瑟住宿',
+    navigation: 'Scandic Ishavshotel',
+    addressLabel: '酒店名称',
     checkIn: '10.04 16:00 后',
     checkOut: '10.05 12:00 前',
     reservation: '1753018586',
@@ -230,8 +187,9 @@ const stayRecords = [
     id: 'oslo-stay',
     startsOn: '2026-10-05',
     endsOn: '2026-10-06',
-    title: 'Radisson Hotel & Conference Centre Oslo Airport',
-    navigation: 'Henrik Ibsensvei (Building B), 2060 Gardermoen, Norway',
+    title: '奥斯陆住宿',
+    navigation: 'Radisson Hotel & Conference Centre Oslo Airport',
+    addressLabel: '酒店名称',
     checkIn: '10.05 15:00 — 18:30',
     checkOut: '10.06 06:00 — 11:30',
     reservation: '6770573874 · PIN 7107',
@@ -353,11 +311,16 @@ const journeyDayEvents = {
     {
       id: 'sep24-hkg-tpe-ams',
       type: '交通',
-      title: 'HKG → TPE → AMS',
+      title: 'HKG → AMS',
       startsAt: '17:35',
       endsAt: '23:59',
       displayEndsAt: '07:40 +1',
       detail: 'CI916 17:35 从香港出发，19:25 抵达台北；中转 3 小时 25 分后搭乘 CI073，09.25 07:40 抵达阿姆斯特丹。行李直挂，无需过境签；每人托运 2×23kg、手提 7kg。',
+      flightLegs: [
+        { code: '中华航空 CI916 · 托运 2×23kg / 手提 7kg', from: 'HKG', to: 'TPE', depart: '17:35', arrive: '19:25' },
+        { code: '中华航空 CI073 · 托运 2×23kg / 手提 7kg', from: 'TPE', to: 'AMS', depart: '22:50', arrive: '07:40' },
+      ],
+      flightConnections: ['台北中转 3 小时 25 分；无需重新托运行李，无需过境签'],
       reservationStatus: '已预定',
       infoType: 'flight',
       reservation: {
@@ -402,9 +365,10 @@ const journeyDayEvents = {
       id: 'sep25-amsterdam-stay',
       type: '住宿',
       title: '荷兰住宿',
-      startsAt: '15:00',
+      startsAt: '20:00',
       detail: 'Hyatt Place Amsterdam Airport，King Room，2 人；09.25 15:00 后入住，09.27 12:00 前退房。Booking.com 预定，到店付款约 EUR 243.78；酒店内自助停车，首小时免费，过夜 EUR 19.50。',
-      navigation: 'Rijnlanderweg 800, 2132 NN Hoofddorp, Netherlands',
+      navigation: 'Hyatt Place Amsterdam Airport',
+      addressLabel: '酒店名称',
       reservationStatus: '已预定',
       paymentStatus: '未付款',
       reservation: {
@@ -423,9 +387,10 @@ const journeyDayEvents = {
       id: 'sep26-amsterdam-stay',
       type: '住宿',
       title: '荷兰住宿',
-      startsAt: '22:00',
+      startsAt: '20:00',
       detail: '继续住在 Hyatt Place Amsterdam Airport；09.27 12:00 前退房。Booking.com 订单到店付款；酒店内自助停车，过夜 EUR 19.50。',
-      navigation: 'Rijnlanderweg 800, 2132 NN Hoofddorp, Netherlands',
+      navigation: 'Hyatt Place Amsterdam Airport',
+      addressLabel: '酒店名称',
       reservationStatus: '已预定',
       paymentStatus: '未付款',
       reservation: {
@@ -447,6 +412,9 @@ const journeyDayEvents = {
       startsAt: '17:00',
       endsAt: '18:15',
       detail: '搭乘荷兰泛航空 HV6885 从阿姆斯特丹飞往雷克雅未克，17:00 起飞、18:15 到达；经济舱，无餐食，每人托运行李 25kg。',
+      flightLegs: [
+        { code: '荷兰泛航空 HV6885 · 托运 25kg', from: 'AMS', to: 'KEF', depart: '17:00', arrive: '18:15' },
+      ],
       reservationStatus: '已预定',
       infoType: 'flight',
       reservation: {
@@ -484,7 +452,7 @@ const journeyDayEvents = {
       id: 'sep27-reykjavik-stay',
       type: '住宿',
       title: '雷克雅未克住宿',
-      startsAt: '15:00 后',
+      startsAt: '21:30',
       detail: 'Airbnb 钥匙盒自助入住；入住指南与 Wi‑Fi 于入住前 48 小时显示。楼外可免费停车，车位充足。',
       navigation: 'Kelduland 19, 108 Reykjavík, Iceland',
       reservationStatus: '已预定',
@@ -518,7 +486,7 @@ const journeyDayEvents = {
       id: 'sep28-reykjavik-stay',
       type: '住宿',
       title: '雷克雅未克住宿',
-      startsAt: '22:00',
+      startsAt: '20:00',
       detail: '继续住在 Reykjavík；当天入住相关事项沿用前一晚。',
       navigation: 'Kelduland 19, 108 Reykjavík, Iceland',
       reservationStatus: '已预定',
@@ -542,7 +510,7 @@ const journeyDayEvents = {
       id: 'sep29-reykjavik-stay',
       type: '住宿',
       title: '雷克雅未克住宿',
-      startsAt: '22:00',
+      startsAt: '20:00',
       detail: '继续住在 Reykjavík；当天入住相关事项沿用前一晚。',
       navigation: 'Kelduland 19, 108 Reykjavík, Iceland',
       reservationStatus: '已预定',
@@ -581,8 +549,9 @@ const journeyDayEvents = {
       id: 'sep30-reykjavik-afternoon',
       type: '行程',
       title: '雷克雅未克市区',
-      startsAt: '下午',
-      detail: '观鲸结束后在雷克雅未克市区逛逛；具体地点与路线稍后补充。',
+      startsAt: '12:00',
+      endsAt: '18:30',
+      detail: '观鲸结束后在雷克雅未克市区逛逛；18:30 左右出发前往 Keflavík，为 20:00 还车预留路程。具体地点与路线稍后补充。',
       navigation: 'Reykjavík, Iceland',
     },
     {
@@ -617,6 +586,15 @@ const journeyDayEvents = {
       startsAt: '08:40',
       endsAt: '20:50',
       detail: 'SK4786 经奥斯陆、SK4116 经博多，再转 WF836 抵达斯沃尔韦尔。奥斯陆中转 2 小时 20 分，行李直达博多；博多中转 3 小时 20 分，需要重新托运。每人托运 23kg、手提 8kg。',
+      flightLegs: [
+        { code: '北欧航空 SK4786 · 托运 23kg / 手提 8kg', from: 'KEF', to: 'OSL', depart: '08:40', arrive: '13:20' },
+        { code: '北欧航空 SK4116 · 托运 23kg / 手提 8kg', from: 'OSL', to: 'BOO', depart: '15:40', arrive: '17:05' },
+        { code: '威德罗航空 WF836 · 托运 23kg / 手提 8kg', from: 'BOO', to: 'SVJ', depart: '20:25', arrive: '20:50' },
+      ],
+      flightConnections: [
+        '奥斯陆中转 2 小时 20 分；行李直达博多',
+        '博多中转 3 小时 20 分；需要重新托运行李',
+      ],
       reservationStatus: '已预定',
       infoType: 'flight',
       reservation: {
@@ -654,8 +632,8 @@ const journeyDayEvents = {
     {
       id: 'oct01-henningsvaer-stay',
       type: '住宿',
-      title: 'Henningsvær Airbnb',
-      startsAt: '15:00 后',
+      title: '罗弗敦住宿',
+      startsAt: '22:00',
       detail: 'Airbnb 房源位于 Henningsvær 码头；房东亲自迎接，需提前联系 Øystein。提供停车位。',
       navigation: 'Misværveien 2, 8312 Henningsvær, Norway',
       reservationStatus: '已预定',
@@ -671,55 +649,60 @@ const journeyDayEvents = {
       id: 'oct02-lofoten-west',
       type: '行程',
       title: 'Svinøya',
-      startsAt: '时间待补充',
-      detail: '斯沃尔韦尔传统渔村，红色渔民木屋与港口景观适合作为西线出发点。',
+      startsAt: '08:30',
+      detail: '08:30 从斯沃尔韦尔传统渔村出发；红色渔民木屋与港口景观也是西线的第一个拍摄点。',
       navigation: 'Svinøya, 8300 Svolvær, Norway',
     },
     {
-      id: 'oct02-ramberg-beach',
+      id: 'oct02-flakstadoya',
       type: '行程',
-      title: 'Ramberg Beach',
-      startsAt: '时间待补充',
-      detail: '白沙、碧蓝海水与高山环绕的北极海滩，适合散步和拍摄开阔海岸风景。',
-      navigation: 'Rambergstranda, 8380 Ramberg, Norway',
+      title: 'Flakstadøya',
+      startsAt: '09:30',
+      endsAt: '09:50',
+      detail: 'GetYourGuide 路线中的 20 分钟摄影停靠点，可拍摄岛屿海岸、山体与渔村景观。',
+      navigation: 'Flakstadøya, Flakstad, Norway',
     },
     {
       id: 'oct02-hamnoy-bridge',
       type: '行程',
       title: 'Hamnøy Bridge',
-      startsAt: '时间待补充',
+      startsAt: '10:20',
+      endsAt: '10:40',
       detail: '经典罗弗敦取景位，可从桥边拍摄红色渔屋、海湾与陡峭山峰。',
       navigation: 'Hamnøy Bridge, E10, 8390 Reine, Norway',
-    },
-    {
-      id: 'oct02-sakrisoy',
-      type: '行程',
-      title: 'Sakrisøy',
-      startsAt: '时间待补充',
-      detail: '以黄色渔屋、木制晒鱼架和海湾景色闻名，也适合作为午餐停靠点。',
-      navigation: 'Sakrisøya, 8390 Reine, Norway',
     },
     {
       id: 'oct02-reine',
       type: '行程',
       title: 'Reine',
-      startsAt: '时间待补充',
+      startsAt: '10:40',
+      endsAt: '11:10',
       detail: '罗弗敦最具代表性的渔村之一，可看山峰、峡湾和水边木屋组成的明信片景观。',
       navigation: 'Reine, 8390 Reine, Norway',
     },
     {
-      id: 'oct02-a-i-lofoten',
+      id: 'oct02-sakrisoy',
       type: '行程',
-      title: 'Å',
-      startsAt: '时间待补充',
-      detail: 'E10 公路西端的历史渔村，可看红色渔屋、晒鱼架并了解罗弗敦传统渔业。',
-      navigation: 'Å i Lofoten, 8392 Sørvågen, Norway',
+      title: 'Sakrisøy',
+      startsAt: '11:10',
+      endsAt: '11:55',
+      detail: '以黄色渔屋、木制晒鱼架和海湾景色闻名；GetYourGuide 在这里安排休息与拍摄。',
+      navigation: 'Sakrisøya, 8390 Reine, Norway',
+    },
+    {
+      id: 'oct02-ramberg-beach',
+      type: '行程',
+      title: 'Ramberg Beach',
+      startsAt: '12:25',
+      endsAt: '12:45',
+      detail: '白沙、碧蓝海水与高山环绕的北极海滩，适合散步和拍摄开阔海岸风景。',
+      navigation: 'Rambergstranda, 8380 Ramberg, Norway',
     },
     {
       id: 'oct02-henningsvaer-stay',
       type: '住宿',
-      title: 'Henningsvær Airbnb',
-      startsAt: '22:00',
+      title: '罗弗敦住宿',
+      startsAt: '20:00',
       detail: '继续住在 Henningsvær；地址为 Misværveien 2。',
       navigation: 'Misværveien 2, 8312 Henningsvær, Norway',
       reservationStatus: '已预定',
@@ -735,7 +718,8 @@ const journeyDayEvents = {
       id: 'oct03-lofoten-east',
       type: '行程',
       title: 'Kabelvåg',
-      startsAt: '时间待补充',
+      startsAt: '08:30',
+      endsAt: '08:50',
       detail: '罗弗敦最古老的聚落之一，可看传统木建筑并了解当地海洋与渔业历史。',
       navigation: 'Kabelvåg, 8310 Kabelvåg, Norway',
     },
@@ -743,7 +727,8 @@ const journeyDayEvents = {
       id: 'oct03-vagan-church',
       type: '行程',
       title: 'Vågan Church',
-      startsAt: '时间待补充',
+      startsAt: '08:50',
+      endsAt: '09:10',
       detail: '又称 Lofoten Cathedral，是当地醒目的木结构教堂和历史地标。',
       navigation: 'Kong Øysteins vei 6, 8310 Kabelvåg, Norway',
     },
@@ -751,7 +736,8 @@ const journeyDayEvents = {
       id: 'oct03-gimsoya',
       type: '行程',
       title: 'Gimsøya',
-      startsAt: '时间待补充',
+      startsAt: '10:00',
+      endsAt: '10:30',
       detail: '岛上地势开阔，可观察农田、海岸与北冰洋方向的宽广景观。',
       navigation: 'Gimsøya, Vågan, Norway',
     },
@@ -759,7 +745,8 @@ const journeyDayEvents = {
       id: 'oct03-haukland-beach',
       type: '行程',
       title: 'Haukland Beach',
-      startsAt: '时间待补充',
+      startsAt: '11:10',
+      endsAt: '11:30',
       detail: '由白沙、青绿色海水和高山构成的海滩，适合散步与风景摄影。',
       navigation: 'Hauklandstranda, 8370 Leknes, Norway',
     },
@@ -767,7 +754,8 @@ const journeyDayEvents = {
       id: 'oct03-unstad-beach',
       type: '行程',
       title: 'Unstad Beach',
-      startsAt: '时间待补充',
+      startsAt: '12:00',
+      endsAt: '12:45',
       detail: '以悬崖、海浪和北极冲浪文化闻名，可在海边停留并安排简短休息。',
       navigation: 'Unstad Beach, 8360 Bøstad, Norway',
     },
@@ -775,7 +763,8 @@ const journeyDayEvents = {
       id: 'oct03-henningsvaer',
       type: '行程',
       title: 'Henningsvær',
-      startsAt: '时间待补充',
+      startsAt: '13:30',
+      endsAt: '14:00',
       detail: '由小岛组成的彩色渔村，适合逛港口、街道、画廊并看海岸景观。',
       navigation: 'Henningsvær, 8312 Henningsvær, Norway',
     },
@@ -798,12 +787,13 @@ const journeyDayEvents = {
     {
       id: 'oct03-hurtigruten',
       type: '住宿',
-      title: 'MS Nordlys',
+      title: '游轮住宿',
       startsAt: '22:15',
       endsAt: '23:59',
       displayEndsAt: '14:15 +1',
       detail: 'Hurtigruten Svolvær → Tromsø 船上住宿；至少提前 15 分钟到港，10.04 14:15 抵达 Tromsø。',
       navigation: 'Torget 22, 8300 Svolvær, Norway',
+      addressLabel: '集合地点',
       reservationStatus: '已预定',
       reservation: {
         reference: '2330704',
@@ -817,17 +807,19 @@ const journeyDayEvents = {
       id: 'oct04-tromso-city',
       type: '行程',
       title: 'Tromsø city',
-      startsAt: '时间待补充',
-      detail: '特罗姆瑟市区行程；具体地点、路线与时间稍后补充。',
+      startsAt: '15:00',
+      endsAt: '20:00',
+      detail: '游轮 14:15 抵达后前往特罗姆瑟市区，安排下午至晚间行程；具体地点与路线稍后补充。',
       navigation: 'Tromsø',
     },
     {
       id: 'oct04-tromso-stay',
       type: '住宿',
-      title: 'Scandic Ishavshotel',
-      startsAt: '16:00 后',
+      title: '特罗姆瑟住宿',
+      startsAt: '20:00',
       detail: 'Agoda 预定，Superior King Room；前台入住建议准备护照和订单号。酒店有收费室外车位，另有 500 米外停车库。',
-      navigation: 'Fredrik Langes gate 2, 9008 Tromsø, Norway',
+      navigation: 'Scandic Ishavshotel',
+      addressLabel: '酒店名称',
       reservationStatus: '已预定',
       reservation: {
         reference: '1753018586',
@@ -841,8 +833,9 @@ const journeyDayEvents = {
       id: 'oct05-tromso-city',
       type: '行程',
       title: 'Tromsø city',
-      startsAt: '时间待补充',
-      detail: '继续安排特罗姆瑟市区行程；前往机场的时间待补充。',
+      startsAt: '09:00',
+      endsAt: '16:30',
+      detail: '继续安排特罗姆瑟市区行程；16:30 左右出发前往机场，为 19:50 航班预留路程与值机时间。',
       navigation: 'Tromsø',
     },
     {
@@ -852,6 +845,9 @@ const journeyDayEvents = {
       startsAt: '19:50',
       endsAt: '21:45',
       detail: '搭乘挪威航空 DY385 从特罗姆瑟飞往奥斯陆，19:50 起飞、21:45 到达；经济舱，无餐食，每人托运行李 23kg。',
+      flightLegs: [
+        { code: '挪威航空 DY385 · 托运 23kg', from: 'TOS', to: 'OSL', depart: '19:50', arrive: '21:45' },
+      ],
       reservationStatus: '已预定',
       infoType: 'flight',
       reservation: {
@@ -869,10 +865,11 @@ const journeyDayEvents = {
     {
       id: 'oct05-oslo-stay',
       type: '住宿',
-      title: 'Radisson Hotel & Conference Centre Oslo Airport',
-      startsAt: '15:00',
+      title: '奥斯陆住宿',
+      startsAt: '22:15',
       detail: 'Radisson Hotel & Conference Centre Oslo Airport，Standard Room，1 人；10.05 15:00–18:30 入住，10.06 06:00–11:30 退房。Booking.com 预定，到店支付 1,435.50 NOK；附近公共停车 530 NOK/天，无需预定。',
-      navigation: 'Henrik Ibsensvei (Building B), 2060 Gardermoen, Norway',
+      navigation: 'Radisson Hotel & Conference Centre Oslo Airport',
+      addressLabel: '酒店名称',
       reservationStatus: '已预定',
       paymentStatus: '未付款',
       reservation: {
@@ -893,11 +890,16 @@ const journeyDayEvents = {
     {
       id: 'oct06-osl-bkk-hkg',
       type: '交通',
-      title: 'OSL → BKK → HKG',
+      title: 'OSL → HKG',
       startsAt: '13:45',
       endsAt: '23:59',
       displayEndsAt: '11:45 +1',
       detail: 'TG955 13:45 从奥斯陆出发，10.07 06:15 抵达曼谷；中转仅 1 小时 45 分后搭乘 TG600，11:45 抵达香港。行李直挂，无需过境签；每人托运 23kg、手提 7kg。',
+      flightLegs: [
+        { code: '泰国国际航空 TG955 · 托运 23kg / 手提 7kg', from: 'OSL', to: 'BKK', depart: '13:45', arrive: '06:15' },
+        { code: '泰国国际航空 TG600 · 托运 23kg / 手提 7kg', from: 'BKK', to: 'HKG', depart: '08:00', arrive: '11:45' },
+      ],
+      flightConnections: ['曼谷中转 1 小时 45 分；无需重新托运行李，无需过境签'],
       reservationStatus: '已预定',
       infoType: 'flight',
       reservation: {
@@ -1578,8 +1580,8 @@ function CopyableEventTitle({ className, event }) {
   );
 }
 
-function getReservationHeading(event) {
-  return event.infoType === 'flight' ? '航班信息' : '预定信息';
+function getReservationHeading() {
+  return '预定信息';
 }
 
 function ReservationDetails({ event, showContext = false }) {
@@ -1694,6 +1696,26 @@ function MapStopModal({ onClose, selection }) {
   );
 }
 
+function EventFlightDetails({ event }) {
+  return (
+    <div className="flight-itinerary day-event-card__flight">
+      {event.flightLegs.map((leg, index) => (
+        <div key={`${event.id}-${leg.from}-${leg.depart}`}>
+          <div className="flight-leg">
+            <span>{leg.depart}</span>
+            <strong>{leg.from} → {leg.to}</strong>
+            <span>{leg.arrive}</span>
+            <small>{leg.code}</small>
+          </div>
+          {index < event.flightLegs.length - 1 && event.flightConnections?.[index] && (
+            <div className="connection-note">{event.flightConnections[index]}</div>
+          )}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function DayEventCard({ event, onOpenReservation }) {
 
   return (
@@ -1712,7 +1734,7 @@ function DayEventCard({ event, onOpenReservation }) {
         </div>
       </div>
       <CopyableEventTitle className="day-event-card__title-row" event={event} />
-      <p>{event.detail}</p>
+      {event.flightLegs ? <EventFlightDetails event={event} /> : <p>{event.detail}</p>}
     </li>
   );
 }
