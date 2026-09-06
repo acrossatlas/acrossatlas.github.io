@@ -58,8 +58,9 @@ const transportRecords = [
     kind: '租车',
     startsOn: '2026-09-27',
     endsOn: '2026-09-30',
-    title: 'Toyota Yaris（自动挡）',
+    title: 'Lotus Car Rental · Flugvellir 6-10',
     details: [
+      ['车型', 'Toyota Yaris（自动挡）'],
       ['取车', '09.27 · 20:00'],
       ['还车', '09.30 · 20:00'],
       ['取还门店', 'Keflavík International Airport'],
@@ -98,8 +99,9 @@ const transportRecords = [
     kind: '租车',
     startsOn: '2026-10-01',
     endsOn: '2026-10-03',
-    title: 'Toyota Yaris Cross 4×4（自动挡）',
+    title: 'Hertz · Svolvær Airport',
     details: [
+      ['车型', 'Toyota Yaris Cross 4×4（自动挡）'],
       ['取车', '10.01 · 19:00｜Svolvær Airport'],
       ['还车', '10.03 · 19:00｜Fiskergata 23'],
       ['预定', '#L52108732E4'],
@@ -153,19 +155,23 @@ const stayRecords = [
   {
     id: 'netherlands-stay',
     startsOn: '2026-09-25',
-    endsOn: '2026-09-26',
-    title: 'Amsterdam 住宿待确认',
-    navigation: 'Amsterdam 住宿地址待确认',
-    checkIn: '入住时间待补充',
-    checkOut: '退房时间待补充',
-    reservation: '尚未预定',
-    note: '预定平台、入住凭证与停车信息待补充',
+    endsOn: '2026-09-27',
+    title: 'Rijnlanderweg 800, 2132 NN Hoofddorp',
+    navigation: 'Rijnlanderweg 800, 2132 NN Hoofddorp, Netherlands',
+    checkIn: '09.25 15:00 — 00:00',
+    checkOut: '09.27 00:00 — 12:00',
+    reservation: '5791629773 · PIN 7204',
+    note: 'Booking.com｜Hyatt Place Amsterdam Airport，King Room，2 人｜到店付款约 EUR 243.78｜酒店内自助停车，首小时免费，过夜 EUR 19.50',
+    voucher: {
+      alt: 'Hyatt Place Amsterdam Airport Booking.com 预定凭证',
+      images: ['/vouchers/stay-hyatt-booking.jpg'],
+    },
   },
   {
     id: 'iceland-stay',
     startsOn: '2026-09-27',
     endsOn: '2026-09-30',
-    title: 'Íbúð í Fossvogi',
+    title: 'Kelduland 19, Reykjavík, Reykjavíkurborg 108',
     navigation: 'Kelduland 19, 108 Reykjavík, Iceland',
     checkIn: '09.27 15:00 后',
     checkOut: '09.30 12:00 前',
@@ -187,12 +193,12 @@ const stayRecords = [
     id: 'henningsvaer-stay',
     startsOn: '2026-10-01',
     endsOn: '2026-10-03',
-    title: 'Beautiful apartment perfectly located on the pier',
+    title: 'Misværveien 2, Vågan, Nordland 8312',
     navigation: 'Misværveien 2, 8312 Henningsvær, Norway',
     checkIn: '10.01 15:00 后',
     checkOut: '10.03 11:00 前',
     reservation: 'HMTYZXPEJB',
-    note: 'Airbnb｜房东亲自迎接，需提前联系 Øystein｜停车位待房东确认',
+    note: 'Airbnb｜房东亲自迎接，需提前联系 Øystein｜提供停车位',
   },
   {
     id: 'hurtigruten-stay',
@@ -203,7 +209,7 @@ const stayRecords = [
     checkIn: '10.03 22:15（至少提前 15 分钟到港）',
     checkOut: '10.04 14:15',
     reservation: '2330704',
-    note: 'Hurtigruten 官网｜Svolvær → Tromsø，已付款｜船上住宿，停车不适用',
+    note: 'Hurtigruten 官网｜Svolvær → Tromsø｜船上住宿，停车不适用',
   },
   {
     id: 'tromso-stay',
@@ -219,13 +225,20 @@ const stayRecords = [
   {
     id: 'oslo-stay',
     startsOn: '2026-10-05',
-    endsOn: '2026-10-05',
-    title: 'Oslo 住宿待确认',
-    navigation: 'Oslo 住宿导航地址待补充',
-    checkIn: '入住时间待补充',
-    checkOut: '退房时间待补充',
-    reservation: '6770573874',
-    note: 'Booking.com｜当前分享链接的订单号与此记录不一致，住宿名称、入住凭证与停车信息待确认',
+    endsOn: '2026-10-06',
+    title: 'Henrik Ibsensvei (Building B), 2060 Gardermoen',
+    navigation: 'Henrik Ibsensvei (Building B), 2060 Gardermoen, Norway',
+    checkIn: '10.05 15:00 — 18:30',
+    checkOut: '10.06 06:00 — 11:30',
+    reservation: '6770573874 · PIN 7107',
+    note: 'Booking.com｜Radisson Hotel & Conference Centre Oslo Airport，Standard Room，1 人｜到店支付 1,435.50 NOK｜附近公共停车 530 NOK/天，无需预定',
+    voucher: {
+      alt: 'Radisson Hotel & Conference Centre Oslo Airport Booking.com 预定凭证',
+      images: [
+        '/vouchers/stay-radisson-booking-1.png',
+        '/vouchers/stay-radisson-booking-2.png',
+      ],
+    },
   },
 ];
 
@@ -339,14 +352,16 @@ const journeyDayEvents = {
       title: 'HKG → TPE → AMS',
       startsAt: '17:35',
       endsAt: '23:59',
-      displayEndsAt: '09.25 07:40',
+      displayEndsAt: '07:40 +1',
       detail: 'CI916 17:35 从香港出发，19:25 抵达台北；中转 3 小时 25 分后搭乘 CI073，09.25 07:40 抵达阿姆斯特丹。行李直挂，无需过境签；每人托运 2×23kg、手提 7kg。',
       reservationStatus: '已预定',
       infoType: 'flight',
       reservation: {
-        reference: '1128146096447141',
-        time: '09.24 17:35 — 09.25 07:40',
-        instruction: '297-9555649633、297-9555649634',
+        orderNumber: '1128146096447141',
+        flightNumber: 'CI916 / CI073',
+        airlineReference: 'EKG5FB',
+        time: '09.24 17:35 — 07:40 +1',
+        ticketNumber: '297-9555649633、297-9555649634',
         voucher: {
           alt: '09.24 香港经台北至阿姆斯特丹航班与行李信息',
           images: [
@@ -382,24 +397,42 @@ const journeyDayEvents = {
     {
       id: 'sep25-amsterdam-stay',
       type: '住宿',
-      title: 'Amsterdam 住宿待确认',
-      startsAt: '入住时间待补充',
-      detail: '住宿尚未预定，住宿名称、地址、入住方式与停车信息待补充。',
-      navigation: 'Amsterdam 住宿地址待确认',
-      reservationStatus: '未预定',
+      title: 'Rijnlanderweg 800, 2132 NN Hoofddorp',
+      startsAt: '15:00',
+      detail: 'Hyatt Place Amsterdam Airport，King Room，2 人；09.25 15:00 后入住，09.27 12:00 前退房。Booking.com 预定，到店付款约 EUR 243.78；酒店内自助停车，首小时免费，过夜 EUR 19.50。',
+      navigation: 'Rijnlanderweg 800, 2132 NN Hoofddorp, Netherlands',
+      reservationStatus: '已预定',
       paymentStatus: '未付款',
+      reservation: {
+        reference: '5791629773 · PIN 7204',
+        time: '09.25 15:00 — 09.27 12:00',
+        instruction: '前台出示护照、确认号与 PIN 办理入住',
+        voucher: {
+          alt: 'Hyatt Place Amsterdam Airport Booking.com 预定凭证',
+          images: ['/vouchers/stay-hyatt-booking.jpg'],
+        },
+      },
     },
   ],
   '2026-09-26': [
     {
       id: 'sep26-amsterdam-stay',
       type: '住宿',
-      title: 'Amsterdam 住宿待确认',
-      startsAt: '时间待补充',
-      detail: '继续住在 Amsterdam；当天行程与住宿信息待补充。',
-      navigation: 'Amsterdam 住宿地址待确认',
-      reservationStatus: '未预定',
+      title: 'Rijnlanderweg 800, 2132 NN Hoofddorp',
+      startsAt: '全天',
+      detail: '继续住在 Hyatt Place Amsterdam Airport；09.27 12:00 前退房。Booking.com 订单到店付款；酒店内自助停车，过夜 EUR 19.50。',
+      navigation: 'Rijnlanderweg 800, 2132 NN Hoofddorp, Netherlands',
+      reservationStatus: '已预定',
       paymentStatus: '未付款',
+      reservation: {
+        reference: '5791629773 · PIN 7204',
+        time: '09.25 15:00 — 09.27 12:00',
+        instruction: '前台出示护照、确认号与 PIN 办理入住',
+        voucher: {
+          alt: 'Hyatt Place Amsterdam Airport Booking.com 预定凭证',
+          images: ['/vouchers/stay-hyatt-booking.jpg'],
+        },
+      },
     },
   ],
   '2026-09-27': [
@@ -413,9 +446,11 @@ const journeyDayEvents = {
       reservationStatus: '已预定',
       infoType: 'flight',
       reservation: {
-        reference: 'PKRCRE',
+        orderNumber: '待补充',
+        flightNumber: 'HV6885',
+        airlineReference: 'PKRCRE',
         time: '09.27 17:00 — 18:15',
-        instruction: 'PKRCRE（航司预订号）',
+        ticketNumber: 'PKRCRE',
         voucher: {
           alt: '09.27 阿姆斯特丹至雷克雅未克航班信息',
           images: ['/vouchers/flight-09-27-ams-kef.jpg'],
@@ -425,9 +460,10 @@ const journeyDayEvents = {
     {
       id: 'sep27-lotus-car',
       type: '交通',
-      title: 'Toyota Yaris（自动挡）',
+      title: 'Lotus Car Rental · Flugvellir 6-10',
       startsAt: '20:00',
-      detail: 'Lotus Car Rental；09.27 20:00 在 Keflavík International Airport 取车，09.30 20:00 原地还车。含 Silver 与 Platinum (S) + Wi‑Fi 保险方案、无限里程。',
+      detail: 'Toyota Yaris（自动挡）；09.27 20:00 在 Keflavík International Airport 取车，09.30 20:00 原地还车。含 Silver 与 Platinum (S) + Wi‑Fi 保险方案、无限里程。',
+      navigation: 'Flugvellir 6-10, 230 Keflavík, Iceland',
       reservationStatus: '已预定',
       reservation: {
         reference: '#68LQL6',
@@ -442,7 +478,7 @@ const journeyDayEvents = {
     {
       id: 'sep27-reykjavik-stay',
       type: '住宿',
-      title: 'Íbúð í Fossvogi',
+      title: 'Kelduland 19, Reykjavík, Reykjavíkurborg 108',
       startsAt: '15:00 后',
       detail: 'Airbnb 钥匙盒自助入住；入住指南与 Wi‑Fi 于入住前 48 小时显示。楼外可免费停车，车位充足。',
       navigation: 'Kelduland 19, 108 Reykjavík, Iceland',
@@ -476,7 +512,7 @@ const journeyDayEvents = {
     {
       id: 'sep28-reykjavik-stay',
       type: '住宿',
-      title: 'Íbúð í Fossvogi',
+      title: 'Kelduland 19, Reykjavík, Reykjavíkurborg 108',
       startsAt: '时间待补充',
       detail: '继续住在 Reykjavík；当天入住相关事项沿用前一晚。',
       navigation: 'Kelduland 19, 108 Reykjavík, Iceland',
@@ -500,7 +536,7 @@ const journeyDayEvents = {
     {
       id: 'sep29-reykjavik-stay',
       type: '住宿',
-      title: 'Íbúð í Fossvogi',
+      title: 'Kelduland 19, Reykjavík, Reykjavíkurborg 108',
       startsAt: '时间待补充',
       detail: '继续住在 Reykjavík；当天入住相关事项沿用前一晚。',
       navigation: 'Kelduland 19, 108 Reykjavík, Iceland',
@@ -516,12 +552,24 @@ const journeyDayEvents = {
     {
       id: 'sep30-whale-watching',
       type: '行程',
-      title: 'Whale watching tour RIB boat',
-      startsAt: '时间待补充',
-      detail: '雷克雅未克 RIB 游艇观鲸与海鹦行程；尚未预定，集合点与具体时段待补充。',
-      navigation: 'Reykjavík whale watching',
-      reservationStatus: '未预定',
-      paymentStatus: '未付款',
+      title: '雷克雅未克乘坐 RIB 游艇观赏鲸鱼和海鹦',
+      startsAt: '09:00',
+      endsAt: '11:00',
+      detail: 'GetYourGuide 预定，2 位成人，英语导览，约 2 小时。请在出发前 30 分钟到 Elding 老码头售票处办理登船；提供连体工作服、护目镜与救生衣，仍需穿保暖多层衣物、结实鞋并带手套和帽子。行程受天气与海况影响。',
+      navigation: 'Ægisgarður 5, 101 Reykjavík, Iceland',
+      reservationStatus: '已预定',
+      reservation: {
+        reference: 'GYGKBF5YANRW',
+        time: '09.30 09:00 — 11:00（提前 30 分钟集合）',
+        instruction: '在 Elding 老码头售票处出示电子票券并签署免责声明',
+        voucher: {
+          alt: 'GetYourGuide 雷克雅未克 RIB 游艇观鲸与海鹦电子票券',
+          images: [
+            '/vouchers/whale-watching-confirmation.png',
+            '/vouchers/whale-watching-details.jpg',
+          ],
+        },
+      },
     },
     {
       id: 'sep30-airport-stay',
@@ -543,9 +591,11 @@ const journeyDayEvents = {
       reservationStatus: '已预定',
       infoType: 'flight',
       reservation: {
-        reference: '订单号待补充',
+        orderNumber: '待补充',
+        flightNumber: 'SK4786 / SK4116 / WF836',
+        airlineReference: '待补充',
         time: '10.01 08:40 — 20:50',
-        instruction: '票号待补充',
+        ticketNumber: '待补充',
         voucher: {
           alt: '10.01 雷克雅未克经奥斯陆和博多至斯沃尔韦尔航班信息',
           images: ['/vouchers/flight-10-01-kef-svj.jpg'],
@@ -555,9 +605,10 @@ const journeyDayEvents = {
     {
       id: 'oct01-hertz-car',
       type: '交通',
-      title: 'Toyota Yaris Cross 4×4（自动挡）',
+      title: 'Hertz · Svolvær Airport',
       startsAt: '19:00',
-      detail: 'Hertz 异地还车：10.01 19:00 在 Svolvær Airport 取车，10.03 19:00 在 Fiskergata 23 还车；不限公里，柜台支付 3,859.62 NOK。注意预定取车时间早于航班 20:50 抵达，需要调整或确认留车。',
+      detail: 'Toyota Yaris Cross 4×4（自动挡），Hertz 异地还车：10.01 19:00 在 Svolvær Airport 取车，10.03 19:00 在 Fiskergata 23 还车；不限公里，柜台支付 3,859.62 NOK。注意预定取车时间早于航班 20:50 抵达，需要调整或确认留车。',
+      navigation: 'Svolvær lufthavn, Helle, 8300 Svolvær, Norway',
       reservationStatus: '已预定',
       paymentStatus: '未付款',
       reservation: {
@@ -573,9 +624,9 @@ const journeyDayEvents = {
     {
       id: 'oct01-henningsvaer-stay',
       type: '住宿',
-      title: 'Beautiful apartment perfectly located on the pier',
+      title: 'Misværveien 2, Vågan, Nordland 8312',
       startsAt: '15:00 后',
-      detail: 'Airbnb 房源位于 Henningsvær 码头；房东亲自迎接，需提前联系 Øystein。停车位待房东确认。',
+      detail: 'Airbnb 房源位于 Henningsvær 码头；房东亲自迎接，需提前联系 Øystein。提供停车位。',
       navigation: 'Misværveien 2, 8312 Henningsvær, Norway',
       reservationStatus: '已预定',
       reservation: {
@@ -597,7 +648,7 @@ const journeyDayEvents = {
     {
       id: 'oct02-henningsvaer-stay',
       type: '住宿',
-      title: 'Beautiful apartment perfectly located on the pier',
+      title: 'Misværveien 2, Vågan, Nordland 8312',
       startsAt: '时间待补充',
       detail: '继续住在 Henningsvær；地址为 Misværveien 2。',
       navigation: 'Misværveien 2, 8312 Henningsvær, Norway',
@@ -624,13 +675,13 @@ const journeyDayEvents = {
       title: 'MS Nordlys',
       startsAt: '22:15',
       endsAt: '23:59',
-      displayEndsAt: '10.04 14:15',
+      displayEndsAt: '14:15 +1',
       detail: 'Hurtigruten Svolvær → Tromsø 船上住宿；至少提前 15 分钟到港，10.04 14:15 抵达 Tromsø。',
       navigation: 'Torget 22, 8300 Svolvær, Norway',
       reservationStatus: '已预定',
       reservation: {
         reference: '2330704',
-        time: '10.03 22:15 — 10.04 14:15',
+        time: '10.03 22:15 — 14:15 +1',
         instruction: '凭订单号办理登船；至少提前 15 分钟到港',
       },
     },
@@ -678,9 +729,11 @@ const journeyDayEvents = {
       reservationStatus: '已预定',
       infoType: 'flight',
       reservation: {
-        reference: 'BA3ZVL',
+        orderNumber: '待补充',
+        flightNumber: 'DY385',
+        airlineReference: 'BA3ZVL',
         time: '10.05 19:50 — 21:45',
-        instruction: 'BA3ZVL（航司预订号）',
+        ticketNumber: 'BA3ZVL',
         voucher: {
           alt: '10.05 特罗姆瑟至奥斯陆航班信息',
           images: ['/vouchers/flight-10-05-tos-osl.jpg'],
@@ -690,16 +743,23 @@ const journeyDayEvents = {
     {
       id: 'oct05-oslo-stay',
       type: '住宿',
-      title: 'Oslo 住宿待确认',
-      startsAt: '入住时间待补充',
-      detail: 'Booking.com 住宿已预定；当前分享链接的订单号与此记录不一致，住宿名称、地址、入住方式与停车信息待确认。',
-      navigation: 'Oslo 住宿导航地址待补充',
+      title: 'Henrik Ibsensvei (Building B), 2060 Gardermoen',
+      startsAt: '15:00',
+      detail: 'Radisson Hotel & Conference Centre Oslo Airport，Standard Room，1 人；10.05 15:00–18:30 入住，10.06 06:00–11:30 退房。Booking.com 预定，到店支付 1,435.50 NOK；附近公共停车 530 NOK/天，无需预定。',
+      navigation: 'Henrik Ibsensvei (Building B), 2060 Gardermoen, Norway',
       reservationStatus: '已预定',
       paymentStatus: '未付款',
       reservation: {
-        reference: '6770573874',
-        time: '10.05 · 入住时间待补充',
-        instruction: 'Booking.com 订单与 PDF 已记录',
+        reference: '6770573874 · PIN 7107',
+        time: '10.05 15:00 — 10.06 11:30',
+        instruction: '前台出示护照、确认号与 PIN；到店付款',
+        voucher: {
+          alt: 'Radisson Hotel & Conference Centre Oslo Airport Booking.com 预定凭证',
+          images: [
+            '/vouchers/stay-radisson-booking-1.png',
+            '/vouchers/stay-radisson-booking-2.png',
+          ],
+        },
       },
     },
   ],
@@ -710,14 +770,16 @@ const journeyDayEvents = {
       title: 'OSL → BKK → HKG',
       startsAt: '13:45',
       endsAt: '23:59',
-      displayEndsAt: '10.07 11:45',
+      displayEndsAt: '11:45 +1',
       detail: 'TG955 13:45 从奥斯陆出发，10.07 06:15 抵达曼谷；中转仅 1 小时 45 分后搭乘 TG600，11:45 抵达香港。行李直挂，无需过境签；每人托运 23kg、手提 7kg。',
       reservationStatus: '已预定',
       infoType: 'flight',
       reservation: {
-        reference: '1128146096549157',
-        time: '10.06 13:45 — 10.07 11:45',
-        instruction: '217-6333199177、217-6333199176',
+        orderNumber: '1128146096549157',
+        flightNumber: 'TG955 / TG600',
+        airlineReference: '8EL2FL',
+        time: '10.06 13:45 — 11:45 +1',
+        ticketNumber: '217-6333199177、217-6333199176',
         voucher: {
           alt: '10.06 奥斯陆经曼谷至香港航班与行李信息',
           images: [
@@ -740,9 +802,11 @@ const journeyDayEvents = {
       reservationStatus: '已预定',
       infoType: 'flight',
       reservation: {
-        reference: '1128146096549157',
+        orderNumber: '1128146096549157',
+        flightNumber: 'TG600',
+        airlineReference: '8EL2FL',
         time: '10.07 08:00 — 11:45',
-        instruction: '217-6333199177、217-6333199176',
+        ticketNumber: '217-6333199177、217-6333199176',
         voucher: {
           alt: '10.07 曼谷至香港航班与行李信息',
           images: [
@@ -1197,6 +1261,7 @@ function StayCard({ record, isRelevant }) {
           <dd>{record.note}</dd>
         </div>
       </dl>
+      {record.voucher && <ReservationVoucher compact voucher={record.voucher} />}
     </article>
   );
 }
@@ -1516,7 +1581,19 @@ function ReservationDetails({ event, showContext = false }) {
     );
   }
 
-  const isFlight = event.infoType === 'flight';
+  const fields = event.infoType === 'flight'
+    ? [
+        ['订单号', event.reservation.orderNumber],
+        ['航班号', event.reservation.flightNumber],
+        ['航司预订号', event.reservation.airlineReference],
+        ['航班时间', event.reservation.time],
+        ['票号', event.reservation.ticketNumber],
+      ]
+    : [
+        ['预定编号', event.reservation.reference],
+        ['使用时间', event.reservation.time],
+        ['使用方式', event.reservation.instruction],
+      ];
 
   return (
     <div className={`reservation-details${showContext ? '' : ' is-embedded'}`}>
@@ -1528,18 +1605,12 @@ function ReservationDetails({ event, showContext = false }) {
           </>
         )}
         <dl className="info-card__details">
-          <div>
-            <dt>{isFlight ? '订单号' : '预定编号'}</dt>
-            <dd>{event.reservation.reference}</dd>
-          </div>
-          <div>
-            <dt>{isFlight ? '航班时间' : '使用时间'}</dt>
-            <dd>{event.reservation.time}</dd>
-          </div>
-          <div>
-            <dt>{isFlight ? '票号' : '使用方式'}</dt>
-            <dd>{event.reservation.instruction}</dd>
-          </div>
+          {fields.map(([label, value]) => (
+            <div key={label}>
+              <dt>{label}</dt>
+              <dd>{value ?? '待补充'}</dd>
+            </div>
+          ))}
         </dl>
       </div>
       <ReservationVoucher voucher={event.reservation.voucher} />
@@ -1637,22 +1708,28 @@ function DayEventCard({ event, onOpenReservation }) {
 function TodayReservationPreview({ event }) {
   if (!event.reservation) return null;
 
-  const isFlight = event.infoType === 'flight';
+  const fields = event.infoType === 'flight'
+    ? [
+        ['订单号', event.reservation.orderNumber],
+        ['航班号', event.reservation.flightNumber],
+        ['航司预订号', event.reservation.airlineReference],
+        ['航班时间', event.reservation.time],
+        ['票号', event.reservation.ticketNumber],
+      ]
+    : [
+        ['预定编号', event.reservation.reference],
+        ['使用时间', event.reservation.time],
+        ['使用方式', event.reservation.instruction],
+      ];
 
   return (
     <dl className="today-focus__reservation">
-      <div>
-        <dt>{isFlight ? '订单号' : '预定编号'}</dt>
-        <dd>{event.reservation.reference}</dd>
-      </div>
-      <div>
-        <dt>{isFlight ? '航班时间' : '使用时间'}</dt>
-        <dd>{event.reservation.time}</dd>
-      </div>
-      <div>
-        <dt>{isFlight ? '票号' : '使用方式'}</dt>
-        <dd>{event.reservation.instruction}</dd>
-      </div>
+      {fields.map(([label, value]) => (
+        <div key={label}>
+          <dt>{label}</dt>
+          <dd>{value ?? '待补充'}</dd>
+        </div>
+      ))}
     </dl>
   );
 }
