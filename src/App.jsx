@@ -3,7 +3,7 @@ import { Link, Route, Routes, useLocation } from 'react-router-dom';
 
 const currentJourney = {
   startsOn: '2026-09-24',
-  endsOn: '2026-10-06',
+  endsOn: '2026-10-07',
   destinations: ['Netherlands', 'Iceland', 'Norway'],
 };
 
@@ -26,10 +26,18 @@ const transportRecords = [
     endsOn: '2026-09-25',
     title: '香港 → 台北 → 阿姆斯特丹',
     legs: [
-      { code: '航班号待补充', from: 'HKG', to: 'TPE', depart: '17:35', arrive: '待补充' },
-      { code: '航班号待补充', from: 'TPE', to: 'AMS', depart: '待补充', arrive: '07:40' },
+      { code: '中华航空 CI916 · 托运 2×23kg / 手提 7kg', from: 'HKG', to: 'TPE', depart: '17:35', arrive: '19:25' },
+      { code: '中华航空 CI073 · 托运 2×23kg / 手提 7kg', from: 'TPE', to: 'AMS', depart: '22:50', arrive: '07:40' },
     ],
-    connection: '订单 EKG5FB　中转时间与行李直挂待确认',
+    connection: '台北中转 3 小时 25 分；无需重新托运行李，无需过境签',
+    voucher: {
+      alt: '09.24 香港经台北至阿姆斯特丹航班与行李信息',
+      images: [
+        '/vouchers/flight-09-24-hkg-ams.jpg',
+        '/vouchers/baggage-09-24-hkg-tpe.jpg',
+        '/vouchers/baggage-09-24-tpe-ams.jpg',
+      ],
+    },
   },
   {
     id: 'ams-kef-flight',
@@ -38,22 +46,32 @@ const transportRecords = [
     endsOn: '2026-09-27',
     title: '阿姆斯特丹 → 雷克雅未克',
     legs: [
-      { code: '航班号待补充', from: 'AMS', to: 'KEF', depart: '17:00', arrive: '18:15' },
+      { code: '荷兰泛航空 HV6885 · 托运 25kg', from: 'AMS', to: 'KEF', depart: '17:00', arrive: '18:15' },
     ],
+    voucher: {
+      alt: '09.27 阿姆斯特丹至雷克雅未克航班信息',
+      images: ['/vouchers/flight-09-27-ams-kef.jpg'],
+    },
   },
   {
     id: 'iceland-car',
     kind: '租车',
     startsOn: '2026-09-27',
-    endsOn: '2026-09-27',
-    title: 'Lotus Car Rental',
+    endsOn: '2026-09-30',
+    title: 'Toyota Yaris（自动挡）',
     details: [
-      ['取车', '09.27 · 时间待补充'],
-      ['还车', '日期与时间待补充'],
-      ['提车点', 'Lotus Car Rental'],
-      ['预定', '#155816'],
-      ['预定网站', 'lotuscarrental.is/client/manage'],
+      ['取车', '09.27 · 20:00'],
+      ['还车', '09.30 · 20:00'],
+      ['取还门店', 'Keflavík International Airport'],
+      ['预定', '#68LQL6'],
+      ['保险', 'Silver + Platinum (S) + Wi‑Fi'],
+      ['里程', '无限里程'],
+      ['总计', '53,070 ISK'],
     ],
+    voucher: {
+      alt: 'Lotus Car Rental 订单截图',
+      images: ['/vouchers/rental-lotus.jpg'],
+    },
   },
   {
     id: 'kef-svj-flight',
@@ -62,23 +80,38 @@ const transportRecords = [
     endsOn: '2026-10-01',
     title: '雷克雅未克 → 斯沃尔韦尔',
     legs: [
-      { code: '航班号待补充', from: 'KEF', to: 'SVJ', depart: '待补充', arrive: '待补充' },
+      { code: '北欧航空 SK4786 · 托运 23kg / 手提 8kg', from: 'KEF', to: 'OSL', depart: '08:40', arrive: '13:20' },
+      { code: '北欧航空 SK4116 · 托运 23kg / 手提 8kg', from: 'OSL', to: 'BOO', depart: '15:40', arrive: '17:05' },
+      { code: '威德罗航空 WF836 · 托运 23kg / 手提 8kg', from: 'BOO', to: 'SVJ', depart: '20:25', arrive: '20:50' },
     ],
+    connections: [
+      '奥斯陆中转 2 小时 20 分；行李直达博多',
+      '博多中转 3 小时 20 分；需要重新托运行李',
+    ],
+    voucher: {
+      alt: '10.01 雷克雅未克经奥斯陆和博多至斯沃尔韦尔航班信息',
+      images: ['/vouchers/flight-10-01-kef-svj.jpg'],
+    },
   },
   {
     id: 'norway-car',
     kind: '租车',
     startsOn: '2026-10-01',
-    endsOn: '2026-10-01',
-    title: 'Hertz 租车',
+    endsOn: '2026-10-03',
+    title: 'Toyota Yaris Cross 4×4（自动挡）',
     details: [
-      ['取车', '10.01 · 时间待补充'],
-      ['还车', '日期与时间待补充'],
-      ['提车点', 'Hertz'],
+      ['取车', '10.01 · 19:00｜Svolvær Airport'],
+      ['还车', '10.03 · 19:00｜Fiskergata 23'],
       ['预定', '#L52108732E4'],
-      ['付款', '未付款'],
-      ['备注', 'CAO'],
+      ['付款', '到店支付 3,859.62 NOK'],
+      ['里程', '无限里程'],
+      ['保险', '车辆碰撞险、超级保险、盗抢险'],
+      ['注意', '取车时间早于航班抵达，需调整或确认留车'],
     ],
+    voucher: {
+      alt: 'Hertz 挪威租车订单截图',
+      images: ['/vouchers/rental-hertz.jpg'],
+    },
   },
   {
     id: 'tos-osl-flight',
@@ -87,20 +120,32 @@ const transportRecords = [
     endsOn: '2026-10-05',
     title: '特罗姆瑟 → 奥斯陆',
     legs: [
-      { code: 'DY385', from: 'TOS', to: 'OSL', depart: '19:50', arrive: '21:45' },
+      { code: '挪威航空 DY385 · 托运 23kg', from: 'TOS', to: 'OSL', depart: '19:50', arrive: '21:45' },
     ],
+    voucher: {
+      alt: '10.05 特罗姆瑟至奥斯陆航班信息',
+      images: ['/vouchers/flight-10-05-tos-osl.jpg'],
+    },
   },
   {
     id: 'return-flight',
     kind: '航班',
     startsOn: '2026-10-06',
-    endsOn: '2026-10-06',
+    endsOn: '2026-10-07',
     title: '奥斯陆 → 曼谷 → 香港',
     legs: [
-      { code: '航班号待补充', from: 'OSL', to: 'BKK', depart: '13:45', arrive: '待补充' },
-      { code: '航班号待补充', from: 'BKK', to: 'HKG', depart: '待补充', arrive: '11:45' },
+      { code: '泰国国际航空 TG955 · 托运 23kg / 手提 7kg', from: 'OSL', to: 'BKK', depart: '13:45', arrive: '06:15' },
+      { code: '泰国国际航空 TG600 · 托运 23kg / 手提 7kg', from: 'BKK', to: 'HKG', depart: '08:00', arrive: '11:45' },
     ],
-    connection: '订单 8EL2FL　中转时间与行李直挂待确认',
+    connection: '曼谷中转 1 小时 45 分，时间较紧；无需重新托运行李，无需过境签',
+    voucher: {
+      alt: '10.06 奥斯陆经曼谷至香港航班与行李信息',
+      images: [
+        '/vouchers/flight-10-06-osl-hkg.jpg',
+        '/vouchers/baggage-10-06-osl-bkk.jpg',
+        '/vouchers/baggage-10-07-bkk-hkg.jpg',
+      ],
+    },
   },
 ];
 
@@ -293,14 +338,23 @@ const journeyDayEvents = {
       type: '交通',
       title: 'HKG → TPE → AMS',
       startsAt: '17:35',
-      endsAt: '07:40',
-      detail: '香港出发，经台北转机前往阿姆斯特丹；两段航班号、中转时间与行李直挂待确认。',
+      endsAt: '23:59',
+      displayEndsAt: '09.25 07:40',
+      detail: 'CI916 17:35 从香港出发，19:25 抵达台北；中转 3 小时 25 分后搭乘 CI073，09.25 07:40 抵达阿姆斯特丹。行李直挂，无需过境签；每人托运 2×23kg、手提 7kg。',
       reservationStatus: '已预定',
       infoType: 'flight',
       reservation: {
-        reference: 'EKG5FB',
+        reference: '1128146096447141',
         time: '09.24 17:35 — 09.25 07:40',
         instruction: '297-9555649633、297-9555649634',
+        voucher: {
+          alt: '09.24 香港经台北至阿姆斯特丹航班与行李信息',
+          images: [
+            '/vouchers/flight-09-24-hkg-ams.jpg',
+            '/vouchers/baggage-09-24-hkg-tpe.jpg',
+            '/vouchers/baggage-09-24-tpe-ams.jpg',
+          ],
+        },
       },
     },
   ],
@@ -355,26 +409,34 @@ const journeyDayEvents = {
       title: 'AMS → KEF',
       startsAt: '17:00',
       endsAt: '18:15',
-      detail: '从阿姆斯特丹飞往雷克雅未克；航班号与机场衔接信息待补充。',
+      detail: '搭乘荷兰泛航空 HV6885 从阿姆斯特丹飞往雷克雅未克，17:00 起飞、18:15 到达；经济舱，无餐食，每人托运行李 25kg。',
       reservationStatus: '已预定',
       infoType: 'flight',
       reservation: {
-        reference: '订单号待补充',
+        reference: 'PKRCRE',
         time: '09.27 17:00 — 18:15',
-        instruction: '票号待补充',
+        instruction: 'PKRCRE（航司预订号）',
+        voucher: {
+          alt: '09.27 阿姆斯特丹至雷克雅未克航班信息',
+          images: ['/vouchers/flight-09-27-ams-kef.jpg'],
+        },
       },
     },
     {
       id: 'sep27-lotus-car',
       type: '交通',
-      title: 'Lotus Car Rental',
-      startsAt: '取车时间待补充',
-      detail: '抵达冰岛后取车；提车点、还车日期与还车时间待补充。',
+      title: 'Toyota Yaris（自动挡）',
+      startsAt: '20:00',
+      detail: 'Lotus Car Rental；09.27 20:00 在 Keflavík International Airport 取车，09.30 20:00 原地还车。含 Silver 与 Platinum (S) + Wi‑Fi 保险方案、无限里程。',
       reservationStatus: '已预定',
       reservation: {
-        reference: '#155816',
-        time: '09.27 取车时间待补充',
-        instruction: 'Lotus 订单管理链接已记录',
+        reference: '#68LQL6',
+        time: '09.27 20:00 — 09.30 20:00',
+        instruction: 'KEF 机场取还；总计 53,070 ISK',
+        voucher: {
+          alt: 'Lotus Car Rental 订单截图',
+          images: ['/vouchers/rental-lotus.jpg'],
+        },
       },
     },
     {
@@ -475,28 +537,37 @@ const journeyDayEvents = {
       id: 'oct01-kef-svj',
       type: '交通',
       title: 'KEF → SVJ',
-      startsAt: '时间待补充',
-      detail: '从雷克雅未克前往斯沃尔韦尔；航班号、起降时间与中转信息待补充。',
+      startsAt: '08:40',
+      endsAt: '20:50',
+      detail: 'SK4786 经奥斯陆、SK4116 经博多，再转 WF836 抵达斯沃尔韦尔。奥斯陆中转 2 小时 20 分，行李直达博多；博多中转 3 小时 20 分，需要重新托运。每人托运 23kg、手提 8kg。',
       reservationStatus: '已预定',
       infoType: 'flight',
       reservation: {
         reference: '订单号待补充',
-        time: '10.01 · 时间待补充',
+        time: '10.01 08:40 — 20:50',
         instruction: '票号待补充',
+        voucher: {
+          alt: '10.01 雷克雅未克经奥斯陆和博多至斯沃尔韦尔航班信息',
+          images: ['/vouchers/flight-10-01-kef-svj.jpg'],
+        },
       },
     },
     {
       id: 'oct01-hertz-car',
       type: '交通',
-      title: 'Hertz 租车',
-      startsAt: '取车时间待补充',
-      detail: '抵达挪威后取车；提车点、还车日期与还车时间待补充。',
+      title: 'Toyota Yaris Cross 4×4（自动挡）',
+      startsAt: '19:00',
+      detail: 'Hertz 异地还车：10.01 19:00 在 Svolvær Airport 取车，10.03 19:00 在 Fiskergata 23 还车；不限公里，柜台支付 3,859.62 NOK。注意预定取车时间早于航班 20:50 抵达，需要调整或确认留车。',
       reservationStatus: '已预定',
       paymentStatus: '未付款',
       reservation: {
         reference: '#L52108732E4',
-        time: '10.01 取车时间待补充',
-        instruction: 'Hertz 确认单与订单管理链接已记录',
+        time: '10.01 19:00 — 10.03 19:00',
+        instruction: '机场取车、Fiskergata 23 还车；到店支付',
+        voucher: {
+          alt: 'Hertz 挪威租车订单截图',
+          images: ['/vouchers/rental-hertz.jpg'],
+        },
       },
     },
     {
@@ -552,7 +623,8 @@ const journeyDayEvents = {
       type: '住宿',
       title: 'MS Nordlys',
       startsAt: '22:15',
-      endsAt: '14:15',
+      endsAt: '23:59',
+      displayEndsAt: '10.04 14:15',
       detail: 'Hurtigruten Svolvær → Tromsø 船上住宿；至少提前 15 分钟到港，10.04 14:15 抵达 Tromsø。',
       navigation: 'Torget 22, 8300 Svolvær, Norway',
       reservationStatus: '已预定',
@@ -602,13 +674,17 @@ const journeyDayEvents = {
       title: 'TOS → OSL',
       startsAt: '19:50',
       endsAt: '21:45',
-      detail: '搭乘 DY385 从特罗姆瑟飞往奥斯陆；到达后的衔接信息待补充。',
+      detail: '搭乘挪威航空 DY385 从特罗姆瑟飞往奥斯陆，19:50 起飞、21:45 到达；经济舱，无餐食，每人托运行李 23kg。',
       reservationStatus: '已预定',
       infoType: 'flight',
       reservation: {
         reference: 'BA3ZVL',
         time: '10.05 19:50 — 21:45',
-        instruction: '票号待补充',
+        instruction: 'BA3ZVL（航司预订号）',
+        voucher: {
+          alt: '10.05 特罗姆瑟至奥斯陆航班信息',
+          images: ['/vouchers/flight-10-05-tos-osl.jpg'],
+        },
       },
     },
     {
@@ -633,14 +709,47 @@ const journeyDayEvents = {
       type: '交通',
       title: 'OSL → BKK → HKG',
       startsAt: '13:45',
-      endsAt: '11:45',
-      detail: '从奥斯陆出发，经曼谷返回香港；两段航班号、中转时间与行李直挂待确认。',
+      endsAt: '23:59',
+      displayEndsAt: '10.07 11:45',
+      detail: 'TG955 13:45 从奥斯陆出发，10.07 06:15 抵达曼谷；中转仅 1 小时 45 分后搭乘 TG600，11:45 抵达香港。行李直挂，无需过境签；每人托运 23kg、手提 7kg。',
       reservationStatus: '已预定',
       infoType: 'flight',
       reservation: {
-        reference: '8EL2FL',
-        time: '10.06 13:45 — 次日 11:45',
+        reference: '1128146096549157',
+        time: '10.06 13:45 — 10.07 11:45',
         instruction: '217-6333199177、217-6333199176',
+        voucher: {
+          alt: '10.06 奥斯陆经曼谷至香港航班与行李信息',
+          images: [
+            '/vouchers/flight-10-06-osl-hkg.jpg',
+            '/vouchers/baggage-10-06-osl-bkk.jpg',
+            '/vouchers/baggage-10-07-bkk-hkg.jpg',
+          ],
+        },
+      },
+    },
+  ],
+  '2026-10-07': [
+    {
+      id: 'oct07-bkk-hkg',
+      type: '交通',
+      title: 'BKK → HKG',
+      startsAt: '08:00',
+      endsAt: '11:45',
+      detail: '搭乘泰国国际航空 TG600 从曼谷返回香港；08:00 起飞、11:45 抵达香港机场 T1。行李从奥斯陆直挂，每人托运 23kg、手提 7kg。',
+      reservationStatus: '已预定',
+      infoType: 'flight',
+      reservation: {
+        reference: '1128146096549157',
+        time: '10.07 08:00 — 11:45',
+        instruction: '217-6333199177、217-6333199176',
+        voucher: {
+          alt: '10.07 曼谷至香港航班与行李信息',
+          images: [
+            '/vouchers/flight-10-06-osl-hkg.jpg',
+            '/vouchers/baggage-10-07-bkk-hkg.jpg',
+          ],
+        },
       },
     },
   ],
@@ -762,8 +871,9 @@ function getCurrentEventFocus(events, now = new Date(), dayKey) {
 }
 
 function formatEventTime(event) {
-  if (!event.endsAt) return event.startsAt;
-  return `${event.startsAt} — ${event.endsAt}`;
+  const displayEnd = event.displayEndsAt ?? event.endsAt;
+  if (!displayEnd) return event.startsAt;
+  return `${event.startsAt} — ${displayEnd}`;
 }
 
 function formatDateRange(journey) {
@@ -1004,19 +1114,23 @@ function TransportCard({ record, isRelevant }) {
 
       {record.legs ? (
         <div className="flight-itinerary">
-          {record.legs.map((leg, index) => (
-            <div key={`${record.id}-${leg.from}`}>
-              <div className="flight-leg">
-                <span>{leg.depart}</span>
-                <strong>{leg.from} → {leg.to}</strong>
-                <span>{leg.arrive}</span>
-                <small>{leg.code}</small>
+          {record.legs.map((leg, index) => {
+            const connection = record.connections?.[index] ?? record.connection;
+
+            return (
+              <div key={`${record.id}-${leg.from}-${leg.depart}`}>
+                <div className="flight-leg">
+                  <span>{leg.depart}</span>
+                  <strong>{leg.from} → {leg.to}</strong>
+                  <span>{leg.arrive}</span>
+                  <small>{leg.code}</small>
+                </div>
+                {index < record.legs.length - 1 && connection && (
+                  <p className="connection-note">{connection}</p>
+                )}
               </div>
-              {index < record.legs.length - 1 && (
-                <p className="connection-note">{record.connection}</p>
-              )}
-            </div>
-          ))}
+            );
+          })}
         </div>
       ) : (
         <dl className="info-card__details">
@@ -1028,6 +1142,7 @@ function TransportCard({ record, isRelevant }) {
           ))}
         </dl>
       )}
+      {record.voucher && <ReservationVoucher compact voucher={record.voucher} />}
     </article>
   );
 }
@@ -1311,7 +1426,7 @@ function getReservationHeading(event) {
   return event.infoType === 'flight' ? '航班信息' : '预定信息';
 }
 
-function ReservationVoucher({ voucher }) {
+function ReservationVoucher({ compact = false, voucher }) {
   const [clickCount, setClickCount] = useState(0);
   const [isOpen, setIsOpen] = useState(false);
   const clickCountRef = useRef(0);
@@ -1329,9 +1444,12 @@ function ReservationVoucher({ voucher }) {
     );
   }
 
+  const voucherImages = voucher.images ?? [voucher.src];
+  const voucherLabel = voucherImages.length > 1 ? `${voucherImages.length} 张凭证图片` : '凭证图片';
+
   const handleVoucherClick = () => {
     const clickedAt = Date.now();
-    if (clickedAt - lastClickRef.current > 1200) clickCountRef.current = 0;
+    if (clickedAt - lastClickRef.current > 3000) clickCountRef.current = 0;
     lastClickRef.current = clickedAt;
 
     const nextCount = clickCountRef.current + 1;
@@ -1349,19 +1467,19 @@ function ReservationVoucher({ voucher }) {
     resetTimerRef.current = window.setTimeout(() => {
       clickCountRef.current = 0;
       setClickCount(0);
-    }, 1200);
+    }, 3000);
   };
 
   return (
     <>
       <button
         aria-label={`连续点击三次查看${voucher.alt ?? '预定凭证'}`}
-        className="reservation-voucher reservation-voucher--image"
+        className={`reservation-voucher reservation-voucher--image${compact ? ' is-compact' : ''}`}
         onClick={handleVoucherClick}
         type="button"
       >
-        <img alt="" aria-hidden="true" src={voucher.src} />
-        <span>凭证缩略图</span>
+        <img alt="" aria-hidden="true" src={voucherImages[0]} />
+        <span>{voucherLabel}</span>
         <p aria-live="polite">{clickCount ? `再点击 ${3 - clickCount} 次查看` : '连续点击 3 次查看'}</p>
       </button>
       {isOpen && (
@@ -1370,7 +1488,15 @@ function ReservationVoucher({ voucher }) {
             <button aria-label="关闭凭证大图" onClick={() => setIsOpen(false)} type="button">
               <CloseIcon />
             </button>
-            <img alt={voucher.alt ?? '预定凭证'} src={voucher.fullSrc ?? voucher.src} />
+            <div className="voucher-viewer__gallery">
+              {voucherImages.map((imageSource, index) => (
+                <img
+                  alt={`${voucher.alt ?? '预定凭证'}${voucherImages.length > 1 ? ` ${index + 1}` : ''}`}
+                  key={imageSource}
+                  src={imageSource}
+                />
+              ))}
+            </div>
           </section>
         </div>
       )}

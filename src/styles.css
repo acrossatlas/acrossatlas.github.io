@@ -1383,6 +1383,12 @@ input:focus-visible {
   z-index: 1;
 }
 
+.reservation-voucher.is-compact {
+  min-height: 118px;
+  margin-top: 18px;
+  aspect-ratio: 16 / 7;
+}
+
 .voucher-viewer {
   position: fixed;
   z-index: 200;
@@ -1395,8 +1401,12 @@ input:focus-visible {
 
 .voucher-viewer section {
   position: relative;
-  max-width: min(960px, 100%);
-  max-height: calc(100dvh - 48px);
+  width: min(720px, 100%);
+  height: min(900px, calc(100dvh - 48px));
+  overflow: hidden;
+  background: #111315;
+  border-radius: 20px;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.3);
 }
 
 .voucher-viewer section > button {
@@ -1421,13 +1431,20 @@ input:focus-visible {
   height: 18px;
 }
 
-.voucher-viewer section > img {
+.voucher-viewer__gallery {
+  display: grid;
+  height: 100%;
+  gap: 12px;
+  padding: 56px 12px 12px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.voucher-viewer__gallery img {
   display: block;
-  max-width: 100%;
-  max-height: calc(100dvh - 48px);
-  object-fit: contain;
-  border-radius: 20px;
-  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
 }
 
 .reservation-state {
