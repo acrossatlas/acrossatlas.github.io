@@ -58,7 +58,9 @@ const transportRecords = [
     kind: '租车',
     startsOn: '2026-09-27',
     endsOn: '2026-09-30',
-    title: 'Lotus Car Rental · Flugvellir 6-10',
+    title: 'Lotus Car Rental',
+    navigation: 'Flugvellir 6-10, 230 Keflavík, Iceland',
+    addressLabel: '取车地址',
     details: [
       ['车型', 'Toyota Yaris（自动挡）'],
       ['取车', '09.27 · 20:00'],
@@ -99,7 +101,9 @@ const transportRecords = [
     kind: '租车',
     startsOn: '2026-10-01',
     endsOn: '2026-10-03',
-    title: 'Hertz · Svolvær Airport',
+    title: 'Hertz Svolvær Airport',
+    navigation: 'Svolvær lufthavn, Helle, 8300 Svolvær, Norway',
+    addressLabel: '取车地址',
     details: [
       ['车型', 'Toyota Yaris Cross 4×4（自动挡）'],
       ['取车', '10.01 · 19:00｜Svolvær Airport'],
@@ -156,7 +160,7 @@ const stayRecords = [
     id: 'netherlands-stay',
     startsOn: '2026-09-25',
     endsOn: '2026-09-27',
-    title: 'Rijnlanderweg 800, 2132 NN Hoofddorp',
+    title: 'Hyatt Place Amsterdam Airport',
     navigation: 'Rijnlanderweg 800, 2132 NN Hoofddorp, Netherlands',
     checkIn: '09.25 15:00 — 00:00',
     checkOut: '09.27 00:00 — 12:00',
@@ -171,7 +175,7 @@ const stayRecords = [
     id: 'iceland-stay',
     startsOn: '2026-09-27',
     endsOn: '2026-09-30',
-    title: 'Kelduland 19, Reykjavík, Reykjavíkurborg 108',
+    title: 'Reykjavík Airbnb',
     navigation: 'Kelduland 19, 108 Reykjavík, Iceland',
     checkIn: '09.27 15:00 后',
     checkOut: '09.30 12:00 前',
@@ -193,7 +197,7 @@ const stayRecords = [
     id: 'henningsvaer-stay',
     startsOn: '2026-10-01',
     endsOn: '2026-10-03',
-    title: 'Misværveien 2, Vågan, Nordland 8312',
+    title: 'Henningsvær Airbnb',
     navigation: 'Misværveien 2, 8312 Henningsvær, Norway',
     checkIn: '10.01 15:00 后',
     checkOut: '10.03 11:00 前',
@@ -226,7 +230,7 @@ const stayRecords = [
     id: 'oslo-stay',
     startsOn: '2026-10-05',
     endsOn: '2026-10-06',
-    title: 'Henrik Ibsensvei (Building B), 2060 Gardermoen',
+    title: 'Radisson Hotel & Conference Centre Oslo Airport',
     navigation: 'Henrik Ibsensvei (Building B), 2060 Gardermoen, Norway',
     checkIn: '10.05 15:00 — 18:30',
     checkOut: '10.06 06:00 — 11:30',
@@ -397,7 +401,7 @@ const journeyDayEvents = {
     {
       id: 'sep25-amsterdam-stay',
       type: '住宿',
-      title: 'Rijnlanderweg 800, 2132 NN Hoofddorp',
+      title: 'Hyatt Place Amsterdam Airport',
       startsAt: '15:00',
       detail: 'Hyatt Place Amsterdam Airport，King Room，2 人；09.25 15:00 后入住，09.27 12:00 前退房。Booking.com 预定，到店付款约 EUR 243.78；酒店内自助停车，首小时免费，过夜 EUR 19.50。',
       navigation: 'Rijnlanderweg 800, 2132 NN Hoofddorp, Netherlands',
@@ -418,7 +422,7 @@ const journeyDayEvents = {
     {
       id: 'sep26-amsterdam-stay',
       type: '住宿',
-      title: 'Rijnlanderweg 800, 2132 NN Hoofddorp',
+      title: 'Hyatt Place Amsterdam Airport',
       startsAt: '全天',
       detail: '继续住在 Hyatt Place Amsterdam Airport；09.27 12:00 前退房。Booking.com 订单到店付款；酒店内自助停车，过夜 EUR 19.50。',
       navigation: 'Rijnlanderweg 800, 2132 NN Hoofddorp, Netherlands',
@@ -460,10 +464,11 @@ const journeyDayEvents = {
     {
       id: 'sep27-lotus-car',
       type: '交通',
-      title: 'Lotus Car Rental · Flugvellir 6-10',
+      title: 'Lotus Car Rental',
       startsAt: '20:00',
       detail: 'Toyota Yaris（自动挡）；09.27 20:00 在 Keflavík International Airport 取车，09.30 20:00 原地还车。含 Silver 与 Platinum (S) + Wi‑Fi 保险方案、无限里程。',
       navigation: 'Flugvellir 6-10, 230 Keflavík, Iceland',
+      addressLabel: '取车地址',
       reservationStatus: '已预定',
       reservation: {
         reference: '#68LQL6',
@@ -478,7 +483,7 @@ const journeyDayEvents = {
     {
       id: 'sep27-reykjavik-stay',
       type: '住宿',
-      title: 'Kelduland 19, Reykjavík, Reykjavíkurborg 108',
+      title: 'Reykjavík Airbnb',
       startsAt: '15:00 后',
       detail: 'Airbnb 钥匙盒自助入住；入住指南与 Wi‑Fi 于入住前 48 小时显示。楼外可免费停车，车位充足。',
       navigation: 'Kelduland 19, 108 Reykjavík, Iceland',
@@ -512,7 +517,7 @@ const journeyDayEvents = {
     {
       id: 'sep28-reykjavik-stay',
       type: '住宿',
-      title: 'Kelduland 19, Reykjavík, Reykjavíkurborg 108',
+      title: 'Reykjavík Airbnb',
       startsAt: '时间待补充',
       detail: '继续住在 Reykjavík；当天入住相关事项沿用前一晚。',
       navigation: 'Kelduland 19, 108 Reykjavík, Iceland',
@@ -536,7 +541,7 @@ const journeyDayEvents = {
     {
       id: 'sep29-reykjavik-stay',
       type: '住宿',
-      title: 'Kelduland 19, Reykjavík, Reykjavíkurborg 108',
+      title: 'Reykjavík Airbnb',
       startsAt: '时间待补充',
       detail: '继续住在 Reykjavík；当天入住相关事项沿用前一晚。',
       navigation: 'Kelduland 19, 108 Reykjavík, Iceland',
@@ -552,11 +557,12 @@ const journeyDayEvents = {
     {
       id: 'sep30-whale-watching',
       type: '行程',
-      title: '雷克雅未克乘坐 RIB 游艇观赏鲸鱼和海鹦',
+      title: '雷克雅未克 RIB 观鲸与海鹦',
       startsAt: '09:00',
       endsAt: '11:00',
       detail: 'GetYourGuide 预定，2 位成人，英语导览，约 2 小时。请在出发前 30 分钟到 Elding 老码头售票处办理登船；提供连体工作服、护目镜与救生衣，仍需穿保暖多层衣物、结实鞋并带手套和帽子。行程受天气与海况影响。',
       navigation: 'Ægisgarður 5, 101 Reykjavík, Iceland',
+      addressLabel: '集合地址',
       reservationStatus: '已预定',
       reservation: {
         reference: 'GYGKBF5YANRW',
@@ -605,10 +611,11 @@ const journeyDayEvents = {
     {
       id: 'oct01-hertz-car',
       type: '交通',
-      title: 'Hertz · Svolvær Airport',
+      title: 'Hertz Svolvær Airport',
       startsAt: '19:00',
       detail: 'Toyota Yaris Cross 4×4（自动挡），Hertz 异地还车：10.01 19:00 在 Svolvær Airport 取车，10.03 19:00 在 Fiskergata 23 还车；不限公里，柜台支付 3,859.62 NOK。注意预定取车时间早于航班 20:50 抵达，需要调整或确认留车。',
       navigation: 'Svolvær lufthavn, Helle, 8300 Svolvær, Norway',
+      addressLabel: '取车地址',
       reservationStatus: '已预定',
       paymentStatus: '未付款',
       reservation: {
@@ -624,7 +631,7 @@ const journeyDayEvents = {
     {
       id: 'oct01-henningsvaer-stay',
       type: '住宿',
-      title: 'Misværveien 2, Vågan, Nordland 8312',
+      title: 'Henningsvær Airbnb',
       startsAt: '15:00 后',
       detail: 'Airbnb 房源位于 Henningsvær 码头；房东亲自迎接，需提前联系 Øystein。提供停车位。',
       navigation: 'Misværveien 2, 8312 Henningsvær, Norway',
@@ -648,7 +655,7 @@ const journeyDayEvents = {
     {
       id: 'oct02-henningsvaer-stay',
       type: '住宿',
-      title: 'Misværveien 2, Vågan, Nordland 8312',
+      title: 'Henningsvær Airbnb',
       startsAt: '时间待补充',
       detail: '继续住在 Henningsvær；地址为 Misværveien 2。',
       navigation: 'Misværveien 2, 8312 Henningsvær, Norway',
@@ -743,7 +750,7 @@ const journeyDayEvents = {
     {
       id: 'oct05-oslo-stay',
       type: '住宿',
-      title: 'Henrik Ibsensvei (Building B), 2060 Gardermoen',
+      title: 'Radisson Hotel & Conference Centre Oslo Airport',
       startsAt: '15:00',
       detail: 'Radisson Hotel & Conference Centre Oslo Airport，Standard Room，1 人；10.05 15:00–18:30 入住，10.06 06:00–11:30 退房。Booking.com 预定，到店支付 1,435.50 NOK；附近公共停车 530 NOK/天，无需预定。',
       navigation: 'Henrik Ibsensvei (Building B), 2060 Gardermoen, Norway',
@@ -1164,6 +1171,40 @@ function CurrentIndicator({ visible }) {
   return visible ? <span className="info-card__current">当前</span> : null;
 }
 
+function CopyableAddress({ label, value }) {
+  const [copied, setCopied] = useState(false);
+
+  useEffect(() => {
+    if (!copied) return undefined;
+    const timer = window.setTimeout(() => setCopied(false), 1500);
+    return () => window.clearTimeout(timer);
+  }, [copied]);
+
+  const handleCopy = async () => setCopied(await copyText(value));
+
+  return (
+    <div className="copyable-address-row">
+      <button aria-label={`复制${label}`} className="copyable-address" onClick={handleCopy} type="button">
+        <span className="copyable-address__label">{label}</span>
+        <span>{value}</span>
+        {!copied && <span className="copy-cue"><CopyIcon /></span>}
+      </button>
+      <span aria-live="polite" className={`copy-feedback${copied ? ' is-visible' : ''}`}>
+        {copied ? '已复制' : ''}
+      </span>
+    </div>
+  );
+}
+
+function LocationCardTitle({ record }) {
+  return (
+    <div className="info-card__title-block">
+      <h3>{record.title}</h3>
+      <CopyableAddress label={record.addressLabel ?? '住宿地址'} value={record.navigation} />
+    </div>
+  );
+}
+
 function TransportCard({ record, isRelevant }) {
   return (
     <article className="info-card transport-card" data-relevant={isRelevant || undefined}>
@@ -1174,7 +1215,7 @@ function TransportCard({ record, isRelevant }) {
         <CurrentIndicator visible={isRelevant} />
       </header>
       <p className="info-card__date">{formatRecordRange(record)}</p>
-      <h3>{record.title}</h3>
+      {record.navigation ? <LocationCardTitle record={record} /> : <h3>{record.title}</h3>}
 
       {record.legs ? (
         <div className="flight-itinerary">
@@ -1211,30 +1252,6 @@ function TransportCard({ record, isRelevant }) {
   );
 }
 
-function CopyableLocation({ record }) {
-  const [copied, setCopied] = useState(false);
-
-  useEffect(() => {
-    if (!copied) return undefined;
-    const timer = window.setTimeout(() => setCopied(false), 1500);
-    return () => window.clearTimeout(timer);
-  }, [copied]);
-
-  const handleCopy = async () => setCopied(await copyText(record.navigation));
-
-  return (
-    <div className="stay-card__title">
-      <button aria-label={`复制${record.title}的导航地址`} className="copyable-name" onClick={handleCopy} type="button">
-        <span>{record.title}</span>
-        {!copied && <span className="copy-cue"><CopyIcon /></span>}
-      </button>
-      <span aria-live="polite" className={`copy-feedback${copied ? ' is-visible' : ''}`}>
-        {copied ? '已复制' : ''}
-      </span>
-    </div>
-  );
-}
-
 function StayCard({ record, isRelevant }) {
   return (
     <article className="info-card stay-card" data-relevant={isRelevant || undefined}>
@@ -1242,7 +1259,7 @@ function StayCard({ record, isRelevant }) {
         <span>{formatRecordRange(record)}</span>
         <CurrentIndicator visible={isRelevant} />
       </header>
-      <CopyableLocation record={record} />
+      <LocationCardTitle record={record} />
       <dl className="info-card__details">
         <div>
           <dt>入住</dt>
@@ -1457,32 +1474,15 @@ async function copyText(text) {
 }
 
 function CopyableEventTitle({ className, event }) {
-  const [copied, setCopied] = useState(false);
-
-  useEffect(() => {
-    if (!copied) return undefined;
-
-    const timer = window.setTimeout(() => setCopied(false), 1500);
-    return () => window.clearTimeout(timer);
-  }, [copied]);
-
-  const copyNavigation = async () => {
-    setCopied(await copyText(event.navigation));
-  };
-
   return (
-    <div className={className}>
-      <h3>
-        {event.navigation ? (
-          <button aria-label={`复制${event.title}的导航地址`} className="copyable-name" onClick={copyNavigation} type="button">
-            <span>{event.title}</span>
-            {!copied && <span className="copy-cue"><CopyIcon /></span>}
-          </button>
-        ) : event.title}
-      </h3>
-      <span aria-live="polite" className={`copy-feedback${copied ? ' is-visible' : ''}`}>
-        {copied ? '已复制' : ''}
-      </span>
+    <div className={`${className} copyable-title-block`}>
+      <h3>{event.title}</h3>
+      {event.navigation && (
+        <CopyableAddress
+          label={event.addressLabel ?? (event.type === '住宿' ? '住宿地址' : '导航地址')}
+          value={event.navigation}
+        />
+      )}
     </div>
   );
 }

@@ -863,7 +863,8 @@ input:focus-visible {
   height: 13px;
 }
 
-.copyable-name:hover .copy-cue {
+.copyable-name:hover .copy-cue,
+.copyable-address:hover .copy-cue {
   color: #77777b;
   opacity: 1;
 }
@@ -1187,8 +1188,7 @@ input:focus-visible {
   margin: 14px 0 0;
 }
 
-.info-card h3,
-.stay-card__title {
+.info-card h3 {
   margin: 7px 0 0;
   color: var(--ink);
   font-size: 15px;
@@ -1274,21 +1274,53 @@ input:focus-visible {
   color: var(--ink);
 }
 
-.stay-card__title {
+.info-card__title-block {
   display: flex;
+  margin-top: 7px;
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.info-card__title-block h3 {
+  margin: 0;
+}
+
+.copyable-title-block {
+  align-items: flex-start;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.copyable-address-row {
+  display: flex;
+  max-width: 100%;
+  min-width: 0;
   align-items: center;
   gap: 8px;
 }
 
-.stay-card__title button {
+.copyable-address {
+  display: inline-flex;
+  max-width: 100%;
   margin: 0;
   padding: 0;
-  color: inherit;
+  align-items: center;
+  color: var(--muted);
   background: transparent;
   border: 0;
   cursor: copy;
   font: inherit;
+  font-size: 10px;
+  font-weight: 450;
+  line-height: 1.45;
   text-align: left;
+  gap: 5px;
+}
+
+.copyable-address__label {
+  flex: 0 0 auto;
+  font-weight: 600;
 }
 
 .reservation-modal {
