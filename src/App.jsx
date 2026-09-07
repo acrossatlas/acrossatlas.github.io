@@ -4,6 +4,7 @@ import { Link, Route, Routes, useLocation } from 'react-router-dom';
 const currentJourney = {
   startsOn: '2026-09-24',
   endsOn: '2026-10-07',
+  itineraryEndsOn: '2026-10-06',
   destinations: ['Netherlands', 'Iceland', 'Norway'],
 };
 
@@ -24,7 +25,7 @@ const transportRecords = [
     kind: '航班',
     startsOn: '2026-09-24',
     endsOn: '2026-09-25',
-    title: '香港 → 台北 → 阿姆斯特丹',
+    title: '香港 → 阿姆斯特丹',
     legs: [
       { code: '中华航空 CI916 · 托运 2×23kg / 手提 7kg', from: 'HKG', to: 'TPE', depart: '17:35', arrive: '19:25' },
       { code: '中华航空 CI073 · 托运 2×23kg / 手提 7kg', from: 'TPE', to: 'AMS', depart: '22:50', arrive: '07:40' },
@@ -92,7 +93,7 @@ const transportRecords = [
     kind: '航班',
     startsOn: '2026-10-06',
     endsOn: '2026-10-07',
-    title: '奥斯陆 → 曼谷 → 香港',
+    title: '奥斯陆 → 香港',
     legs: [
       { code: '泰国国际航空 TG955 · 托运 23kg / 手提 7kg', from: 'OSL', to: 'BKK', depart: '13:45', arrive: '06:15' },
       { code: '泰国国际航空 TG600 · 托运 23kg / 手提 7kg', from: 'BKK', to: 'HKG', depart: '08:00', arrive: '11:45' },
@@ -108,6 +109,19 @@ const transportRecords = [
     },
   },
 ];
+
+function getTransportEventFields(recordId) {
+  const record = transportRecords.find((item) => item.id === recordId);
+
+  if (!record) throw new Error(`Missing transport record: ${recordId}`);
+
+  return {
+    transportRecordId: record.id,
+    title: record.title,
+    flightLegs: record.legs,
+    flightConnections: record.connections ?? (record.connection ? [record.connection] : undefined),
+  };
+}
 
 const stayRecords = [
   {
@@ -229,7 +243,10 @@ function createJourneyDates(journey) {
   });
 }
 
-const journeyDates = createJourneyDates(currentJourney);
+const journeyDates = createJourneyDates({
+  ...currentJourney,
+  endsOn: currentJourney.itineraryEndsOn,
+});
 
 const placeholderRouteStops = [
   { id: 'stop-1', eventIndex: 0, name: '停靠点 1', x: '16%', y: '68%' },
@@ -311,16 +328,11 @@ const journeyDayEvents = {
     {
       id: 'sep24-hkg-tpe-ams',
       type: '交通',
-      title: 'HKG → AMS',
+      ...getTransportEventFields('outbound-flight'),
       startsAt: '17:35',
       endsAt: '23:59',
       displayEndsAt: '07:40 +1',
       detail: 'CI916 17:35 从香港出发，19:25 抵达台北；中转 3 小时 25 分后搭乘 CI073，09.25 07:40 抵达阿姆斯特丹。行李直挂，无需过境签；每人托运 2×23kg、手提 7kg。',
-      flightLegs: [
-        { code: '中华航空 CI916 · 托运 2×23kg / 手提 7kg', from: 'HKG', to: 'TPE', depart: '17:35', arrive: '19:25' },
-        { code: '中华航空 CI073 · 托运 2×23kg / 手提 7kg', from: 'TPE', to: 'AMS', depart: '22:50', arrive: '07:40' },
-      ],
-      flightConnections: ['台北中转 3 小时 25 分；无需重新托运行李，无需过境签'],
       reservationStatus: '已预定',
       infoType: 'flight',
       reservation: {
@@ -408,13 +420,10 @@ const journeyDayEvents = {
     {
       id: 'sep27-ams-kef',
       type: '交通',
-      title: 'AMS → KEF',
+      ...getTransportEventFields('ams-kef-flight'),
       startsAt: '17:00',
       endsAt: '18:15',
       detail: '搭乘荷兰泛航空 HV6885 从阿姆斯特丹飞往雷克雅未克，17:00 起飞、18:15 到达；经济舱，无餐食，每人托运行李 25kg。',
-      flightLegs: [
-        { code: '荷兰泛航空 HV6885 · 托运 25kg', from: 'AMS', to: 'KEF', depart: '17:00', arrive: '18:15' },
-      ],
       reservationStatus: '已预定',
       infoType: 'flight',
       reservation: {
@@ -432,7 +441,7 @@ const journeyDayEvents = {
     {
       id: 'sep27-lotus-car',
       type: '交通',
-      title: 'Lotus Car Rental',
+      title: 'Lotus Car Rental 取车',
       startsAt: '20:00',
       detail: 'Toyota Yaris（自动挡）；09.27 20:00 在 Keflavík International Airport 取车，09.30 20:00 原地还车。含 Silver 与 Platinum (S) + Wi‑Fi 保险方案、无限里程。',
       navigation: 'Flugvellir 6-10, 230 Keflavík, Iceland',
@@ -582,19 +591,10 @@ const journeyDayEvents = {
     {
       id: 'oct01-kef-svj',
       type: '交通',
-      title: 'KEF → SVJ',
+      ...getTransportEventFields('kef-svj-flight'),
       startsAt: '08:40',
       endsAt: '20:50',
       detail: 'SK4786 经奥斯陆、SK4116 经博多，再转 WF836 抵达斯沃尔韦尔。奥斯陆中转 2 小时 20 分，行李直达博多；博多中转 3 小时 20 分，需要重新托运。每人托运 23kg、手提 8kg。',
-      flightLegs: [
-        { code: '北欧航空 SK4786 · 托运 23kg / 手提 8kg', from: 'KEF', to: 'OSL', depart: '08:40', arrive: '13:20' },
-        { code: '北欧航空 SK4116 · 托运 23kg / 手提 8kg', from: 'OSL', to: 'BOO', depart: '15:40', arrive: '17:05' },
-        { code: '威德罗航空 WF836 · 托运 23kg / 手提 8kg', from: 'BOO', to: 'SVJ', depart: '20:25', arrive: '20:50' },
-      ],
-      flightConnections: [
-        '奥斯陆中转 2 小时 20 分；行李直达博多',
-        '博多中转 3 小时 20 分；需要重新托运行李',
-      ],
       reservationStatus: '已预定',
       infoType: 'flight',
       reservation: {
@@ -841,13 +841,10 @@ const journeyDayEvents = {
     {
       id: 'oct05-tos-osl',
       type: '交通',
-      title: 'TOS → OSL',
+      ...getTransportEventFields('tos-osl-flight'),
       startsAt: '19:50',
       endsAt: '21:45',
       detail: '搭乘挪威航空 DY385 从特罗姆瑟飞往奥斯陆，19:50 起飞、21:45 到达；经济舱，无餐食，每人托运行李 23kg。',
-      flightLegs: [
-        { code: '挪威航空 DY385 · 托运 23kg', from: 'TOS', to: 'OSL', depart: '19:50', arrive: '21:45' },
-      ],
       reservationStatus: '已预定',
       infoType: 'flight',
       reservation: {
@@ -890,16 +887,11 @@ const journeyDayEvents = {
     {
       id: 'oct06-osl-bkk-hkg',
       type: '交通',
-      title: 'OSL → HKG',
+      ...getTransportEventFields('return-flight'),
       startsAt: '13:45',
       endsAt: '23:59',
       displayEndsAt: '11:45 +1',
       detail: 'TG955 13:45 从奥斯陆出发，10.07 06:15 抵达曼谷；中转仅 1 小时 45 分后搭乘 TG600，11:45 抵达香港。行李直挂，无需过境签；每人托运 23kg、手提 7kg。',
-      flightLegs: [
-        { code: '泰国国际航空 TG955 · 托运 23kg / 手提 7kg', from: 'OSL', to: 'BKK', depart: '13:45', arrive: '06:15' },
-        { code: '泰国国际航空 TG600 · 托运 23kg / 手提 7kg', from: 'BKK', to: 'HKG', depart: '08:00', arrive: '11:45' },
-      ],
-      flightConnections: ['曼谷中转 1 小时 45 分；无需重新托运行李，无需过境签'],
       reservationStatus: '已预定',
       infoType: 'flight',
       reservation: {
@@ -1279,14 +1271,11 @@ function CopyableAddress({ label, value }) {
 
   return (
     <div className="copyable-address-row">
-      <button aria-label={`复制${label}`} className="copyable-address" onClick={handleCopy} type="button">
+      <button aria-label={copied ? `${label}已复制` : `复制${label}`} className="copyable-address" onClick={handleCopy} type="button">
         <span className="copyable-address__label">{label}</span>
         <span>{value}</span>
-        {!copied && <span className="copy-cue"><CopyIcon /></span>}
+        <span className="copy-cue">{copied ? <CheckIcon /> : <CopyIcon />}</span>
       </button>
-      <span aria-live="polite" className={`copy-feedback${copied ? ' is-visible' : ''}`}>
-        {copied ? '已复制' : ''}
-      </span>
     </div>
   );
 }
