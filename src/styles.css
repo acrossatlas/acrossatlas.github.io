@@ -1237,8 +1237,8 @@ input:focus-visible {
 .connection-note {
   margin: 10px 0 0;
   padding: 9px 12px;
-  color: #55879a;
-  background: #e7f5fa;
+  color: #7c7c7c;
+  background: #f0f1f2;
   border-radius: 12px;
   font-size: 10px;
   font-weight: 600;
