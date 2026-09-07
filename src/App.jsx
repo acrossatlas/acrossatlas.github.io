@@ -440,7 +440,7 @@ const journeyDayEvents = {
     },
     {
       id: 'sep27-lotus-car',
-      type: '交通',
+      type: '行程',
       title: 'Lotus Car Rental 取车',
       startsAt: '20:00',
       detail: 'Toyota Yaris（自动挡）；09.27 20:00 在 Keflavík International Airport 取车，09.30 20:00 原地还车。含 Silver 与 Platinum (S) + Wi‑Fi 保险方案、无限里程。',
@@ -565,7 +565,7 @@ const journeyDayEvents = {
     },
     {
       id: 'sep30-lotus-return',
-      type: '交通',
+      type: '行程',
       title: 'Lotus Car Rental 还车',
       startsAt: '20:00',
       detail: '在原取车门店归还 Toyota Yaris（自动挡）；还车前检查油量、个人物品和车辆外观。',
@@ -611,7 +611,7 @@ const journeyDayEvents = {
     },
     {
       id: 'oct01-hertz-car',
-      type: '交通',
+      type: '行程',
       title: 'Hertz 取车',
       startsAt: '19:00',
       detail: '在 Svolvær Airport 提取 Toyota Yaris Cross 4×4（自动挡），不限公里，柜台支付 3,859.62 NOK。预定取车时间早于航班 20:50 抵达，需要调整或确认留车。',
@@ -770,7 +770,7 @@ const journeyDayEvents = {
     },
     {
       id: 'oct03-hertz-return',
-      type: '交通',
+      type: '行程',
       title: 'Hertz 还车',
       startsAt: '19:00',
       detail: '在 Fiskergata 23 归还 Toyota Yaris Cross 4×4（自动挡）；确认油量、个人物品和车辆外观后办理还车。',
@@ -933,22 +933,34 @@ const documentChecklist = [
   },
 ];
 
-const packingChecklist = [
-  '行李箱',
-  '衣物',
-  '洗漱用品、毛巾、牙刷',
-  '拖鞋',
-  '包纸',
-  '药（维生素）',
-  '充电器和转换插（手机、相机）',
-  '奶茶袋',
-  '一次性餐具',
-  '一套换洗衣物',
-  '充气颈枕、腰枕',
-  '信用卡',
-  'Pocket 3',
-  'Oppo X9 Ultra 大地探索家',
-].map((label, index) => ({ id: `packing-${index + 1}`, label }));
+const packingChecklistGroups = [
+  {
+    id: 'carry-on',
+    title: '随身携带',
+    items: [
+      '包纸',
+      '药（维生素）',
+      '充电器和转换插（手机、相机）',
+      '一套换洗衣物',
+      '充气颈枕、腰枕',
+      '信用卡',
+      'Pocket 3',
+      'Oppo X9 Ultra 大地探索家',
+    ].map((label, index) => ({ id: `carry-on-${index + 1}`, label })),
+  },
+  {
+    id: 'checked-luggage',
+    title: '托运行李',
+    items: [
+      '行李箱',
+      '衣物',
+      '洗漱用品、毛巾、牙刷',
+      '拖鞋',
+      '奶茶袋',
+      '一次性餐具',
+    ].map((label, index) => ({ id: `checked-luggage-${index + 1}`, label })),
+  },
+];
 
 function getLocalDateKey(date) {
   const year = date.getFullYear();
@@ -1416,9 +1428,10 @@ function SectionHeading({ children }) {
   );
 }
 
-function ChecklistGroup({ items, title, variant }) {
+function ChecklistGroup({ groups, items = [], title, variant }) {
+  const allItems = groups ? groups.flatMap((group) => group.items) : items;
   const [checkedItems, setCheckedItems] = useState(() => new Set(
-    items.filter((item) => item.checked).map((item) => item.id),
+    allItems.filter((item) => item.checked).map((item) => item.id),
   ));
 
   const toggleItem = (itemId, checked) => {
@@ -1430,32 +1443,41 @@ function ChecklistGroup({ items, title, variant }) {
     });
   };
 
+  const renderItems = (groupItems) => (
+    <div className="checklist-grid">
+      {groupItems.map((item) => {
+        const checked = checkedItems.has(item.id);
+
+        return (
+          <label className={`checklist-item${checked ? ' is-checked' : ''}`} key={item.id}>
+            <input
+              checked={checked}
+              onChange={(event) => toggleItem(item.id, event.target.checked)}
+              type="checkbox"
+            />
+            <span aria-hidden="true" className="checklist-box"><CheckIcon /></span>
+            <span className="checklist-copy">
+              {item.emoji && <span aria-hidden="true" className="checklist-emoji">{item.emoji}</span>}
+              <span className="checklist-text">
+                <strong>{item.label}</strong>
+                {item.detail && <small>{item.detail}</small>}
+              </span>
+            </span>
+          </label>
+        );
+      })}
+    </div>
+  );
+
   return (
     <section className={`checklist-group checklist-group--${variant}`}>
       <h3>{title}</h3>
-      <div className="checklist-grid">
-        {items.map((item) => {
-          const checked = checkedItems.has(item.id);
-
-          return (
-            <label className={`checklist-item${checked ? ' is-checked' : ''}`} key={item.id}>
-              <input
-                checked={checked}
-                onChange={(event) => toggleItem(item.id, event.target.checked)}
-                type="checkbox"
-              />
-              <span aria-hidden="true" className="checklist-box"><CheckIcon /></span>
-              <span className="checklist-copy">
-                {item.emoji && <span aria-hidden="true" className="checklist-emoji">{item.emoji}</span>}
-                <span className="checklist-text">
-                  <strong>{item.label}</strong>
-                  {item.detail && <small>{item.detail}</small>}
-                </span>
-              </span>
-            </label>
-          );
-        })}
-      </div>
+      {groups ? groups.map((group) => (
+        <section className="checklist-subgroup" key={group.id}>
+          <h4>{group.title}</h4>
+          {renderItems(group.items)}
+        </section>
+      )) : renderItems(items)}
     </section>
   );
 }
@@ -1728,35 +1750,6 @@ function DayEventCard({ event, onOpenReservation }) {
   );
 }
 
-function TodayReservationPreview({ event }) {
-  if (!event.reservation) return null;
-
-  const fields = event.infoType === 'flight'
-    ? [
-        ['订单号', event.reservation.orderNumber],
-        ['航班号', event.reservation.flightNumber],
-        ['航司预订号', event.reservation.airlineReference],
-        ['航班时间', event.reservation.time],
-        ['票号', event.reservation.ticketNumber],
-      ]
-    : [
-        ['预定编号', event.reservation.reference],
-        ['使用时间', event.reservation.time],
-        ['使用方式', event.reservation.instruction],
-      ];
-
-  return (
-    <dl className="today-focus__reservation">
-      {fields.map(([label, value]) => (
-        <div key={label}>
-          <dt>{label}</dt>
-          <dd>{value ?? '待补充'}</dd>
-        </div>
-      ))}
-    </dl>
-  );
-}
-
 function TodayFocusCard({ dayIndex, focus }) {
   if (!focus) return null;
 
@@ -1780,8 +1773,7 @@ function TodayFocusCard({ dayIndex, focus }) {
         {event.paymentStatus === '未付款' && <span className="event-alert-tag">未付款</span>}
       </div>
       <CopyableEventTitle className="today-focus__title-row" event={event} />
-      <p>{event.detail}</p>
-      <TodayReservationPreview event={event} />
+      {event.flightLegs ? <EventFlightDetails event={event} /> : <p>{event.detail}</p>}
     </article>
   );
 }
@@ -1975,7 +1967,7 @@ function OngoingPage() {
             <SectionHeading>Checklist</SectionHeading>
             <div className="checklist-surface">
               <ChecklistGroup items={documentChecklist} title="证件" variant="documents" />
-              <ChecklistGroup items={packingChecklist} title="行李" variant="packing" />
+              <ChecklistGroup groups={packingChecklistGroups} title="行李" variant="packing" />
             </div>
           </section>
 

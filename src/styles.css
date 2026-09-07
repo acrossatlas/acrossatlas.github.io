@@ -464,37 +464,6 @@ input:focus-visible {
   line-height: 1.65;
 }
 
-.today-focus__reservation {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 22px;
-  margin: 24px 0 0;
-  padding: 20px 0 0;
-  border-top: 1px solid #e7e8ea;
-}
-
-.today-focus__reservation > div {
-  min-width: 0;
-}
-
-.today-focus__reservation dt,
-.today-focus__reservation dd {
-  margin: 0;
-  line-height: 1.5;
-}
-
-.today-focus__reservation dt {
-  color: var(--muted);
-  font-size: 10px;
-  font-weight: 600;
-}
-
-.today-focus__reservation dd {
-  margin-top: 5px;
-  color: var(--ink);
-  font-size: 12px;
-}
-
 .day-tabs {
   display: flex;
   gap: 8px;
@@ -891,6 +860,17 @@ input:focus-visible {
   color: var(--ink);
   font-size: 17px;
   font-weight: 650;
+}
+
+.checklist-subgroup + .checklist-subgroup {
+  margin-top: 24px;
+}
+
+.checklist-subgroup h4 {
+  margin: 0 0 10px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .checklist-grid {
@@ -1698,13 +1678,6 @@ input:focus-visible {
 
   .today-focus > p {
     font-size: 12px;
-  }
-
-  .today-focus__reservation {
-    grid-template-columns: 1fr;
-    gap: 12px;
-    margin-top: 20px;
-    padding-top: 18px;
   }
 
   .day-tabs {
