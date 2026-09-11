@@ -369,7 +369,7 @@ input:focus-visible {
   min-height: 0;
   padding: 24px 28px;
   flex-direction: column;
-  background: var(--white);
+  background: #edf6fc;
   border: 1px solid #e9edf0;
   border-radius: 22px;
   animation: active-card-glow 9.6s ease-in-out infinite both;

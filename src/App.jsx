@@ -31,14 +31,6 @@ const transportRecords = [
       { code: '中华航空 CI073 · 托运 2×23kg / 手提 7kg', from: 'TPE', to: 'AMS', depart: '22:50', arrive: '07:40' },
     ],
     connection: '台北中转 3 小时 25 分；无需重新托运行李，无需过境签',
-    voucher: {
-      alt: '09.24 香港经台北至阿姆斯特丹航班与行李信息',
-      images: [
-        '/vouchers/flight-09-24-hkg-ams.jpg',
-        '/vouchers/baggage-09-24-hkg-tpe.jpg',
-        '/vouchers/baggage-09-24-tpe-ams.jpg',
-      ],
-    },
   },
   {
     id: 'ams-kef-flight',
@@ -49,10 +41,6 @@ const transportRecords = [
     legs: [
       { code: '荷兰泛航空 HV6885 · 托运 25kg', from: 'AMS', to: 'KEF', depart: '17:00', arrive: '18:15' },
     ],
-    voucher: {
-      alt: '09.27 阿姆斯特丹至雷克雅未克航班信息',
-      images: ['/vouchers/flight-09-27-ams-kef.jpg'],
-    },
   },
   {
     id: 'kef-svj-flight',
@@ -69,10 +57,6 @@ const transportRecords = [
       '奥斯陆中转 2 小时 20 分；行李直达博多',
       '博多中转 3 小时 20 分；需要重新托运行李',
     ],
-    voucher: {
-      alt: '10.01 雷克雅未克经奥斯陆和博多至斯沃尔韦尔航班信息',
-      images: ['/vouchers/flight-10-01-kef-svj.jpg'],
-    },
   },
   {
     id: 'tos-osl-flight',
@@ -83,10 +67,6 @@ const transportRecords = [
     legs: [
       { code: '挪威航空 DY385 · 托运 23kg', from: 'TOS', to: 'OSL', depart: '19:50', arrive: '21:45' },
     ],
-    voucher: {
-      alt: '10.05 特罗姆瑟至奥斯陆航班信息',
-      images: ['/vouchers/flight-10-05-tos-osl.jpg'],
-    },
   },
   {
     id: 'return-flight',
@@ -99,14 +79,6 @@ const transportRecords = [
       { code: '泰国国际航空 TG600 · 托运 23kg / 手提 7kg', from: 'BKK', to: 'HKG', depart: '08:00', arrive: '11:45' },
     ],
     connection: '曼谷中转 1 小时 45 分，时间较紧；无需重新托运行李，无需过境签',
-    voucher: {
-      alt: '10.06 奥斯陆经曼谷至香港航班与行李信息',
-      images: [
-        '/vouchers/flight-10-06-osl-hkg.jpg',
-        '/vouchers/baggage-10-06-osl-bkk.jpg',
-        '/vouchers/baggage-10-07-bkk-hkg.jpg',
-      ],
-    },
   },
 ];
 
@@ -133,12 +105,8 @@ const stayRecords = [
     addressLabel: '酒店名称',
     checkIn: '09.25 15:00 — 00:00',
     checkOut: '09.27 00:00 — 12:00',
-    reservation: '5791629773 · PIN 7204',
+    reservation: '在 Booking.com 查看',
     note: 'Booking.com｜Hyatt Place Amsterdam Airport，King Room，2 人｜到店付款约 EUR 243.78',
-    voucher: {
-      alt: 'Hyatt Place Amsterdam Airport Booking.com 预定凭证',
-      images: ['/vouchers/stay-hyatt-booking.jpg'],
-    },
   },
   {
     id: 'iceland-stay',
@@ -148,7 +116,7 @@ const stayRecords = [
     navigation: 'Kelduland 19, 108 Reykjavík, Iceland',
     checkIn: '09.27 15:00 后',
     checkOut: '09.30 12:00 前',
-    reservation: 'HMEPFWFFR3',
+    reservation: '在 Airbnb 查看',
     note: 'Airbnb｜钥匙盒自助入住，指南与 Wi‑Fi 于入住前 48 小时显示｜楼外免费停车，车位充足',
   },
   {
@@ -159,7 +127,7 @@ const stayRecords = [
     navigation: 'Keflavík International Airport, 235 Keflavík, Iceland',
     checkIn: '09.30 22:00',
     checkOut: '退房时间待补充',
-    reservation: '预定编号待补充',
+    reservation: '查看预订确认信息',
     note: '住在 Keflavík International Airport，便于次日早班机；具体住宿设施与退房方式待补充',
   },
   {
@@ -170,7 +138,7 @@ const stayRecords = [
     navigation: 'Misværveien 2, 8312 Henningsvær, Norway',
     checkIn: '10.01 15:00 后',
     checkOut: '10.03 11:00 前',
-    reservation: 'HMTYZXPEJB',
+    reservation: '在 Airbnb 查看',
     note: 'Airbnb｜房东亲自迎接，需提前联系 Øystein｜提供停车位',
   },
   {
@@ -182,7 +150,7 @@ const stayRecords = [
     addressLabel: '集合地点',
     checkIn: '10.03 22:15（至少提前 15 分钟到港）',
     checkOut: '10.04 14:15',
-    reservation: '2330704',
+    reservation: '在 Hurtigruten 预订邮件中查看',
     note: 'Hurtigruten 官网｜Svolvær → Tromsø｜船上住宿',
   },
   {
@@ -194,8 +162,8 @@ const stayRecords = [
     addressLabel: '酒店名称',
     checkIn: '10.04 16:00 后',
     checkOut: '10.05 12:00 前',
-    reservation: '1753018586',
-    note: 'Agoda｜前台入住，建议准备护照与订单号',
+    reservation: '在 Agoda 查看',
+    note: 'Agoda｜前台入住，订单在 Agoda 查看',
   },
   {
     id: 'oslo-stay',
@@ -206,15 +174,8 @@ const stayRecords = [
     addressLabel: '酒店名称',
     checkIn: '10.05 15:00 — 18:30',
     checkOut: '10.06 06:00 — 11:30',
-    reservation: '6770573874 · PIN 7107',
+    reservation: '在 Booking.com 查看',
     note: 'Booking.com｜Radisson Hotel & Conference Centre Oslo Airport，Standard Room，1 人｜到店支付 1,435.50 NOK',
-    voucher: {
-      alt: 'Radisson Hotel & Conference Centre Oslo Airport Booking.com 预定凭证',
-      images: [
-        '/vouchers/stay-radisson-booking-1.png',
-        '/vouchers/stay-radisson-booking-2.png',
-      ],
-    },
   },
 ];
 
@@ -263,7 +224,7 @@ const placeholderEventTypes = [
     reservationStatus: '已预定',
     paymentStatus: '已付款',
     reservation: {
-      reference: '预定编号待补充',
+      reference: '查看预订确认信息',
       time: '使用时间待补充',
       instruction: '取票或使用方式待补充',
     },
@@ -276,7 +237,7 @@ const placeholderEventTypes = [
     reservationStatus: '已预定',
     paymentStatus: '未付款',
     reservation: {
-      reference: '预定编号待补充',
+      reference: '查看预订确认信息',
       time: '入住时间待补充',
       instruction: '入住凭证与门禁方式待补充',
     },
@@ -336,19 +297,8 @@ const journeyDayEvents = {
       reservationStatus: '已预定',
       infoType: 'flight',
       reservation: {
-        orderNumber: '1128146096447141',
         flightNumber: 'CI916 / CI073',
-        airlineReference: 'EKG5FB',
         time: '09.24 17:35 — 07:40 +1',
-        ticketNumber: '297-9555649633、297-9555649634',
-        voucher: {
-          alt: '09.24 香港经台北至阿姆斯特丹航班与行李信息',
-          images: [
-            '/vouchers/flight-09-24-hkg-ams.jpg',
-            '/vouchers/baggage-09-24-hkg-tpe.jpg',
-            '/vouchers/baggage-09-24-tpe-ams.jpg',
-          ],
-        },
       },
     },
   ],
@@ -384,13 +334,9 @@ const journeyDayEvents = {
       reservationStatus: '已预定',
       paymentStatus: '未付款',
       reservation: {
-        reference: '5791629773 · PIN 7204',
+        reference: '在 Booking.com 查看',
         time: '09.25 15:00 — 09.27 12:00',
-        instruction: '前台出示护照、确认号与 PIN 办理入住',
-        voucher: {
-          alt: 'Hyatt Place Amsterdam Airport Booking.com 预定凭证',
-          images: ['/vouchers/stay-hyatt-booking.jpg'],
-        },
+        instruction: '在 Booking.com 查看订单，前台办理入住',
       },
     },
   ],
@@ -406,13 +352,9 @@ const journeyDayEvents = {
       reservationStatus: '已预定',
       paymentStatus: '未付款',
       reservation: {
-        reference: '5791629773 · PIN 7204',
+        reference: '在 Booking.com 查看',
         time: '09.25 15:00 — 09.27 12:00',
-        instruction: '前台出示护照、确认号与 PIN 办理入住',
-        voucher: {
-          alt: 'Hyatt Place Amsterdam Airport Booking.com 预定凭证',
-          images: ['/vouchers/stay-hyatt-booking.jpg'],
-        },
+        instruction: '在 Booking.com 查看订单，前台办理入住',
       },
     },
   ],
@@ -427,15 +369,8 @@ const journeyDayEvents = {
       reservationStatus: '已预定',
       infoType: 'flight',
       reservation: {
-        orderNumber: '待补充',
         flightNumber: 'HV6885',
-        airlineReference: 'PKRCRE',
         time: '09.27 17:00 — 18:15',
-        ticketNumber: 'PKRCRE',
-        voucher: {
-          alt: '09.27 阿姆斯特丹至雷克雅未克航班信息',
-          images: ['/vouchers/flight-09-27-ams-kef.jpg'],
-        },
       },
     },
     {
@@ -448,19 +383,15 @@ const journeyDayEvents = {
       addressLabel: '取车地址',
       reservationStatus: '已预定',
       reservation: {
-        reference: '#155816',
+        reference: '在 Lotus 预订邮件中查看',
         time: '09.27 20:00 — 09.30 20:00',
         instruction: 'KEF 机场取还；总计 53,070 ISK',
-        voucher: {
-          alt: 'Lotus Car Rental 订单截图',
-          images: ['/vouchers/rental-lotus.jpg'],
-        },
       },
       bookingAccess: {
-        url: 'https://www.lotuscarrental.is/client/manage',
+
         credentials: [
-          { label: '登录邮箱', value: 'wendicao71@gmail.com' },
-          { label: '预订号', value: '#155816' },
+          { label: '登录邮箱', value: 'W********@gmail.com' },
+
         ],
       },
     },
@@ -473,7 +404,7 @@ const journeyDayEvents = {
       navigation: 'Kelduland 19, 108 Reykjavík, Iceland',
       reservationStatus: '已预定',
       reservation: {
-        reference: 'HMEPFWFFR3',
+        reference: '在 Airbnb 查看',
         time: '09.27 15:00 — 09.30 12:00',
         instruction: '钥匙盒自助入住；入住前 48 小时查看指南',
       },
@@ -549,7 +480,7 @@ const journeyDayEvents = {
       navigation: 'Kelduland 19, 108 Reykjavík, Iceland',
       reservationStatus: '已预定',
       reservation: {
-        reference: 'HMEPFWFFR3',
+        reference: '在 Airbnb 查看',
         time: '09.27 15:00 — 09.30 12:00',
         instruction: '钥匙盒自助入住；入住前 48 小时查看指南',
       },
@@ -635,7 +566,7 @@ const journeyDayEvents = {
       navigation: 'Kelduland 19, 108 Reykjavík, Iceland',
       reservationStatus: '已预定',
       reservation: {
-        reference: 'HMEPFWFFR3',
+        reference: '在 Airbnb 查看',
         time: '09.27 15:00 — 09.30 12:00',
         instruction: '钥匙盒自助入住；入住前 48 小时查看指南',
       },
@@ -653,22 +584,9 @@ const journeyDayEvents = {
       addressLabel: '集合地址',
       reservationStatus: '已预定',
       reservation: {
-        reference: 'GYGKBF5YANRW',
+        reference: '在手机 GetYourGuide App 查看票券／二维码',
         time: '09.30 09:00 — 11:00（提前 30 分钟集合）',
         instruction: '票券及二维码保存在手机 GetYourGuide App 中；打开该观鲸订单出示电子票券／二维码，在 Elding 老码头售票处办理登船并签署免责声明，至少提前 30 分钟到达。',
-        voucher: {
-          alt: 'GetYourGuide 雷克雅未克 RIB 游艇观鲸与海鹦电子票券',
-          images: [
-            '/vouchers/whale-watching-confirmation.png',
-            '/vouchers/whale-watching-details.jpg',
-          ],
-        },
-      },
-      bookingAccess: {
-        url: 'https://www.getyourguide.com/confirmation/WQ9QMBMC6HBGWBGCGDLXY38PZCRZJDL1',
-        credentials: [
-          { label: '预订号', value: 'GYGKBF5YANRW' },
-        ],
       },
     },
     {
@@ -690,7 +608,7 @@ const journeyDayEvents = {
       addressLabel: '还车地址',
       reservationStatus: '已预定',
       reservation: {
-        reference: '#68LQL6',
+        reference: '在 Lotus 预订邮件中查看',
         time: '09.30 20:00',
         instruction: '在 Lotus Car Rental 原门店还车',
       },
@@ -715,15 +633,8 @@ const journeyDayEvents = {
       reservationStatus: '已预定',
       infoType: 'flight',
       reservation: {
-        orderNumber: '待补充',
         flightNumber: 'SK4786 / SK4116 / WF836',
-        airlineReference: '待补充',
         time: '10.01 08:40 — 20:50',
-        ticketNumber: '待补充',
-        voucher: {
-          alt: '10.01 雷克雅未克经奥斯陆和博多至斯沃尔韦尔航班信息',
-          images: ['/vouchers/flight-10-01-kef-svj.jpg'],
-        },
       },
     },
     {
@@ -737,19 +648,15 @@ const journeyDayEvents = {
       reservationStatus: '已预定',
       paymentStatus: '未付款',
       reservation: {
-        reference: '#L52108732E4',
+        reference: '在 Hertz 预订邮件中查看',
         time: '10.01 19:00 — 10.03 19:00',
         instruction: '机场取车、Fiskergata 23 还车；到店支付',
-        voucher: {
-          alt: 'Hertz 挪威租车订单截图',
-          images: ['/vouchers/rental-hertz.jpg'],
-        },
       },
       bookingAccess: {
-        url: 'https://www.hertz.com/rentacar/reservation/?confirmationNumber=L52108732E4#review',
+
         credentials: [
-          { label: '姓氏拼音', value: 'CAO' },
-          { label: '预订号', value: '#L52108732E4' },
+          { label: '姓氏拼音', value: 'C**' },
+
         ],
       },
     },
@@ -762,7 +669,7 @@ const journeyDayEvents = {
       navigation: 'Misværveien 2, 8312 Henningsvær, Norway',
       reservationStatus: '已预定',
       reservation: {
-        reference: 'HMTYZXPEJB',
+        reference: '在 Airbnb 查看',
         time: '10.01 15:00 — 10.03 11:00',
         instruction: '房东亲自迎接；到达前联系 Øystein',
       },
@@ -883,7 +790,7 @@ const journeyDayEvents = {
       navigation: 'Misværveien 2, 8312 Henningsvær, Norway',
       reservationStatus: '已预定',
       reservation: {
-        reference: 'HMTYZXPEJB',
+        reference: '在 Airbnb 查看',
         time: '10.01 15:00 — 10.03 11:00',
         instruction: '房东亲自迎接；到达前联系 Øystein',
       },
@@ -961,7 +868,7 @@ const journeyDayEvents = {
       reservationStatus: '已预定',
       paymentStatus: '未付款',
       reservation: {
-        reference: '#L52108732E4',
+        reference: '在 Hertz 预订邮件中查看',
         time: '10.03 19:00',
         instruction: '在 Hertz Fiskergata 23 门店办理异地还车并付款',
       },
@@ -988,15 +895,15 @@ const journeyDayEvents = {
       addressLabel: '集合地点',
       reservationStatus: '已预定',
       reservation: {
-        reference: '2330704',
+        reference: '在 Hurtigruten 预订邮件中查看',
         time: '10.03 22:15 — 14:15 +1',
-        instruction: '凭订单号办理登船；至少提前 15 分钟到港',
+        instruction: '在 Hurtigruten 预订邮件中查看登船凭证；至少提前 15 分钟到港',
       },
       bookingAccess: {
-        url: 'https://www.hurtigruten.com/en/my-booking/login',
+
         credentials: [
-          { label: '登录邮箱', value: 'xiaojieliang31@gmail.com' },
-          { label: '预订号', value: '2330704' },
+          { label: '登录邮箱', value: 'L************@gmail.com' },
+
         ],
       },
     },
@@ -1049,9 +956,9 @@ const journeyDayEvents = {
       addressLabel: '酒店名称',
       reservationStatus: '已预定',
       reservation: {
-        reference: '1753018586',
+        reference: '在 Agoda 查看',
         time: '10.04 16:00 — 10.05 12:00',
-        instruction: '前台出示护照与 Agoda 订单号办理入住',
+        instruction: '在 Agoda 查看订单，前台办理入住',
       },
     },
   ],
@@ -1130,15 +1037,8 @@ const journeyDayEvents = {
       reservationStatus: '已预定',
       infoType: 'flight',
       reservation: {
-        orderNumber: '待补充',
         flightNumber: 'DY385',
-        airlineReference: 'BA3ZVL',
         time: '10.05 19:50 — 21:45',
-        ticketNumber: 'BA3ZVL',
-        voucher: {
-          alt: '10.05 特罗姆瑟至奥斯陆航班信息',
-          images: ['/vouchers/flight-10-05-tos-osl.jpg'],
-        },
       },
     },
     {
@@ -1152,16 +1052,9 @@ const journeyDayEvents = {
       reservationStatus: '已预定',
       paymentStatus: '未付款',
       reservation: {
-        reference: '6770573874 · PIN 7107',
+        reference: '在 Booking.com 查看',
         time: '10.05 15:00 — 10.06 11:30',
-        instruction: '前台出示护照、确认号与 PIN；到店付款',
-        voucher: {
-          alt: 'Radisson Hotel & Conference Centre Oslo Airport Booking.com 预定凭证',
-          images: [
-            '/vouchers/stay-radisson-booking-1.png',
-            '/vouchers/stay-radisson-booking-2.png',
-          ],
-        },
+        instruction: '在 Booking.com 查看订单；到店付款',
       },
     },
   ],
@@ -1177,19 +1070,8 @@ const journeyDayEvents = {
       reservationStatus: '已预定',
       infoType: 'flight',
       reservation: {
-        orderNumber: '1128146096549157',
         flightNumber: 'TG955 / TG600',
-        airlineReference: '8EL2FL',
         time: '10.06 13:45 — 11:45 +1',
-        ticketNumber: '217-6333199177、217-6333199176',
-        voucher: {
-          alt: '10.06 奥斯陆经曼谷至香港航班与行李信息',
-          images: [
-            '/vouchers/flight-10-06-osl-hkg.jpg',
-            '/vouchers/baggage-10-06-osl-bkk.jpg',
-            '/vouchers/baggage-10-07-bkk-hkg.jpg',
-          ],
-        },
       },
     },
   ],
@@ -1592,19 +1474,11 @@ function BookingAccess({ access }) {
   return (
     <aside aria-label="查看预订所需信息" className="booking-access">
       <div className="booking-access__header">
-        <span>查看预订需要</span>
-        <a href={access.url} rel="noreferrer" target="_blank">
-          打开订单
-          <ArrowIcon />
-        </a>
+        <span>账号提示</span>
       </div>
       <div className="booking-access__credentials">
         {access.credentials.map((credential) => (
-          <CopyableAddress
-            key={credential.label}
-            label={credential.label}
-            value={credential.value}
-          />
+          <p key={credential.label}>{credential.label}：{credential.value}</p>
         ))}
       </div>
     </aside>
@@ -1975,14 +1849,14 @@ function ReservationDetails({ event, showContext = false }) {
 
   const fields = event.infoType === 'flight'
     ? [
-        ['订单号', event.reservation.orderNumber],
+
         ['航班号', event.reservation.flightNumber],
-        ['航司预订号', event.reservation.airlineReference],
+
         ['航班时间', event.reservation.time],
-        ['票号', event.reservation.ticketNumber],
+
       ]
     : [
-        ['预定编号', event.reservation.reference],
+        ['查看预订', event.reservation.reference],
         ['使用时间', event.reservation.time],
         ['使用方式', event.reservation.instruction],
       ];
