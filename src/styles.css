@@ -86,7 +86,7 @@ input:focus-visible {
   align-items: end;
   min-height: 150px;
   padding: 18px 20px;
-  background: var(--white);
+  background: #fbfcfd;
   border-radius: 40px;
   animation: active-card-glow 7.2s ease-in-out infinite both;
 }
@@ -366,12 +366,13 @@ input:focus-visible {
 
 .today-focus {
   display: flex;
-  min-height: 300px;
-  padding: 34px;
+  min-height: 0;
+  padding: 24px 28px;
   flex-direction: column;
   background: var(--white);
-  border: 1px solid #e5e8ec;
-  animation: active-card-glow 7.2s ease-in-out infinite both;
+  border: 1px solid #e9edf0;
+  border-radius: 22px;
+  animation: active-card-glow 9.6s ease-in-out infinite both;
 }
 
 .today-focus__meta {
@@ -400,39 +401,35 @@ input:focus-visible {
 
 .today-focus__status {
   display: inline-flex;
-  min-height: 24px;
-  padding: 0 9px;
-  gap: 7px;
-  color: #278cae;
-  background: #e9f8fd;
-  border-radius: 999px;
+  gap: 6px;
+  color: #6898aa;
   align-items: center;
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .today-focus__signals {
   display: flex;
   gap: 6px;
-  margin-top: 30px;
+  margin-top: 17px;
   align-items: center;
 }
 
 .journey-live-dot {
   display: inline-block;
   flex: 0 0 auto;
-  width: 5px;
-  height: 5px;
-  background: var(--accent);
+  width: 4px;
+  height: 4px;
+  background: #73c6e4;
   border-radius: 50%;
-  animation: live-dot-cycle 6.4s ease-in-out infinite both;
+  animation: live-dot-cycle 5.8s ease-in-out infinite both;
 }
 
 .today-focus__title-row {
   display: flex;
   min-width: 0;
   gap: 8px;
-  margin-top: 14px;
+  margin-top: 9px;
   align-items: center;
 }
 
@@ -440,7 +437,7 @@ input:focus-visible {
   min-width: 0;
   margin: 0;
   color: var(--ink);
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 650;
   line-height: 1.35;
 }
@@ -458,10 +455,19 @@ input:focus-visible {
 
 .today-focus > p {
   max-width: 720px;
-  margin: 9px 0 0;
+  margin: 6px 0 0;
   color: var(--muted);
-  font-size: 13px;
+  font-size: 12px;
   line-height: 1.65;
+}
+
+.today-focus .flight-itinerary {
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.today-focus .connection-note {
+  margin-top: 5px;
 }
 
 .day-tabs {
@@ -847,6 +853,51 @@ input:focus-visible {
   line-height: 1.65;
 }
 
+.booking-access {
+  margin-top: 13px;
+  padding-top: 11px;
+  border-top: 1px solid #eeeeef;
+}
+
+.booking-access__header {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.booking-access__header > span {
+  color: var(--muted);
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.booking-access__header a {
+  display: inline-flex;
+  flex: 0 0 auto;
+  gap: 5px;
+  align-items: center;
+  color: #4b9fbd;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.booking-access__header svg {
+  width: 12px;
+  height: 12px;
+}
+
+.booking-access__credentials {
+  display: flex;
+  margin-top: 7px;
+  gap: 6px 14px;
+  flex-wrap: wrap;
+}
+
+.booking-access__credentials .copyable-address {
+  color: #66666a;
+}
+
 .checklist-surface {
   padding: 34px;
 }
@@ -965,20 +1016,27 @@ input:focus-visible {
   color: var(--ink);
   font-size: 13px;
   font-weight: 600;
+  transition: color 160ms ease;
 }
 
 .checklist-text small {
   color: var(--muted);
   font-size: 11px;
+  transition: color 160ms ease;
 }
 
 .checklist-group--packing .checklist-text strong {
-  color: var(--muted);
-  font-weight: 400;
+  color: var(--ink);
+  font-weight: 500;
 }
 
 .checklist-item.is-checked .checklist-box {
   color: var(--accent);
+}
+
+.checklist-item.is-checked .checklist-text strong,
+.checklist-item.is-checked .checklist-text small {
+  color: #b2b2b2;
 }
 
 .checklist-item:has(input:focus-visible) .checklist-box {
@@ -1202,14 +1260,18 @@ input:focus-visible {
   text-align: center;
 }
 
+.flight-leg small b {
+  color: #747474;
+  font-weight: 650;
+}
+
 .connection-note {
-  margin: 10px 0 0;
-  padding: 9px 12px;
-  color: #7c7c7c;
-  background: #f0f1f2;
-  border-radius: 12px;
+  margin: 9px 0 1px;
+  padding: 0 12px;
+  color: #a0a0a0;
+  background: transparent;
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 400;
   line-height: 1.45;
   text-align: center;
 }
@@ -1651,8 +1713,8 @@ input:focus-visible {
 
   .today-focus {
     min-height: 0;
-    padding: 24px;
-    border-radius: 24px;
+    padding: 20px;
+    border-radius: 20px;
   }
 
   .today-focus__meta {
@@ -1669,7 +1731,7 @@ input:focus-visible {
   }
 
   .today-focus__signals {
-    margin-top: 26px;
+    margin-top: 16px;
   }
 
   .today-focus__title-row h3 {
@@ -1842,67 +1904,23 @@ input:focus-visible {
 @keyframes active-card-glow {
   0%,
   100% {
-    box-shadow: 0 10px 28px rgba(35, 184, 242, 0.045);
+    box-shadow: 0 8px 24px rgba(35, 184, 242, 0.035);
   }
 
-  18% {
-    box-shadow: 0 12px 32px rgba(35, 184, 242, 0.06);
-  }
-
-  44% {
-    box-shadow: 0 16px 38px rgba(35, 184, 242, 0.105);
-  }
-
-  68% {
-    box-shadow: 0 13px 34px rgba(35, 184, 242, 0.075);
-  }
-
-  90% {
-    box-shadow: 0 10px 29px rgba(35, 184, 242, 0.05);
+  50% {
+    box-shadow: 0 12px 30px rgba(35, 184, 242, 0.065);
   }
 }
 
 @keyframes live-dot-cycle {
-  0% {
-    opacity: 0;
-    transform: scale(0.75);
-  }
-
-  6% {
-    opacity: 1;
-    transform: scale(0.92);
-  }
-
-  12% {
-    opacity: 1;
-    transform: scale(1.12);
-  }
-
-  18%,
-  30% {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  46% {
-    opacity: 1;
-    transform: scale(1.2);
-  }
-
-  64% {
-    opacity: 1;
-    transform: scale(0.94);
-  }
-
-  82%,
-  90% {
-    opacity: 1;
-    transform: scale(1);
-  }
-
-  94%,
+  0%,
   100% {
-    opacity: 0;
-    transform: scale(1.24);
+    opacity: 0.45;
+    transform: scale(0.88);
+  }
+
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
   }
 }

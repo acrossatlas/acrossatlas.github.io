@@ -448,13 +448,20 @@ const journeyDayEvents = {
       addressLabel: '取车地址',
       reservationStatus: '已预定',
       reservation: {
-        reference: '#68LQL6',
+        reference: '#155816',
         time: '09.27 20:00 — 09.30 20:00',
         instruction: 'KEF 机场取还；总计 53,070 ISK',
         voucher: {
           alt: 'Lotus Car Rental 订单截图',
           images: ['/vouchers/rental-lotus.jpg'],
         },
+      },
+      bookingAccess: {
+        url: 'https://www.lotuscarrental.is/client/manage',
+        credentials: [
+          { label: '登录邮箱', value: 'wendicao71@gmail.com' },
+          { label: '预订号', value: '#155816' },
+        ],
       },
     },
     {
@@ -628,6 +635,13 @@ const journeyDayEvents = {
           images: ['/vouchers/rental-hertz.jpg'],
         },
       },
+      bookingAccess: {
+        url: 'https://www.hertz.com/rentacar/reservation/?confirmationNumber=L52108732E4#review',
+        credentials: [
+          { label: '姓氏拼音', value: 'CAO' },
+          { label: '预订号', value: '#L52108732E4' },
+        ],
+      },
     },
     {
       id: 'oct01-henningsvaer-stay',
@@ -800,6 +814,13 @@ const journeyDayEvents = {
         time: '10.03 22:15 — 14:15 +1',
         instruction: '凭订单号办理登船；至少提前 15 分钟到港',
       },
+      bookingAccess: {
+        url: 'https://www.hurtigruten.com/en/my-booking/booking',
+        credentials: [
+          { label: '登录邮箱', value: 'xiaojieliang31@gmail.com' },
+          { label: '预订号', value: '2330704' },
+        ],
+      },
     },
   ],
   '2026-10-04': [
@@ -938,27 +959,39 @@ const packingChecklistGroups = [
     id: 'carry-on',
     title: '随身携带',
     items: [
-      '包纸',
-      '药（维生素）',
-      '充电器和转换插（手机、相机）',
-      '一套换洗衣物',
-      '充气颈枕、腰枕',
-      '信用卡',
-      'Pocket 3',
-      'Oppo X9 Ultra 大地探索家',
-    ].map((label, index) => ({ id: `carry-on-${index + 1}`, label })),
+      { id: 'carry-on-pocket-tissues', label: '包纸' },
+      { id: 'carry-on-chargers', label: '充电器和转换插（手机、相机）' },
+      { id: 'carry-on-change-of-clothes', label: '一套换洗衣物' },
+      { id: 'carry-on-pillows', label: '充气颈枕、腰枕' },
+      { id: 'carry-on-steam-eye-mask', label: '蒸汽眼罩' },
+      { id: 'carry-on-payment-cards', label: '支付卡', detail: 'Visa 或 Mastercard' },
+      { id: 'carry-on-power-bank', label: '充电宝' },
+      { id: 'carry-on-sim-card', label: '电话卡' },
+      { id: 'carry-on-pocket-3', label: 'Pocket 3' },
+      { id: 'carry-on-oppo-x9-ultra', label: 'Oppo X9 Ultra 大地探索家' },
+    ],
   },
   {
     id: 'checked-luggage',
     title: '托运行李',
     items: [
-      '行李箱',
-      '衣物',
-      '洗漱用品、毛巾、牙刷',
-      '拖鞋',
-      '奶茶袋',
-      '一次性餐具',
-    ].map((label, index) => ({ id: `checked-luggage-${index + 1}`, label })),
+      { id: 'checked-suitcase', label: '行李箱' },
+      { id: 'checked-underwear', label: '内衣内裤' },
+      { id: 'checked-socks', label: '袜子' },
+      { id: 'checked-outer-layer', label: '外层衣物', detail: '冲锋衣、羽绒服' },
+      { id: 'checked-mid-layer', label: '中层衣物', detail: '羽绒内胆、抓绒、毛衣' },
+      { id: 'checked-base-layer', label: '内层衣物', detail: '优衣库 HEATTECH 保暖内衣' },
+      { id: 'checked-winter-accessories', label: '保暖配件', detail: '手套、围巾、帽子' },
+      { id: 'checked-toiletries', label: '洗漱用品、毛巾、牙刷' },
+      { id: 'checked-slippers', label: '拖鞋' },
+      { id: 'checked-milk-tea-bags', label: '奶茶袋' },
+      { id: 'checked-disposable-tableware', label: '一次性餐具' },
+      { id: 'checked-instant-noodles', label: '泡面 × 6' },
+      { id: 'checked-pocket-3-mount', label: 'Pocket 3 支架' },
+      { id: 'checked-sunglasses', label: '墨镜' },
+      { id: 'checked-medicine', label: '药品', detail: '晕船药、感冒药、布洛芬、蒙脱石散' },
+      { id: 'checked-tissues', label: '2 包抽纸' },
+    ],
   },
 ];
 
@@ -1016,7 +1049,7 @@ function getCurrentEventFocus(events, now = new Date(), dayKey) {
   if (dayKey && todayKey !== dayKey) {
     return {
       event: events[0],
-      status: todayKey < dayKey ? '行程未开始' : '行程已结束',
+      status: '接下来',
     };
   }
 
@@ -1028,16 +1061,16 @@ function getCurrentEventFocus(events, now = new Date(), dayKey) {
   const current = scheduledEvents.find((event) => (
     currentMinutes >= timeToMinutes(event.startsAt) && currentMinutes < timeToMinutes(event.endsAt)
   ));
-  if (current) return { event: current, status: '正在进行' };
+  if (current) return { event: current, status: '接下来' };
 
   const upcoming = scheduledEvents.find((event) => currentMinutes < timeToMinutes(event.startsAt));
   if (upcoming) return { event: upcoming, status: '接下来' };
 
   if (scheduledEvents.length > 0) {
-    return { event: scheduledEvents.at(-1), status: '今日已完成' };
+    return { event: scheduledEvents.at(-1), status: '接下来' };
   }
 
-  return { event: events[0], status: '时间待补充' };
+  return { event: events[0], status: '接下来' };
 }
 
 function formatEventTime(event) {
@@ -1292,12 +1325,54 @@ function CopyableAddress({ label, value }) {
   );
 }
 
+function BookingAccess({ access }) {
+  if (!access) return null;
+
+  return (
+    <aside aria-label="查看预订所需信息" className="booking-access">
+      <div className="booking-access__header">
+        <span>查看预订需要</span>
+        <a href={access.url} rel="noreferrer" target="_blank">
+          打开订单
+          <ArrowIcon />
+        </a>
+      </div>
+      <div className="booking-access__credentials">
+        {access.credentials.map((credential) => (
+          <CopyableAddress
+            key={credential.label}
+            label={credential.label}
+            value={credential.value}
+          />
+        ))}
+      </div>
+    </aside>
+  );
+}
+
 function LocationCardTitle({ record }) {
   return (
     <div className="info-card__title-block">
       <h3>{record.title}</h3>
       <CopyableAddress label={record.addressLabel ?? '住宿地址'} value={record.navigation} />
     </div>
+  );
+}
+
+function FlightLegCaption({ text }) {
+  const flightNumber = text.match(/\b[A-Z0-9]{2}\d{3,4}\b/);
+
+  if (!flightNumber) return <small>{text}</small>;
+
+  const start = flightNumber.index;
+  const end = start + flightNumber[0].length;
+
+  return (
+    <small>
+      {text.slice(0, start)}
+      <b>{flightNumber[0]}</b>
+      {text.slice(end)}
+    </small>
   );
 }
 
@@ -1324,7 +1399,7 @@ function TransportCard({ record, isRelevant }) {
                   <span>{leg.depart}</span>
                   <strong>{leg.from} → {leg.to}</strong>
                   <span>{leg.arrive}</span>
-                  <small>{leg.code}</small>
+                  <FlightLegCaption text={leg.code} />
                 </div>
                 {index < record.legs.length - 1 && connection && (
                   <p className="connection-note">{connection}</p>
@@ -1430,9 +1505,28 @@ function SectionHeading({ children }) {
 
 function ChecklistGroup({ groups, items = [], title, variant }) {
   const allItems = groups ? groups.flatMap((group) => group.items) : items;
-  const [checkedItems, setCheckedItems] = useState(() => new Set(
-    allItems.filter((item) => item.checked).map((item) => item.id),
-  ));
+  const storageKey = `across-atlas:${currentJourney.startsOn}:checklist:${variant}`;
+  const [checkedItems, setCheckedItems] = useState(() => {
+    const defaultItems = allItems.filter((item) => item.checked).map((item) => item.id);
+
+    try {
+      const storedItems = JSON.parse(window.localStorage.getItem(storageKey));
+      if (!Array.isArray(storedItems)) return new Set(defaultItems);
+
+      const validItemIds = new Set(allItems.map((item) => item.id));
+      return new Set(storedItems.filter((itemId) => validItemIds.has(itemId)));
+    } catch {
+      return new Set(defaultItems);
+    }
+  });
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(storageKey, JSON.stringify([...checkedItems]));
+    } catch {
+      // Keep the checklist usable when browser storage is unavailable.
+    }
+  }, [checkedItems, storageKey]);
 
   const toggleItem = (itemId, checked) => {
     setCheckedItems((current) => {
@@ -1716,7 +1810,7 @@ function EventFlightDetails({ event }) {
             <span>{leg.depart}</span>
             <strong>{leg.from} → {leg.to}</strong>
             <span>{leg.arrive}</span>
-            <small>{leg.code}</small>
+            <FlightLegCaption text={leg.code} />
           </div>
           {index < event.flightLegs.length - 1 && event.flightConnections?.[index] && (
             <div className="connection-note">{event.flightConnections[index]}</div>
@@ -1746,6 +1840,7 @@ function DayEventCard({ event, onOpenReservation }) {
       </div>
       <CopyableEventTitle className="day-event-card__title-row" event={event} />
       {event.flightLegs ? <EventFlightDetails event={event} /> : <p>{event.detail}</p>}
+      <BookingAccess access={event.bookingAccess} />
     </li>
   );
 }
@@ -1753,7 +1848,8 @@ function DayEventCard({ event, onOpenReservation }) {
 function TodayFocusCard({ dayIndex, focus }) {
   if (!focus) return null;
 
-  const { event, status } = focus;
+  const { event } = focus;
+  const hasAlerts = event.reservationStatus === '未预定' || event.paymentStatus === '未付款';
 
   return (
     <article className="today-focus">
@@ -1764,16 +1860,15 @@ function TodayFocusCard({ dayIndex, focus }) {
         </div>
         <span className="today-focus__type">{event.type}</span>
       </div>
-      <div className="today-focus__signals">
-        <span className="today-focus__status">
-          <span aria-hidden="true" className="journey-live-dot" />
-          {status}
-        </span>
-        {event.reservationStatus === '未预定' && <span className="event-alert-tag">未预定</span>}
-        {event.paymentStatus === '未付款' && <span className="event-alert-tag">未付款</span>}
-      </div>
+      {hasAlerts && (
+        <div className="today-focus__signals">
+          {event.reservationStatus === '未预定' && <span className="event-alert-tag">未预定</span>}
+          {event.paymentStatus === '未付款' && <span className="event-alert-tag">未付款</span>}
+        </div>
+      )}
       <CopyableEventTitle className="today-focus__title-row" event={event} />
       {event.flightLegs ? <EventFlightDetails event={event} /> : <p>{event.detail}</p>}
+      <BookingAccess access={event.bookingAccess} />
     </article>
   );
 }
