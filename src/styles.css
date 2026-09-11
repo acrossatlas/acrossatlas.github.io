@@ -9,6 +9,7 @@
   --soft: #f5f5f5;
   --accent: #23b8f2;
   --white: #ffffff;
+  --journey-surface: #fbfcfd;
   --page-x: clamp(22px, 6vw, 96px);
   --content: 1120px;
   --brand-font: "FZLTHProGBK", "方正兰亭黑Pro GBK", "PingFang SC", sans-serif;
@@ -86,7 +87,7 @@ input:focus-visible {
   align-items: end;
   min-height: 150px;
   padding: 18px 20px;
-  background: #fbfcfd;
+  background: var(--journey-surface);
   border-radius: 40px;
   animation: active-card-glow 7.2s ease-in-out infinite both;
 }
@@ -369,7 +370,7 @@ input:focus-visible {
   min-height: 0;
   padding: 24px 28px;
   flex-direction: column;
-  background: #edf6fc;
+  background: var(--journey-surface);
   border: 1px solid #e9edf0;
   border-radius: 22px;
   animation: active-card-glow 9.6s ease-in-out infinite both;
@@ -380,6 +381,60 @@ input:focus-visible {
   gap: 18px;
   align-items: center;
   justify-content: space-between;
+}
+
+.journey-island {
+  position: fixed;
+  top: calc(env(safe-area-inset-top, 0px) + 10px);
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: max-content;
+  max-width: min(360px, calc(100vw - 32px));
+  min-height: 58px;
+  padding: 11px 22px;
+  border: 0;
+  border-radius: 36px;
+  background: #08090b;
+  color: #fafbfc;
+  box-shadow: 0 6px 22px rgb(0 0 0 / 16%);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.journey-island:focus-visible {
+  outline: 2px solid #23b8f2;
+  outline-offset: 4px;
+}
+
+.journey-island__type {
+  flex: none;
+  color: #a9b4bd;
+  font-size: 11px;
+}
+
+.journey-island__content {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.journey-island__content strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.journey-island__content > span {
+  color: #a9b4bd;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
 }
 
 .today-focus__schedule {
