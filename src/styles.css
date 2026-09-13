@@ -2142,11 +2142,12 @@ body {
   .day-detail {
     --sticky-map-height: min(360px, 40svh);
     --sticky-map-fade-height: 28px;
+    --sticky-map-top-gap: 12px;
   }
 
   .day-detail > .day-map {
     position: sticky;
-    top: env(safe-area-inset-top, 0px);
+    top: calc(env(safe-area-inset-top, 0px) + var(--sticky-map-top-gap));
     z-index: 20;
     height: var(--sticky-map-height);
     min-height: 0;
@@ -2177,6 +2178,6 @@ body {
   }
 
   .day-detail .day-event-card {
-    scroll-margin-top: calc(var(--sticky-map-height) + var(--sticky-map-fade-height) + env(safe-area-inset-top, 0px) + 12px);
+    scroll-margin-top: calc(var(--sticky-map-height) + var(--sticky-map-fade-height) + var(--sticky-map-top-gap) + env(safe-area-inset-top, 0px) + 12px);
   }
 }
