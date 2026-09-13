@@ -393,73 +393,6 @@ input:focus-visible {
   justify-content: space-between;
 }
 
-.journey-island {
-  position: fixed;
-  top: calc(env(safe-area-inset-top, 0px) + 10px);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 30;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  width: max-content;
-  max-width: min(360px, calc(100vw - 32px));
-  min-height: 58px;
-  padding: 11px 22px;
-  border: 0;
-  border-radius: 36px;
-  background: #08090b;
-  color: #fafbfc;
-  box-shadow: 0 6px 22px rgb(0 0 0 / 16%);
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
-}
-
-.journey-island:focus-visible {
-  outline: 2px solid var(--accent);
-  outline-offset: 4px;
-}
-
-.journey-island__type {
-  flex: none;
-  color: #a9b4bd;
-  font-size: 11px;
-}
-
-.journey-island__content {
-  display: grid;
-  gap: 3px;
-  min-width: 0;
-}
-
-.journey-island__content strong {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.journey-island__content > span {
-  color: #a9b4bd;
-  font-size: 11px;
-  font-variant-numeric: tabular-nums;
-}
-
-/* Only extend into the top inset when the viewport exposes it. No guessed
-   iPhone model dimensions: all text stays below the reported sensor area. */
-@media (max-width: 600px) and (orientation: portrait) {
-  .journey-island {
-    top: 0;
-    width: min(280px, calc(100vw - 48px));
-    min-height: calc(env(safe-area-inset-top, 0px) + 62px);
-    padding: calc(env(safe-area-inset-top, 0px) + 8px) 20px 12px;
-    justify-content: center;
-    border-radius: 28px;
-    background: #000;
-  }
-}
 
 body {
   padding-left: env(safe-area-inset-left, 0px);
@@ -2202,3 +2135,28 @@ body {
 .day-tabs__divider { flex: none; align-self: center; height: 20px; margin: 0 6px; border-left: 1px solid #dcdde1; }
 
 .event-description { white-space: pre-line; }
+
+/* Sticky is bounded by .day-detail, so it releases before Checklist.
+   Use the existing single-column breakpoint; desktop keeps its split view. */
+@media (max-width: 820px) {
+  .day-detail {
+    --sticky-map-height: min(360px, 40svh);
+  }
+
+  .day-detail > .day-map {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 20;
+    height: var(--sticky-map-height);
+    min-height: 0;
+    box-shadow: 0 8px 18px #0000000a;
+  }
+
+  .day-detail > .day-map .daily-map__surface {
+    height: 100%;
+  }
+
+  .day-detail .day-event-card {
+    scroll-margin-top: calc(var(--sticky-map-height) + env(safe-area-inset-top, 0px) + 12px);
+  }
+}

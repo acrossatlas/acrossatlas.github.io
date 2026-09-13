@@ -1957,45 +1957,13 @@ function DayEventCard({ event, onOpenReservation }) {
 }
 
 function TodayFocusCard({ dayIndex, focus }) {
-  const cardRef = useRef(null);
-  const [isDocked, setIsDocked] = useState(false);
-
-  useEffect(() => {
-    const card = cardRef.current;
-    if (!card) return undefined;
-    const observer = new IntersectionObserver(([entry]) => {
-      // Only dock after the whole card has scrolled above the viewport.
-      setIsDocked(!entry.isIntersecting && entry.boundingClientRect.bottom <= 0);
-    }, { threshold: 0 });
-    observer.observe(card);
-    return () => observer.disconnect();
-  }, [focus?.event.id]);
-
   if (!focus) return null;
 
   const { event } = focus;
   const hasAlerts = event.reservationStatus === '未预定' || event.paymentStatus === '未付款';
 
   return (
-    <>
-    {isDocked && (
-      <button
-        className="journey-island"
-        type="button"
-        aria-label={`查看完整行程：${event.title}`}
-        onClick={() => cardRef.current?.scrollIntoView({
-          behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
-          block: 'center',
-        })}
-      >
-        <span className="journey-island__type">{event.type}</span>
-        <span className="journey-island__content">
-          <strong>{event.title}</strong>
-          <span>{formatEventTime(event)}</span>
-        </span>
-      </button>
-    )}
-    <article className="today-focus" ref={cardRef}>
+    <article className="today-focus">
       <div className="today-focus__meta">
         <div className="today-focus__schedule">
           <span>Day {dayIndex + 1}</span>
@@ -2012,7 +1980,6 @@ function TodayFocusCard({ dayIndex, focus }) {
       <CopyableEventTitle className="today-focus__title-row" event={event} />
       {event.flightLegs ? <EventFlightDetails event={event} /> : <p className="event-description">{event.detail}</p>}
     </article>
-    </>
   );
 }
 
