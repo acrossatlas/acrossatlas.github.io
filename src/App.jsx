@@ -7,18 +7,21 @@ const bookingAccessByProvider = {
         url: 'https://www.lotuscarrental.is/client/manage',
         credentials: [
           { label: '登录邮箱', value: 'W********@gmail.com' },
+          { label: '预订号', value: '155816' },
         ],
       },
   hertz: {
-        url: 'https://www.hertz.com/rentacar/reservation/',
+        url: 'https://www.hertz.com/us/en/reservation',
         credentials: [
           { label: '姓氏拼音', value: 'C**' },
+          { label: '预订号', value: 'L52108732E4' },
         ],
       },
   hurtigruten: {
         url: 'https://www.hurtigruten.com/en/my-booking/login',
         credentials: [
           { label: '登录邮箱', value: 'L************@gmail.com' },
+          { label: '预订号', value: '2330704' },
         ],
       },
 };
@@ -1496,13 +1499,16 @@ function BookingAccess({ access }) {
       <div className="booking-access__header">
         <span>查看预订需要</span>
         {access.url && <a href={access.url} rel="noopener noreferrer" target="_blank">
-          打开订单<ArrowIcon />
+          查询预订<ArrowIcon />
         </a>}
       </div>
       <div className="booking-access__credentials">
         {access.credentials.map((credential) => (
           credential.label.includes('邮箱')
-            ? <p key={credential.label}>{credential.label}：{credential.value}</p>
+            ? <div className="booking-access__identity" key={credential.label}>
+                <span className="copyable-address__label">{credential.label}</span>
+                <span>{credential.value}</span>
+              </div>
             : <CopyableAddress key={credential.label} label={credential.label} value={credential.value} />
         ))}
       </div>

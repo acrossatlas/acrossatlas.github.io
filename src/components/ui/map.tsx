@@ -4,6 +4,7 @@
 import * as MapLibreGL from "maplibre-gl";
 import type { PopupOptions, MarkerOptions } from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
+import mapWorkerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
 import type * as GeoJSON from "geojson";
 import {
   createContext,
@@ -25,7 +26,7 @@ import { cn } from "../../lib/utils";
 
 if (typeof window !== "undefined" && !MapLibreGL.getWorkerUrl()) {
   MapLibreGL.setWorkerUrl(
-    `https://unpkg.com/maplibre-gl@${MapLibreGL.getVersion()}/dist/maplibre-gl-worker.mjs`,
+    mapWorkerUrl,
   );
 }
 
@@ -216,7 +217,8 @@ type MapProps = {
 
 function DefaultLoader() {
   return (
-    <div className="bg-background/50 absolute inset-0 z-10 flex items-center justify-center backdrop-blur-xs">
+    <div role="status" className="daily-map__load-status">
+      正在加载地图…
       <div className="flex gap-1">
         <span className="bg-muted-foreground/60 size-1.5 animate-pulse rounded-full" />
         <span className="bg-muted-foreground/60 size-1.5 animate-pulse rounded-full [animation-delay:150ms]" />
@@ -254,6 +256,7 @@ const Map = forwardRef<MapRef, MapProps>(function Map(
   const containerRef = useRef<HTMLDivElement>(null);
   const [mapInstance, setMapInstance] = useState<MapLibreGL.Map | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [loadFailed, setLoadFailed] = useState(false);
   const [isStyleLoaded, setIsStyleLoaded] = useState(false);
   const [pendingStyle, setPendingStyle] = useState<MapStyleOption | null>(null);
   const currentStyleRef = useRef<MapStyleOption | null>(null);
@@ -294,7 +297,9 @@ const Map = forwardRef<MapRef, MapProps>(function Map(
       resolvedTheme === "dark" ? mapStyles.dark : mapStyles.light;
     currentStyleRef.current = initialStyle;
 
-    const map = new MapLibreGL.Map({
+    let map: MapLibreGL.Map;
+    try {
+      map = new MapLibreGL.Map({
       container: containerRef.current,
       style: initialStyle,
       renderWorldCopies: false,
@@ -303,13 +308,27 @@ const Map = forwardRef<MapRef, MapProps>(function Map(
       },
       ...props,
       ...viewport,
-    });
+      });
+    } catch {
+      setLoadFailed(true);
+      return;
+    }
+
+    // A failed remote basemap must not leave the map behind a permanent loader.
+    // The local blank style still supports our GeoJSON routes and DOM markers.
+    const loadTimeout = window.setTimeout(() => {
+      setLoadFailed(true);
+      map.setStyle(blankMapStyle, { diff: false });
+    }, 12000);
 
     const styleLoadHandler = () => {
       styleSwapInFlightRef.current = false;
       setIsStyleLoaded(true);
     };
-    const loadHandler = () => setIsLoaded(true);
+    const loadHandler = () => {
+      window.clearTimeout(loadTimeout);
+      setIsLoaded(true);
+    };
 
     // Viewport change handler - skip if triggered by internal update
     const handleMove = () => {
@@ -323,6 +342,7 @@ const Map = forwardRef<MapRef, MapProps>(function Map(
     setMapInstance(map);
 
     return () => {
+      window.clearTimeout(loadTimeout);
       map.off("load", loadHandler);
       map.off("style.load", styleLoadHandler);
       map.off("move", handleMove);
@@ -409,7 +429,11 @@ const Map = forwardRef<MapRef, MapProps>(function Map(
         ref={containerRef}
         className={cn("relative h-full w-full", className)}
       >
-        {(!isLoaded || loading) && <DefaultLoader />}
+        {(!isLoaded || loading) && !loadFailed && <DefaultLoader />}
+        {loadFailed && <div role="status" className="daily-map__load-status">
+          {mapInstance ? '底图未加载，当前仅显示路线和地点。' : '地图无法初始化，请查看下方行程。'}
+          <button type="button" onClick={() => window.location.reload()}>重新加载</button>
+        </div>}
         {/* SSR-safe: children render only when map is loaded on client */}
         {mapInstance && children}
       </div>
