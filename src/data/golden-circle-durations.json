@@ -1,0 +1,86 @@
+{
+  "retrievedOn": "2026-09-13",
+  "source": "https://routing.openstreetmap.de/routed-car/route/v1/driving/",
+  "legs": [
+    {
+      "from": "city",
+      "to": "thingvellir",
+      "seconds": 2823.8,
+      "coordinates": [
+        -21.557476,
+        64.185506
+      ],
+      "mode": "driving"
+    },
+    {
+      "from": "thingvellir",
+      "to": "geysir",
+      "seconds": 3601.6,
+      "coordinates": [
+        -20.760094,
+        64.209401
+      ],
+      "mode": "driving"
+    },
+    {
+      "from": "geysir",
+      "to": "gullfoss",
+      "seconds": 564.9,
+      "coordinates": [
+        -20.211705,
+        64.308113
+      ],
+      "mode": "driving"
+    },
+    {
+      "from": "gullfoss",
+      "to": "kerid",
+      "seconds": 3042.3,
+      "coordinates": [
+        -20.460072,
+        64.17644
+      ],
+      "mode": "driving"
+    },
+    {
+      "from": "kerid",
+      "to": "city",
+      "seconds": 3840.1,
+      "coordinates": [
+        -21.366609,
+        64.018232
+      ],
+      "mode": "driving"
+    },
+    {
+      "from": "gullfoss",
+      "to": "city",
+      "seconds": 6739.9,
+      "coordinates": [
+        -21.038978,
+        64.231963
+      ],
+      "mode": "driving"
+    },
+    {
+      "seconds": 1868.9,
+      "coordinates": [
+        -20.192594,
+        64.267981
+      ],
+      "from": "gullfoss",
+      "to": "lagoon",
+      "mode": "driving"
+    },
+    {
+      "seconds": 5874.4,
+      "coordinates": [
+        -21.192064,
+        63.995016
+      ],
+      "from": "lagoon",
+      "to": "city",
+      "mode": "driving"
+    }
+  ]
+}

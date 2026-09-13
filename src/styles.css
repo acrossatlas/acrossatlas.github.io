@@ -1,3 +1,8 @@
+@layer theme, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+@source "./components/ui/map.tsx";
+
 :root {
   color: #202020;
   background: #ffffff;
@@ -7,9 +12,12 @@
   --ink: #202020;
   --muted: #979797;
   --soft: #f5f5f5;
-  --accent: #23b8f2;
+  --accent: #5499ff;
+  --accent-ink: #2865bd;
+  --accent-soft: #edf4ff;
+  --accent-tag: #dceaff;
   --white: #ffffff;
-  --journey-surface: #fbfcfd;
+  --journey-surface: #94bfff;
   --page-x: clamp(22px, 6vw, 96px);
   --content: 1120px;
   --brand-font: "FZLTHProGBK", "方正兰亭黑Pro GBK", "PingFang SC", sans-serif;
@@ -85,10 +93,11 @@ input:focus-visible {
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 20px;
   align-items: end;
-  min-height: 150px;
-  padding: 18px 20px;
-  background: var(--journey-surface);
-  border-radius: 40px;
+  min-height: 0;
+  padding: 18px 26px;
+  background: var(--white);
+  border: 1px solid #e9edf0;
+  border-radius: 24px;
   animation: active-card-glow 7.2s ease-in-out infinite both;
 }
 
@@ -131,6 +140,7 @@ input:focus-visible {
 }
 
 .current-journey__action {
+  align-self: center;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -370,7 +380,7 @@ input:focus-visible {
   min-height: 0;
   padding: 24px 28px;
   flex-direction: column;
-  background: var(--journey-surface);
+  background: var(--white);
   border: 1px solid #e9edf0;
   border-radius: 22px;
   animation: active-card-glow 9.6s ease-in-out infinite both;
@@ -407,7 +417,7 @@ input:focus-visible {
 }
 
 .journey-island:focus-visible {
-  outline: 2px solid #23b8f2;
+  outline: 2px solid var(--accent);
   outline-offset: 4px;
 }
 
@@ -457,7 +467,7 @@ input:focus-visible {
 .today-focus__status {
   display: inline-flex;
   gap: 6px;
-  color: #6898aa;
+  color: var(--accent-ink);
   align-items: center;
   font-size: 10px;
   font-weight: 500;
@@ -475,7 +485,7 @@ input:focus-visible {
   flex: 0 0 auto;
   width: 4px;
   height: 4px;
-  background: #73c6e4;
+  background: var(--accent);
   border-radius: 50%;
   animation: live-dot-cycle 5.8s ease-in-out infinite both;
 }
@@ -523,6 +533,30 @@ input:focus-visible {
 
 .today-focus .connection-note {
   margin-top: 5px;
+}
+
+.today-focus__schedule > span:first-child::before {
+  content: '';
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  margin-right: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  vertical-align: middle;
+}
+
+/* Keep supporting text legible on the reference blue surface. */
+.current-journey__dates {
+  color: #737b85;
+}
+
+.today-focus .today-focus__schedule span,
+.today-focus .today-focus__type,
+.today-focus > p,
+.today-focus .flight-leg small,
+.today-focus .connection-note {
+  color: #737b85;
 }
 
 .day-tabs {
@@ -696,7 +730,7 @@ input:focus-visible {
   position: absolute;
   z-index: 2;
   padding: 5px 8px;
-  color: #4c9dbc;
+  color: var(--accent-ink);
 }
 
 .route-segment--one {
@@ -829,19 +863,19 @@ input:focus-visible {
 }
 
 .event-alert-tag {
-  color: #278cae;
-  background: #e9f8fd;
+  color: var(--accent-ink);
+  background: var(--accent-tag);
 }
 
 .reservation-info-trigger {
-  color: #6e6e73;
-  background: #f0f0f2;
+  color: var(--accent-ink);
+  background: var(--accent-soft);
   cursor: pointer;
 }
 
 .reservation-info-trigger:hover {
-  color: var(--ink);
-  background: #e8e8eb;
+  color: var(--accent-ink);
+  background: var(--accent-tag);
 }
 
 .day-event-card__title-row {
@@ -961,7 +995,7 @@ input:focus-visible {
   flex: 0 0 auto;
   gap: 5px;
   align-items: center;
-  color: #4b9fbd;
+  color: var(--accent-ink);
   font-size: 10px;
   font-weight: 600;
 }
@@ -1258,7 +1292,7 @@ input:focus-visible {
 }
 
 .info-card[data-relevant="true"] {
-  background: #f2f8fb;
+  background: var(--accent-soft);
 }
 
 .info-card__meta {
@@ -1291,8 +1325,8 @@ input:focus-visible {
 }
 
 .info-card__meta .info-card__current {
-  color: #278cae;
-  background: #e3f5fb;
+  color: var(--accent-ink);
+  background: var(--accent-tag);
 }
 
 .info-card__date {
@@ -1485,8 +1519,8 @@ input:focus-visible {
 }
 
 .reservation-state.is-pending {
-  color: #278cae;
-  background: #e9f8fd;
+  color: var(--accent-ink);
+  background: var(--accent-tag);
 }
 
 .reservation-state strong {
@@ -1692,9 +1726,9 @@ input:focus-visible {
   }
 
   .current-journey {
-    min-height: 148px;
-    padding: 18px 20px;
-    border-radius: 32px;
+    min-height: 0;
+    padding: 18px 22px;
+    border-radius: 24px;
   }
 
   .current-journey__status {
@@ -1988,11 +2022,11 @@ input:focus-visible {
 @keyframes active-card-glow {
   0%,
   100% {
-    box-shadow: 0 8px 24px rgba(35, 184, 242, 0.035);
+    box-shadow: 0 8px 24px rgba(84, 153, 255, 0.035);
   }
 
   50% {
-    box-shadow: 0 12px 30px rgba(35, 184, 242, 0.065);
+    box-shadow: 0 12px 30px rgba(84, 153, 255, 0.065);
   }
 }
 
@@ -2008,3 +2042,127 @@ input:focus-visible {
     transform: scale(1.08);
   }
 }
+
+/* Daily maps — mapcn / CARTO, with the fieldbook's blue route accent. */
+.daily-map { align-self: start; background: #f4f6f8; min-height: 496px; }
+.daily-map__surface { position: relative; height: 496px; isolation: isolate; }
+.daily-map__surface > div:first-child { height: 100%; }
+.daily-map__caption { pointer-events: none; padding: 0; top: 22px; left: 22px; background: none; box-shadow: none; }
+.daily-map__caption span { color: #737b85; font-size: 12px; font-weight: 600; letter-spacing: 0; }
+.daily-map__caption strong { font-size: 16px; }
+.daily-map__marker { display: flex; align-items: center; gap: 6px; border: 0; background: transparent; cursor: pointer; padding: 0; font-family: inherit; }
+.daily-map__marker > span, .daily-map__number { display: grid; place-items: center; width: 28px; height: 28px; flex-shrink: 0; border: 3px solid white; border-radius: 50%; background: #3986ed; color: #fff; font-size: 12px; font-weight: 700; box-shadow: 0 2px 6px #233d6533; }
+.daily-map__marker strong { background: #fffffff2; border: 0; color: var(--ink); border-radius: 999px; padding: 6px 9px; font-size: 11px; font-weight: 600; white-space: nowrap; box-shadow: 0 5px 16px rgb(35 40 44 / 6%); }
+.daily-map__marker:hover > span, .daily-map__marker.is-selected > span { background: #1658b5; }
+.daily-map button:focus-visible { outline: 3px solid #195abc; outline-offset: 3px; }
+.daily-map__controls { position: absolute; z-index: 5; right: 14px; top: 18px; display: flex; flex-direction: column; border: 1px solid #dfe5ec; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px #20385812; }
+.daily-map__controls button { display: grid; place-items: center; width: 34px; height: 34px; background: white; border: 0; color: #33445b; font-size: 20px; cursor: pointer; }
+.daily-map__controls button + button { border-top: 1px solid #e9edf2; }
+.daily-map__options { position: absolute; left: 16px; right: 58px; bottom: 32px; z-index: 4; padding: 11px 12px; border-radius: 12px; background: #fffffff2; box-shadow: 0 2px 14px #20385812; }
+.daily-map__options > span { font-size: 10px; color: #788496; }
+.daily-map__options > div { display: flex; gap: 5px; margin-top: 7px; }
+.daily-map__options button { border: 1px solid #e2e8f0; background: white; color: #627084; border-radius: 6px; padding: 6px 9px; font: inherit; font-size: 11px; cursor: pointer; }
+.daily-map__options button[aria-pressed="true"] { color: #2166c4; background: #edf4ff; border-color: #a3c6f7; }
+.daily-map__options p { font-size: 10px; color: #778393; margin: 8px 0 0; line-height: 1.5; }
+.daily-map__stops { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 10px; list-style: none; padding: 20px; margin: 0; border-top: 1px solid #e6eaf0; background: white; }
+.daily-map__stops li { display: flex; align-items: flex-start; gap: 8px; min-width: 0; }
+.daily-map__number { width: 23px; height: 23px; font-size: 10px; border-width: 2px; }
+.daily-map__stop-title { padding: 0; border: 0; background: none; font: inherit; font-size: 12px; font-weight: 600; color: #33445b; cursor: pointer; text-align: left; }
+.daily-map__stops small { display: block; color: #8792a1; font-size: 10px; margin-top: 4px; }
+.daily-map__event-links { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 5px; }
+.daily-map__event-links button { border: 0; padding: 0; background: none; color: #2166c4; font: inherit; font-size: 10px; cursor: pointer; }
+.daily-map__error, .daily-map__empty { position: absolute; z-index: 5; left: 20px; right: 20px; top: 105px; padding: 12px; background: #fffffff2; border-radius: 8px; color: #68778b; font-size: 12px; }
+.daily-map__loading { display: grid; place-items: center; color: #788496; font-size: 13px; }
+@media (max-width: 640px) { .daily-map__surface { height: 440px; } .daily-map__caption { left: 12px; top: 12px; padding: 10px; } .daily-map__caption strong { font-size: 14px; } .daily-map__options { left: 12px; right: 12px; } .daily-map__stops { padding: 16px; } }
+.daily-map__marker { position: relative; width: 28px; height: 28px; }
+.daily-map__marker strong { position: absolute; left: 34px; top: 50%; transform: translateY(-50%); }
+.daily-map__marker--geysir strong { left: auto; right: 0; top: -8px; transform: translateY(-100%); }
+@media (max-width: 640px) {
+  .daily-map__marker strong { font-size: 10px; padding: 4px; }
+  .daily-map__marker--thingvellir strong { left: 0; top: -8px; transform: translateY(-100%); }
+  .daily-map__marker--gullfoss strong { left: 12px; top: 36px; transform: none; }
+}
+
+.daily-map { min-height: 0; }
+.daily-map__marker.is-optional > span { background: #a0a7b1; }
+.daily-map__marker.is-optional strong { color: #808994; }
+.daily-map__marker.is-optional small { display: inline; margin-top: 0; font-size: 9px; font-weight: 400; color: #929aa5; }
+.daily-map__marker.is-optional:hover > span { background: #79828f; }
+.daily-map__marker--lagoon strong { left: 34px; top: 50%; transform: translateY(-50%); }
+
+/* Scoped overrides keep provider styles from changing the fieldbook pins. */
+.daily-map .daily-map__marker > span { position: absolute; top: 0; left: 0; width: 24px; height: 24px; border: 0; background: var(--ink); color: white; font-size: 11px; font-weight: 600; box-shadow: none; }
+.daily-map .daily-map__marker > span::after { content: ''; position: absolute; width: 12px; height: 10px; background: inherit; top: 22px; left: 6px; clip-path: polygon(0 0, 100% 0, 50% 100%); }
+.daily-map .daily-map__marker { display: block; width: 24px; height: 32px; }
+.daily-map .daily-map__marker.is-optional > span { background: #737b85; }
+.daily-map .daily-map__marker strong { left: 30px; }
+.daily-map .daily-map__marker--geysir strong { left: auto; }
+.daily-map .daily-map__caption { padding: 0; }
+.daily-map__duration { color: #303c48; font: 500 12px/1.4 'PingFang SC', sans-serif; text-shadow: 0 0 2px #fff, 0 0 4px #fff, 1px 1px 1px #fff, -1px -1px 1px #fff; white-space: nowrap; pointer-events: none; display: block; transform: translateY(-10px); }
+.daily-map__duration-trigger { pointer-events: auto; cursor: pointer; border: 0; background: transparent; padding: 8px; margin: -8px; }
+.daily-map__duration-trigger:disabled { cursor: default; }
+.daily-map__marker[data-dimmed="true"]:not(.is-selected) { opacity: .25; }
+.daily-map .daily-map__marker.is-selected { opacity: 1; }
+.daily-map .daily-map__marker.is-selected strong { background: #fff; }
+.daily-map__route-picker { position: absolute; z-index: 6; left: 16px; bottom: 14px; display: flex; gap: 6px; }
+.daily-map__route-picker button { border: 0; border-radius: 999px; padding: 7px 10px; background: #fffffff0; color: #737b85; font-family: inherit; font-size: 11px; font-weight: 500; line-height: 1.3; cursor: pointer; }
+.daily-map__route-picker button[aria-pressed="true"] { background: var(--accent); color: white; }
+.daily-map .maplibregl-marker:has(.daily-map__marker.is-selected) { z-index: 10; }
+.daily-map .daily-map__marker.is-selected strong { left: 12px; right: auto; top: -12px; transform: translate(-50%, -100%); width: max-content; max-width: none; white-space: nowrap; border-radius: 16px; padding: 14px 16px; color: var(--ink); font-size: 13px; line-height: 1.45; text-align: left; box-shadow: 0 6px 24px rgb(35 40 44 / 12%); }
+.daily-map .daily-map__marker.is-selected .daily-map__address { display: block; margin-top: 7px; font-size: 11px; line-height: 1.5; font-weight: 400; color: #737b85; white-space: nowrap; overflow-wrap: normal; }
+
+.daily-map__controls { gap: 8px; border: 0; border-radius: 0; overflow: visible; box-shadow: none; }
+.daily-map__controls .daily-map__reset { display: grid; place-items: center; border: 1px solid #dfe5ec; border-radius: 10px; box-shadow: 0 2px 10px #20385812; }
+.daily-map__zoom { display: flex; flex-direction: column; border: 1px solid #dfe5ec; border-radius: 10px; overflow: hidden; box-shadow: 0 2px 10px #20385812; }
+.daily-map__zoom button { width: 32px; }
+.daily-map__pin-trigger { position: absolute; inset: 0; z-index: 1; padding: 0; border: 0; background: transparent; cursor: pointer; }
+.daily-map__title-trigger { padding: 0; border: 0; color: inherit; background: transparent; font: inherit; text-align: inherit; cursor: pointer; }
+.daily-map .daily-map__marker.is-selected .daily-map__address-copy { display: flex; align-items: flex-start; gap: 8px; width: 100%; padding: 0; border: 0; background: transparent; font-family: inherit; text-align: left; cursor: pointer; }
+.daily-map__address-copy svg { flex-shrink: 0; margin-top: 2px; }
+.daily-map__copy-status { display: block; color: #737b85; font-size: 10px; font-weight: 400; }
+.daily-map .daily-map__marker.is-optional.is-highlighted > span { background: var(--ink); }
+.daily-map .daily-map__marker.is-optional.is-highlighted strong { color: var(--ink); }
+.daily-map__plan-toggle { position: absolute; right: 14px; top: 50%; transform: translateY(-50%); display: grid; place-items: center; width: 28px; height: 28px; margin: 0; border: 0; border-radius: 50%; background: #f5f5f7; color: var(--ink); cursor: pointer; }
+.daily-map .daily-map__marker.is-selected strong:has(.daily-map__plan-toggle) { padding-right: 58px; }
+.daily-map__plan-toggle:hover { background: #e9edf0; }
+
+/* Country badges and Iceland's volcanic palette. */
+.daily-map .daily-map__caption { display: flex; flex-direction: row; align-items: center; gap: 12px; background: #fffffff0; border-radius: 10px; padding: 9px 11px; top: 16px; left: 16px; }
+.daily-map__countries, .daily-map__country-step, .daily-map__country { display: inline-flex; align-items: center; gap: 7px; }
+.daily-map__countries:empty { display: none; }
+.daily-map__country svg { display: block; width: 25px; height: 18px; border-radius: 2px; }
+.daily-map .daily-map__date { font-size: 11px; font-weight: 400; }
+.daily-map--volcanic .daily-map__caption { background: #292e29ed; border: 1px solid #5b635355; }
+.daily-map--volcanic .daily-map__caption span { color: #d7ddce; }
+.daily-map--volcanic .daily-map__duration { color: #e0dcc7; text-shadow: 0 1px 3px #1b211b, 0 0 5px #1b211b; }
+.daily-map--volcanic .daily-map__marker > span { background: #ed955e; color: #282820; }
+.daily-map--volcanic .daily-map__marker.is-optional > span { background: #879276; color: #1e261e; }
+.daily-map--volcanic .daily-map__marker.is-optional.is-highlighted > span { background: #ed955e; }
+.daily-map--volcanic .daily-map__marker strong { background: #30382ff5; color: #f1eee5; box-shadow: 0 3px 12px #10171033; }
+.daily-map--volcanic .daily-map__marker.is-optional strong { color: #c5ceb9; }
+.daily-map--volcanic .daily-map__marker.is-optional.is-highlighted strong { color: #f1eee5; }
+.daily-map--volcanic .daily-map__marker.is-selected strong { background: #fffffff5; color: var(--ink); }
+.daily-map--volcanic .daily-map__controls button { background: #30382f; color: #f1eee5; }
+.daily-map--volcanic .daily-map__controls .daily-map__reset, .daily-map--volcanic .daily-map__zoom { border-color: #68725b; }
+.daily-map--volcanic .daily-map__controls button + button { border-color: #68725b; }
+
+/* Amsterdam city / northern Norway fjord map chrome. */
+.daily-map--amsterdam .daily-map__caption { background: #faf6efed; }
+.daily-map--amsterdam .daily-map__caption span { color: #756255; }
+.daily-map--amsterdam .daily-map__controls button { background: #faf6ef; color: #756255; }
+.daily-map--amsterdam .daily-map__controls .daily-map__reset, .daily-map--amsterdam .daily-map__zoom { border-color: #d9cabb; }
+.daily-map--fjords .daily-map__caption { background: #f1faffed; }
+.daily-map--fjords .daily-map__caption span { color: #35617f; }
+.daily-map--fjords .daily-map__controls button { background: #f1faff; color: #35617f; }
+.daily-map--fjords .daily-map__controls .daily-map__reset, .daily-map--fjords .daily-map__zoom { border-color: #acd5ec; }
+.daily-map--amsterdam .daily-map__empty, .daily-map--fjords .daily-map__empty { top: auto; bottom: 14px; left: 16px; right: auto; max-width: calc(100% - 32px); margin: 0; padding: 7px 10px; font-size: 10px; background: #ffffffd9; }
+
+.day-tabs__country { display: inline-flex; flex: none; align-items: center; align-self: center; height: 20px; margin-left: 6px; padding-left: 14px; border-left: 1px solid #dcdde1; color: #85858b; font-size: 10px; }
+.daily-map .daily-map__marker.is-selected strong .daily-map__title-trigger { color: var(--ink); }
+.daily-map .daily-map__marker.is-selected.is-highlighted strong { color: var(--ink); }
+.daily-map--fjords .daily-map__marker > span { background: #ff6257; }
+.daily-map--amsterdam .daily-map__marker > span { background: #cc6839; }
+
+.day-tabs__divider { flex: none; align-self: center; height: 20px; margin: 0 6px; border-left: 1px solid #dcdde1; }
+
+.event-description { white-space: pre-line; }
