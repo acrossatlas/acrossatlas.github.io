@@ -1,3 +1,4 @@
+import { amsterdamDays, amsterdamDepartureEvents, amsterdamStay } from './data/amsterdam-itinerary';
 import { Fragment, lazy, Suspense, useEffect, useRef, useState } from 'react';
 const DayRouteMap = lazy(() => import('./components/DayRouteMap'));
 import { Link, Route, Routes, useLocation } from 'react-router-dom';
@@ -123,18 +124,7 @@ function getTransportEventFields(recordId) {
 }
 
 const stayRecords = [
-  {
-    id: 'netherlands-stay',
-    startsOn: '2026-09-25',
-    endsOn: '2026-09-27',
-    title: '荷兰住宿',
-    navigation: 'Hyatt Place Amsterdam Airport',
-    addressLabel: '酒店名称',
-    checkIn: '09.25 15:00 — 00:00',
-    checkOut: '09.27 00:00 — 12:00',
-    reservation: '在 Booking.com 查看',
-    note: 'Booking.com｜Hyatt Place Amsterdam Airport，King Room，2 人｜到店付款约 EUR 243.78',
-  },
+  amsterdamStay,
   {
     id: 'iceland-stay',
     startsOn: '2026-09-27',
@@ -322,63 +312,9 @@ const journeyDayEvents = {
       },
     },
   ],
-  '2026-09-25': [
-    {
-      id: 'sep25-rijksmuseum',
-      type: '行程',
-      title: '国立博物馆',
-      startsAt: '时间待补充',
-      detail: "参观时段、订票方式待定。",
-      navigation: '国立博物馆 Amsterdam',
-      reservationStatus: '未预定',
-      paymentStatus: '未付款',
-    },
-    {
-      id: 'sep25-van-gogh',
-      type: '行程',
-      title: 'Van Gogh Museum',
-      startsAt: '时间待补充',
-      detail: "提前两周预订；参观时段待定。",
-      navigation: 'Van Gogh Museum Amsterdam',
-      reservationStatus: '未预定',
-      paymentStatus: '未付款',
-    },
-    {
-      id: 'sep25-amsterdam-stay',
-      type: '住宿',
-      title: '荷兰住宿',
-      startsAt: '20:00',
-      detail: "房型：King Room，2 人。\n入住：09.25 15:00 后；退房：09.27 12:00 前。\n付款：Booking.com 订单，到店支付约 EUR 243.78。",
-      navigation: 'Hyatt Place Amsterdam Airport',
-      addressLabel: '酒店名称',
-      reservationStatus: '已预定',
-      paymentStatus: '未付款',
-      reservation: {
-        reference: '在 Booking.com 查看',
-        time: '09.25 15:00 — 09.27 12:00',
-        instruction: '在 Booking.com 查看订单，前台办理入住',
-      },
-    },
-  ],
-  '2026-09-26': [
-    {
-      id: 'sep26-amsterdam-stay',
-      type: '住宿',
-      title: '荷兰住宿',
-      startsAt: '20:00',
-      detail: "续住 Hyatt Place Amsterdam Airport。\n退房：09.27 12:00 前；房费到店支付。",
-      navigation: 'Hyatt Place Amsterdam Airport',
-      addressLabel: '酒店名称',
-      reservationStatus: '已预定',
-      paymentStatus: '未付款',
-      reservation: {
-        reference: '在 Booking.com 查看',
-        time: '09.25 15:00 — 09.27 12:00',
-        instruction: '在 Booking.com 查看订单，前台办理入住',
-      },
-    },
-  ],
+  ...amsterdamDays,
   '2026-09-27': [
+    ...amsterdamDepartureEvents,
     {
       id: 'sep27-ams-kef',
       type: '交通',

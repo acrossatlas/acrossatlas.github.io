@@ -9,6 +9,7 @@ import longHaulCountries from '../data/long-haul-countries.json';
 const countries = { type: 'FeatureCollection', features: [...countryBase.features, ...longHaulCountries.features] };
 const countryNames = { CN: '中国', NL: '荷兰', NO: '挪威', TH: '泰国' };
 import icelandDays from '../data/iceland-day-routes.json';
+import { amsterdamPlaces } from '../data/amsterdam-map';
 import oct01Drive from '../data/oct01-driving-route.json';
 
 const airports = {
@@ -41,7 +42,9 @@ export const migrationDays = {
   '2026-09-27': {
     countries: ['NL', 'IS'], bounds: [[-25, 50.5], [8, 67.5]], flightId: 'sep27-ams-kef',
     stops: [
-      { country: 'NL', name: 'Schiphol Airport', coordinates: airports.AMS.coordinates, eventId: 'sep27-ams-kef' },
+      { number: 0, country: 'NL', name: 'ibis Schiphol Amsterdam Airport', coordinates: amsterdamPlaces.hotel, eventId: 'sep27-checkout' },
+      { country: 'NL', name: 'Rijksmuseum 国立博物馆', coordinates: amsterdamPlaces.rijksmuseum, eventIds: ['sep27-hotel-luggage', 'sep27-rijksmuseum'] },
+      { country: 'NL', name: 'Schiphol Airport', coordinates: airports.AMS.coordinates, eventIds: ['sep27-airport-taxi', 'sep27-ams-kef'] },
       { country: 'IS', name: 'Keflavík 凯夫拉维克机场', coordinates: [-22.6238642, 63.9950427], eventId: 'sep27-ams-kef' },
       { country: 'IS', name: 'Lotus 莲花租车', coordinates: [-22.578577, 63.9971773], eventId: 'sep27-lotus-car' },
       { country: 'IS', name: 'Kelduland 雷克雅未克住宿', coordinates: [-21.8621482, 64.120598], eventId: 'sep27-reykjavik-stay', note: 'Kelduland 街道落点' },
@@ -222,7 +225,7 @@ function MigrationScene({ config, events, focus, setFocus }) {
         setPreviewLine(null);
       };
       const address = [...stopEvents].reverse().find(event => event.navigation)?.navigation;
-      return <DayMapStop key={stop.name} stop={{ ...stop, id: stop.name, number: config.airportsOnly ? index : index + 1 }} dimmed={config.airportsOnly && (!relevant.has(index) || Boolean(previewLine && ![previewLine.coordinates[0], previewLine.coordinates.at(-1)].some(p => Math.abs(p[0] - stop.coordinates[0]) < .001 && Math.abs(p[1] - stop.coordinates[1]) < .001)))} expanded={expanded} previewed={expanded || Boolean(previewLine)} onToggle={toggle} address={stop.address || address} />;
+      return <DayMapStop key={stop.name} stop={{ ...stop, id: stop.name, number: stop.number ?? (config.airportsOnly || stop.country === 'NL' ? index : index + 1) }} dimmed={config.airportsOnly && (!relevant.has(index) || Boolean(previewLine && ![previewLine.coordinates[0], previewLine.coordinates.at(-1)].some(p => Math.abs(p[0] - stop.coordinates[0]) < .001 && Math.abs(p[1] - stop.coordinates[1]) < .001)))} expanded={expanded} previewed={expanded || Boolean(previewLine)} onToggle={toggle} address={stop.address || address} />;
     })}
     <div className="daily-map__controls" aria-label="地图控制"><div className="daily-map__zoom"><button type="button" aria-label="放大地图" onClick={() => map?.zoomIn()}><Plus size={16} strokeWidth={1.8} /></button><button type="button" aria-label="缩小地图" onClick={() => map?.zoomOut()}><Minus size={16} strokeWidth={1.8} /></button></div><button className="daily-map__reset" type="button" aria-label="恢复全天总览" title="恢复全天总览" onClick={reset}><RotateCcw size={16} strokeWidth={1.8} /></button></div>
     {error && <p role="status" className="daily-map__error">地图加载失败，请检查网络；当天行程仍可在行程卡片中查看。</p>}

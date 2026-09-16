@@ -1,10 +1,11 @@
 import { Component, useEffect, useMemo, useState } from 'react';
-import { RotateCcw, Plus, Minus } from 'lucide-react';
+import { RotateCcw, Plus, Minus, Expand } from 'lucide-react';
 import { Map, MapMarker, MarkerContent, MapRoute, useMap } from './ui/map';
 import routes from '../data/golden-circle-routes.json';
 import durations from '../data/golden-circle-durations.json';
 import icelandDays from '../data/iceland-day-routes.json';
 import norwayDays from '../data/norway-day-routes.json';
+import { amsterdamMapDays } from '../data/amsterdam-map';
 import DayMapStop from './DayMapStop';
 import { numberPlannedStops } from '../lib/route-stop-numbers';
 import savedVisitRoutes from '../data/visit-route-legs.json';
@@ -43,7 +44,7 @@ function labelCoordinates(leg) {
   return routes[route].coordinates.reduce((best, p) => distance(p) < distance(best) ? p : best);
 }
 const visibleLegs = durations.legs.filter((leg) => !(leg.from === 'gullfoss' && leg.to === 'city'));
-const travelModes = { driving: '驾车', bus: '公交', train: '火车', walking: '步行', ferry: '渡轮', taxi: '出租车' };
+const travelModes = { transit: '交通', driving: '驾车', bus: '公交', train: '火车', walking: '步行', ferry: '渡轮', taxi: '出租车' };
 const mapStops = stops.map((stop) => {
   const distance = (p) => ((p[0] - stop.coordinates[0]) * 0.44) ** 2 + (p[1] - stop.coordinates[1]) ** 2;
   const coordinates = routes[stop.option || 'direct'].coordinates.reduce((best, p) => distance(p) < distance(best) ? p : best);
@@ -56,7 +57,7 @@ class MapBoundary extends Component {
   render() { return this.state.failed ? <p className="daily-map__error">地图暂时无法显示，请查看下方行程卡片。</p> : this.props.children; }
 }
 
-function MapTools({ selected, focusedLegs, routeFocus, isGoldenCircle, isIceland, countryTheme, overview, onReset, onRouteClick, clickableLegs, mapStops, routes, bounds, focusZoom = 8.7 }) {
+function MapTools({ selected, focusedLegs, routeFocus, isGoldenCircle, isIceland, countryTheme, overview, onReset, onRouteClick, clickableLegs, mapStops, routes, bounds, overviewBounds, focusZoom = 8.7 }) {
   const { map, isLoaded } = useMap();
   const [error, setError] = useState(false);
   function resetView() {
@@ -146,6 +147,7 @@ function MapTools({ selected, focusedLegs, routeFocus, isGoldenCircle, isIceland
   return <>
     {error && <p role="status" className="daily-map__error">底图加载失败，请检查网络后重试。下方行程仍可查看。</p>}
     <div className="daily-map__controls" aria-label="地图控制">
+      {overviewBounds && <button type="button" aria-label="查看酒店与全部行程地点" title="查看酒店与全部行程地点" onClick={() => { onReset(); map?.fitBounds(overviewBounds, { ...fitOptions, bearing: 0, pitch: 0 }); }}><Expand size={16} strokeWidth={1.8} aria-hidden="true" /></button>}
       <div className="daily-map__zoom">
       <button type="button" aria-label="放大地图" onClick={() => map?.zoomIn()}><Plus size={16} strokeWidth={1.8} aria-hidden="true" /></button>
       <button type="button" aria-label="缩小地图" onClick={() => map?.zoomOut()}><Minus size={16} strokeWidth={1.8} aria-hidden="true" /></button>
@@ -160,7 +162,7 @@ export default function DayRouteMap(props) {
 }
 
 function DayRouteMapContent({ day, events }) {
-  const config = day.key === '2026-09-30' ? sep30Checkout.day : day.key === '2026-10-03' ? oct03Optional.day : norwayDays[day.key] || icelandDays[day.key];
+  const config = day.key === '2026-09-30' ? sep30Checkout.day : day.key === '2026-10-03' ? oct03Optional.day : amsterdamMapDays[day.key] || norwayDays[day.key] || icelandDays[day.key];
   const dayRoutes = config?.routes || routes;
   const dayStops = config?.stops || mapStops;
   const dayLegs = config?.legs || visibleLegs;
@@ -191,7 +193,7 @@ function DayRouteMapContent({ day, events }) {
     return clickableLegs.find(item => item.route === activeRoute && item.from === leg.from && item.to === leg.to && item.mode === leg.mode)
       || clickableLegs.find(item => item.from === leg.from && item.to === leg.to && item.mode === leg.mode);
   }
-  const segmentLabel = leg => `${numberedStops.find(stop => stop.id === leg.from)?.number ?? '?'} → ${numberedStops.find(stop => stop.id === leg.to)?.number ?? '?'} · ${travelModes[leg.mode]} ${Math.max(1, Math.round(leg.seconds / 60))} 分钟`;
+  const segmentLabel = leg => `${numberedStops.find(stop => stop.id === leg.from)?.number ?? '?'} → ${numberedStops.find(stop => stop.id === leg.to)?.number ?? '?'} · ${leg.durationLabel || `${travelModes[leg.mode]} ${Math.max(1, Math.round(leg.seconds / 60))} 分钟`}`;
   const [previewRoute, setPreviewRoute] = useState(null);
   function togglePlannedStop(option) {
     const next = activeRoute === option ? 'direct' : option;
@@ -226,12 +228,12 @@ function DayRouteMapContent({ day, events }) {
       <MapBoundary>
         <Map theme={isIceland ? "dark" : "light"} bounds={isGoldenCircle ? dayBounds : undefined} center={overview.center} zoom={overview.zoom} fitBoundsOptions={fitOptions} scrollZoom={true} touchZoomRotate={true} dragPan={true} attributionControl={false}>
           {isGoldenCircle && <>
-            {clickableLegs.map((leg, index) => <MapRoute key={`${activeRoute}-${index}`} id={`daily-segment-${index}`} coordinates={leg.path} color={leg.route === activeRoute ? routeColor : optionalColor} width={leg.route === activeRoute ? 4 : 3} opacity={isFocused ? .18 : leg.route === activeRoute ? .95 : .65} />)}
-            {focusedLegs.map((leg, index) => <MapRoute key={`focus-${leg.from}-${leg.to}`} coordinates={leg.path} color={routeColor} width={4} opacity={1} interactive={false} active />)}
+            {clickableLegs.map((leg, index) => <MapRoute key={`${activeRoute}-${index}`} id={`daily-segment-${index}`} coordinates={leg.path} dashArray={leg.dashArray} color={leg.color || (leg.route === activeRoute ? routeColor : optionalColor)} width={leg.route === activeRoute ? 4 : 3} opacity={isFocused ? .18 : leg.route === activeRoute ? .95 : .65} />)}
+            {focusedLegs.map((leg, index) => <MapRoute key={`focus-${leg.from}-${leg.to}`} coordinates={leg.path} dashArray={leg.dashArray} color={leg.color || routeColor} width={4} opacity={1} interactive={false} active />)}
             {shownLegs.map((leg, index) => <MapMarker key={`${leg.from}-${leg.to}-${leg.mode}`} longitude={(isFocused ? leg.coordinates : pointForLeg(leg))[0]} latitude={(isFocused ? leg.coordinates : pointForLeg(leg))[1]} offset={isFocused ? [0, index ? 14 : -14] : [0, 0]}>
               <MarkerContent>
-                <button type="button" className="daily-map__duration daily-map__duration-trigger" aria-label={`聚焦 ${segmentLabel(leg)}`} disabled={!matchingSegment(leg)} onClick={event => { event.stopPropagation(); const segment = matchingSegment(leg); if (segment) focusSegment(segment); }} title={`${dayStops.find((s) => s.id === leg.from)?.name} → ${dayStops.find((s) => s.id === leg.to)?.name} · 点击聚焦路段`}>
-                  {isFocused ? segmentLabel(leg) : `${travelModes[leg.mode]} ${Math.max(1, Math.round(leg.seconds / 60))} 分钟`}
+                <button type="button" className="daily-map__duration daily-map__duration-trigger" aria-label={`聚焦 ${segmentLabel(leg)}`} disabled={!matchingSegment(leg)} onClick={event => { event.stopPropagation(); const segment = matchingSegment(leg); if (segment) focusSegment(segment); }} title={`${dayStops.find((s) => s.id === leg.from)?.name} → ${dayStops.find((s) => s.id === leg.to)?.name} · ${leg.travelNote ? `${leg.travelNote} · ` : ''}点击聚焦路段`}>
+                  {isFocused ? segmentLabel(leg) : leg.durationLabel || `${travelModes[leg.mode]} ${Math.max(1, Math.round(leg.seconds / 60))} 分钟`}
                 </button>
               </MarkerContent>
             </MapMarker>)}
@@ -248,7 +250,7 @@ function DayRouteMapContent({ day, events }) {
               return <DayMapStop key={stop.id} stop={stop} dimmed={isFocused && !focusNodeIds.has(stop.id)} expanded={expanded} previewed={previewed} activeRoute={activeRoute} onToggle={toggle} onTogglePlannedStop={togglePlannedStop} address={stop.address || event?.navigation} />;
             })}
           </>}
-          <MapTools clickableLegs={clickableLegs} onRouteClick={focusSegment} focusedLegs={focusedLegs} focusZoom={config?.focusZoom} mapStops={dayStops} routes={dayRoutes} bounds={dayBounds} selected={selected} routeFocus={routeFocus} isGoldenCircle={isGoldenCircle} isIceland={isIceland} countryTheme={countryTheme} overview={overview} onReset={() => { setSelected(null); setRouteFocus(null); setPreviewRoute(null); }} />
+          <MapTools overviewBounds={config?.overviewBounds} clickableLegs={clickableLegs} onRouteClick={focusSegment} focusedLegs={focusedLegs} focusZoom={config?.focusZoom} mapStops={dayStops} routes={dayRoutes} bounds={dayBounds} selected={selected} routeFocus={routeFocus} isGoldenCircle={isGoldenCircle} isIceland={isIceland} countryTheme={countryTheme} overview={overview} onReset={() => { setSelected(null); setRouteFocus(null); setPreviewRoute(null); }} />
         </Map>
       </MapBoundary>
       <figcaption className="day-map__caption daily-map__caption">
