@@ -166,19 +166,25 @@ export const amsterdamDays = {
       "type": "用餐",
       "title": "咖啡与休息",
       "startsAt": "16:00",
-      "endsAt": "17:15",
-      "detail": "Dam 周边休息，之后步行回 Damrak 码头；上船前约 15 分钟到达。",
+      "endsAt": "17:00",
+      "detail": "Dam 周边休息；17:00 前出发前往中央站旁 Flagship 码头，17:15 集合。",
       "navigation": "Dam, Amsterdam"
     },
     {
       "id": "sep26-cruise",
       "type": "行程",
-      "title": "Damrak 运河游船",
+      "title": "Flagship 运河游船（中央站出发）",
       "startsAt": "17:30",
-      "detail": "淘宝待订：Damrak 出发、约 1 小时。17:30 为计划时段，具体班次、上下船码头以票券为准。",
+      "detail": "17:15 集合，17:30 开船；航程约 1 小时，英文现场导览。\n在中央站市中心侧码头找橘色制服的 Flagship 工作人员，出示电子船票。",
       "endsAt": "18:30",
-      "navigation": "Damrak, Amsterdam",
-      "reservationStatus": "未预定"
+      "navigation": "Prins Hendrikkade 33A, Amsterdam, Netherlands",
+      "addressLabel": "集合码头",
+      "reservationStatus": "已预定",
+      "reservation": {
+        "reference": "订单号 ARY788197 · 2 位成人；电子船票见淘宝订单／已保存的 PDF",
+        "time": "09.26 17:30 — 约18:30（阿姆斯特丹当地时间；17:15 集合）",
+        "instruction": "出示两位成人各自的电子凭证二维码。所选套餐为中央站出发，集合地址 Prins Hendrikkade 33A；票内另列的 Prinsengracht 地址与套餐不符，勿据此导航。"
+      }
     },
     {
       "id": "sep26-dinner",

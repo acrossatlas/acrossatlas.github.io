@@ -16,6 +16,8 @@ export const amsterdamPlaces = {
   haarlemmerstraat: [4.8918561, 52.3803058],
   centraal: [4.9005805, 52.378901],
   damrak: [4.8987017, 52.3768599],
+  // Flagship's official Central Station departure map, checked 2026-09-18.
+  cruise: [4.8977774, 52.378305],
   dam: [4.8923511, 52.3731162],
   oudeKerk: [4.8980733, 52.3743621],
 };
@@ -38,10 +40,11 @@ export const amsterdamMapDays = {
     stop('market', 1, 'Noordermarkt 农夫集市', ['sep26-market', 'sep26-lunch']),
     stop('haarlemmerstraat', 2, 'Haarlemmerstraat', ['sep26-jordaan'], 'Haarlemmerstraat, Amsterdam'),
     stop('centraal', 3, 'Amsterdam Centraal 中央站', [], 'Stationsplein, Amsterdam'),
-    stop('damrak', 4, 'Damrak', ['sep26-damrak', 'sep26-cruise']),
+    stop('damrak', 4, 'Damrak', ['sep26-damrak']),
     stop('dam', 5, 'Dam 广场', ['sep26-dam', 'sep26-coffee-break']),
-    stop('nieuwmarkt', 6, 'Nieuwmarkt', ['sep26-dinner']),
-    stop('oudeKerk', 7, 'Oude Kerk · De Wallen', ['sep26-de-wallen']),
+    stop('cruise', 6, 'Flagship 中央站码头', ['sep26-cruise']),
+    stop('nieuwmarkt', 7, 'Nieuwmarkt', ['sep26-dinner']),
+    stop('oudeKerk', 8, 'Oude Kerk · De Wallen', ['sep26-de-wallen']),
     stop('hotel', 0, 'ibis Schiphol Amsterdam Airport', ['sep26-amsterdam-stay']),
   ], [[4.881, 52.368], [4.909, 52.385]]),
 };
