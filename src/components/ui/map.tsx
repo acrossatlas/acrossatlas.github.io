@@ -198,6 +198,8 @@ type MapProps = {
    * Ignored when an explicit `styles` prop is provided.
    */
   blank?: boolean;
+  /** Optional alternate basemap used when the primary cannot finish loading. */
+  fallbackStyle?: MapStyleOption;
   /** Map projection type. Use `{ type: "globe" }` for 3D globe view. */
   projection?: MapLibreGL.ProjectionSpecification;
   /**
@@ -245,6 +247,7 @@ const Map = forwardRef<MapRef, MapProps>(function Map(
     theme: themeProp,
     styles,
     blank = false,
+    fallbackStyle,
     projection,
     viewport,
     onViewportChange,
@@ -257,6 +260,7 @@ const Map = forwardRef<MapRef, MapProps>(function Map(
   const [mapInstance, setMapInstance] = useState<MapLibreGL.Map | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [loadFailed, setLoadFailed] = useState(false);
+  const retryBasemap = useRef<() => void>(() => {});
   const [isStyleLoaded, setIsStyleLoaded] = useState(false);
   const [pendingStyle, setPendingStyle] = useState<MapStyleOption | null>(null);
   const currentStyleRef = useRef<MapStyleOption | null>(null);
@@ -314,13 +318,30 @@ const Map = forwardRef<MapRef, MapProps>(function Map(
       return;
     }
 
-    // A failed remote basemap must not leave the map behind a permanent loader.
-    // The local blank style still supports our GeoJSON routes and DOM markers.
-    const loadTimeout = window.setTimeout(() => {
-      setLoadFailed(true);
-      map.setStyle(blankMapStyle, { diff: false });
-    }, 12000);
-
+    let loadTimeout: number;
+    let usingFallback = false;
+    const armTimeout = () => {
+      window.clearTimeout(loadTimeout);
+      loadTimeout = window.setTimeout(() => {
+        if (fallbackStyle && !usingFallback) {
+          usingFallback = true;
+          setIsStyleLoaded(false);
+          setPendingStyle(fallbackStyle);
+          armTimeout();
+        } else {
+          setLoadFailed(true);
+          if (!fallbackStyle) map.setStyle(blankMapStyle, { diff: false });
+        }
+      }, 12000);
+    };
+    armTimeout();
+    retryBasemap.current = () => {
+      usingFallback = false;
+      setLoadFailed(false);
+      setIsStyleLoaded(false);
+      setPendingStyle(initialStyle);
+      armTimeout();
+    };
     const styleLoadHandler = () => {
       styleSwapInFlightRef.current = false;
       setIsStyleLoaded(true);
@@ -328,6 +349,13 @@ const Map = forwardRef<MapRef, MapProps>(function Map(
     const loadHandler = () => {
       window.clearTimeout(loadTimeout);
       setIsLoaded(true);
+    };
+    const idleHandler = () => {
+      if (fallbackStyle && map.isStyleLoaded() && map.areTilesLoaded()) {
+        window.clearTimeout(loadTimeout);
+        setIsLoaded(true);
+        setLoadFailed(false);
+      }
     };
 
     // Viewport change handler - skip if triggered by internal update
@@ -337,6 +365,7 @@ const Map = forwardRef<MapRef, MapProps>(function Map(
     };
 
     map.on("load", loadHandler);
+    map.on("idle", idleHandler);
     map.on("style.load", styleLoadHandler);
     map.on("move", handleMove);
     setMapInstance(map);
@@ -344,6 +373,7 @@ const Map = forwardRef<MapRef, MapProps>(function Map(
     return () => {
       window.clearTimeout(loadTimeout);
       map.off("load", loadHandler);
+      map.off("idle", idleHandler);
       map.off("style.load", styleLoadHandler);
       map.off("move", handleMove);
       map.remove();
@@ -432,7 +462,7 @@ const Map = forwardRef<MapRef, MapProps>(function Map(
         {(!isLoaded || loading) && !loadFailed && <DefaultLoader />}
         {loadFailed && <div role="status" className="daily-map__load-status">
           {mapInstance ? '底图未加载，当前仅显示路线和地点。' : '地图无法初始化，请查看下方行程。'}
-          <button type="button" onClick={() => window.location.reload()}>重新加载</button>
+          <button type="button" onClick={() => mapInstance ? retryBasemap.current() : window.location.reload()}>重新加载</button>
         </div>}
         {/* SSR-safe: children render only when map is loaded on client */}
         {mapInstance && children}

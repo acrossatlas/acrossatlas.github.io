@@ -26,3 +26,7 @@ Create a production build with `npm run build`.
 See [`docs/PROJECT-CHARTER.md`](docs/PROJECT-CHARTER.md) before implementation begins.
 
 Environment and account readiness are recorded in [`docs/PREPARATION.md`](docs/PREPARATION.md).
+
+## Travel templates
+
+Open `/templates` from the top-right home navigation to preview four reusable day structures: driving, city, transfer, and outdoor. Download the standard journey data from the page, or copy `public/templates/journey.json`. See [the reuse guide](docs/TRAVEL-TEMPLATE.md) for fields, map/event references, and current integration limits.

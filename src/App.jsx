@@ -1,3 +1,6 @@
+import ChecklistGroup from './components/ChecklistGroup';
+import EventCard from './components/EventCard';
+import TemplatesPage from './components/TemplatesPage';
 import { amsterdamDays, amsterdamDepartureEvents, amsterdamStay } from './data/amsterdam-itinerary';
 import { Fragment, lazy, Suspense, useEffect, useRef, useState } from 'react';
 const DayRouteMap = lazy(() => import('./components/DayRouteMap'));
@@ -1342,6 +1345,7 @@ function HomePage() {
 
   return (
     <div className="page home-page">
+      <nav className="home-navigation" aria-label="主导航"><Link to="/templates">模板 ↗</Link></nav>
       <main>
         <section className="home-hero" aria-labelledby="home-title">
           <h1 id="home-title">across</h1>
@@ -1605,78 +1609,6 @@ function SectionHeading({ children }) {
   );
 }
 
-function ChecklistGroup({ groups, items = [], title, variant }) {
-  const allItems = groups ? groups.flatMap((group) => group.items) : items;
-  const storageKey = `across-atlas:${currentJourney.startsOn}:checklist:${variant}`;
-  const [checkedItems, setCheckedItems] = useState(() => {
-    const defaultItems = allItems.filter((item) => item.checked).map((item) => item.id);
-
-    try {
-      const storedItems = JSON.parse(window.localStorage.getItem(storageKey));
-      if (!Array.isArray(storedItems)) return new Set(defaultItems);
-
-      const validItemIds = new Set(allItems.map((item) => item.id));
-      return new Set(storedItems.filter((itemId) => validItemIds.has(itemId)));
-    } catch {
-      return new Set(defaultItems);
-    }
-  });
-
-  useEffect(() => {
-    try {
-      window.localStorage.setItem(storageKey, JSON.stringify([...checkedItems]));
-    } catch {
-      // Keep the checklist usable when browser storage is unavailable.
-    }
-  }, [checkedItems, storageKey]);
-
-  const toggleItem = (itemId, checked) => {
-    setCheckedItems((current) => {
-      const next = new Set(current);
-      if (checked) next.add(itemId);
-      else next.delete(itemId);
-      return next;
-    });
-  };
-
-  const renderItems = (groupItems) => (
-    <div className="checklist-grid">
-      {groupItems.map((item) => {
-        const checked = checkedItems.has(item.id);
-
-        return (
-          <label className={`checklist-item${checked ? ' is-checked' : ''}`} key={item.id}>
-            <input
-              checked={checked}
-              onChange={(event) => toggleItem(item.id, event.target.checked)}
-              type="checkbox"
-            />
-            <span aria-hidden="true" className="checklist-box"><CheckIcon /></span>
-            <span className="checklist-copy">
-              {item.emoji && <span aria-hidden="true" className="checklist-emoji">{item.emoji}</span>}
-              <span className="checklist-text">
-                <strong>{item.label}</strong>
-                {item.detail && <small>{item.detail}</small>}
-              </span>
-            </span>
-          </label>
-        );
-      })}
-    </div>
-  );
-
-  return (
-    <section className={`checklist-group checklist-group--${variant}`}>
-      <h3>{title}</h3>
-      {groups ? groups.map((group) => (
-        <section className="checklist-subgroup" key={group.id}>
-          <h4>{group.title}</h4>
-          {renderItems(group.items)}
-        </section>
-      )) : renderItems(items)}
-    </section>
-  );
-}
 
 function legacyCopyText(text) {
   const textarea = document.createElement('textarea');
@@ -1870,26 +1802,10 @@ function EventFlightDetails({ event }) {
 }
 
 function DayEventCard({ event, onOpenReservation }) {
-
-  return (
-    <li className="day-event-card">
-      <div className="day-event-card__meta">
-        <span className="day-event-card__time">{formatEventTime(event)}</span>
-        <div className="day-event-card__signals">
-          {event.reservationStatus === '未预定' && <span className="event-alert-tag">未预定</span>}
-          {event.reservationStatus === '已预定' && (
-            <button className="reservation-info-trigger" onClick={() => onOpenReservation(event)} type="button">
-              {getReservationHeading(event)}
-            </button>
-          )}
-          {event.paymentStatus === '未付款' && <span className="event-alert-tag">未付款</span>}
-          <span className="day-event-card__type">{event.type}</span>
-        </div>
-      </div>
-      <CopyableEventTitle className="day-event-card__title-row" event={event} />
-      {event.flightLegs ? <EventFlightDetails event={event} /> : <p className="event-description">{event.detail}</p>}
-    </li>
-  );
+  return <EventCard event={event} onOpenReservation={onOpenReservation}
+    title={<CopyableEventTitle className="day-event-card__title-row" event={event} />}>
+    {event.flightLegs ? <EventFlightDetails event={event} /> : <p className="event-description">{event.detail}</p>}
+  </EventCard>;
 }
 
 function TodayFocusCard({ dayIndex, focus }) {
@@ -2111,8 +2027,8 @@ function OngoingPage() {
           <section className="notebook-section">
             <SectionHeading>Checklist</SectionHeading>
             <div className="checklist-surface">
-              <ChecklistGroup items={documentChecklist} title="证件" variant="documents" />
-              <ChecklistGroup groups={packingChecklistGroups} title="行李" variant="packing" />
+              <ChecklistGroup storageId={currentJourney.startsOn} items={documentChecklist} title="证件" variant="documents" />
+              <ChecklistGroup storageId={currentJourney.startsOn} groups={packingChecklistGroups} title="行李" variant="packing" />
             </div>
           </section>
 
@@ -2156,6 +2072,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/ongoing" element={<OngoingPage />} />
+        <Route path="/templates" element={<TemplatesPage />} />
         <Route path="*" element={<HomePage />} />
       </Routes>
     </>
