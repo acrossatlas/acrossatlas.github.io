@@ -8,19 +8,25 @@ import { Link, Route, Routes, useLocation } from 'react-router-dom';
 
 const bookingAccessByProvider = {
   lotus: {
-        url: 'https://www.lotuscarrental.is/client/manage',
-        credentials: [
-          { label: '登录邮箱', value: 'W********@gmail.com' },
-          { label: '预订号', value: '155816' },
-        ],
-      },
+    url: 'https://www.lotuscarrental.is/client/manage',
+    links: [
+      { label: '取车指引', url: 'https://assist.lotuscarrental.is/help/pickup' },
+      { label: '上车点视频', url: 'https://shuttle.lotuscarrental.is/' },
+    ],
+    credentials: [
+      { label: '登录邮箱', value: 'W********@gmail.com' },
+      { label: '预订号', value: '155816' },
+      { label: '接驳车电话（按 1）', value: '+354 787 4444' },
+    ],
+  },
   hertz: {
-        url: 'https://www.hertz.com/us/en/reservation',
-        credentials: [
-          { label: '姓氏拼音', value: 'C**' },
-          { label: '预订号', value: 'L52108732E4' },
-        ],
-      },
+    url: 'https://www.hertz.com/rentacar/reservation/?confirmationNumber=L52108732E4#review',
+    credentials: [
+      { label: '姓氏拼音', value: 'C**' },
+      { label: '预订号', value: 'L52108732E4' },
+      { label: 'Svolvær 门店电话', value: '+47 9747 9000' },
+    ],
+  },
   hurtigruten: {
         url: 'https://www.hurtigruten.com/en/my-booking/login',
         credentials: [
@@ -337,14 +343,14 @@ const journeyDayEvents = {
       type: '行程',
       title: 'Lotus Car Rental 取车',
       startsAt: '20:00',
-      detail: "车型：Toyota Yaris，自动挡，不限里程。\n取还：09.27 20:00 取车；09.30 20:00 原店还车。\n方案：Silver 与 Platinum (S) + Wi‑Fi。",
+      detail: "车型：Toyota Yaris，自动挡，不限里程。\n取还：09.27 20:00 取车；09.30 20:00 原店还车。\n方案：Silver 与 Platinum (S) + Wi‑Fi。\n到达后致电 +354 787 4444 并按 1 呼叫接驳车；上车点路线见「预定信息」。",
       navigation: 'Flugvellir 6-10, 230 Keflavík, Iceland',
       addressLabel: '取车地址',
       reservationStatus: '已预定',
       reservation: {
         reference: '在 Lotus 预订邮件中查看',
         time: '09.27 20:00 — 09.30 20:00',
-        instruction: 'KEF 机场取还；总计 53,070 ISK',
+        instruction: 'KEF 机场取还；总计 53,070 ISK。到达后致电 +354 787 4444 并按 1 呼叫接驳车；取车指引及步行至上车点的视频见下方链接。',
       },
       bookingAccess: bookingAccessByProvider.lotus,
     },
@@ -625,16 +631,16 @@ const journeyDayEvents = {
       id: 'oct01-hertz-car',
       type: '行程',
       title: 'Hertz 取车',
-      startsAt: '19:00',
-      detail: "车型：Toyota Yaris Cross 4×4，自动挡，不限里程。\n付款：柜台支付 3,859.62 NOK。\n待确认：预订取车 19:00，航班抵达 20:50；需调整取车时间或确认留车。",
+      startsAt: '21:00',
+      detail: "车型：Toyota Yaris Cross 4×4，自动挡，不限里程。\n付款：柜台支付 3,859.62 NOK。\n取车已调整为 21:00；航班计划 20:50 抵达，仅预留 10 分钟，若延误请致电门店。",
       navigation: 'Svolvær lufthavn, Helle, 8300 Svolvær, Norway',
       addressLabel: '取车地址',
       reservationStatus: '已预定',
       paymentStatus: '未付款',
       reservation: {
         reference: '在 Hertz 预订邮件中查看',
-        time: '10.01 19:00 — 10.03 19:00',
-        instruction: '机场取车、Fiskergata 23 还车；到店支付',
+        time: '10.01 21:00 — 10.03 21:00',
+        instruction: 'Svolvær 机场取车、Fiskergata 23 还车；到店支付。门店电话可在下方直接复制。',
       },
       bookingAccess: bookingAccessByProvider.hertz,
     },
@@ -836,9 +842,9 @@ const journeyDayEvents = {
       id: "oct03-refuel",
       type: "行程",
       title: "Svolvær（加油与还车准备）",
-      startsAt: "17:30",
-      endsAt: "19:00",
-      detail: "加油、整理行李、拍摄车况与油表；19:00 还车，之后行李随身携带。",
+      startsAt: "20:15",
+      endsAt: "21:00",
+      detail: "加油、整理行李、拍摄车况与油表；21:00 还车，之后行李随身携带。",
       navigation: "Fiskergata 23, 8300 Svolvær, Norway",
       addressLabel: "还车目的地",
     },
@@ -847,7 +853,7 @@ const journeyDayEvents = {
       bookingAccess: bookingAccessByProvider.hertz,
       type: '行程',
       title: 'Hertz 还车',
-      startsAt: '19:00',
+      startsAt: '21:00',
       detail: "车辆：Toyota Yaris Cross。\n还车：Fiskergata 23 异地归还，办理还车及付款。",
       navigation: 'Fiskergata 23, 8300 Svolvær, Norway',
       addressLabel: '还车地址',
@@ -855,17 +861,17 @@ const journeyDayEvents = {
       paymentStatus: '未付款',
       reservation: {
         reference: '在 Hertz 预订邮件中查看',
-        time: '10.03 19:00',
-        instruction: '在 Hertz Fiskergata 23 门店办理异地还车并付款',
+        time: '10.03 21:00',
+        instruction: '21:00 在 Hertz Fiskergata 23 门店办理异地还车并付款；门店电话可在下方直接复制。',
       },
     },
     {
       id: 'oct03-dinner',
       type: '用餐',
-      title: 'Svolvær（晚餐与登船前休息）',
-      startsAt: '19:15',
-      endsAt: '21:15',
-      detail: "晚餐与休息，餐厅待选。\n21:15 前往码头，预计 21:45 到港。",
+      title: 'Svolvær（还车后简餐与补给）',
+      startsAt: '21:05',
+      endsAt: '21:30',
+      detail: "还车后在市中心快速用餐或购买外带，餐厅待选。\n21:30 前往码头，预计 21:45 到港。",
       navigation: 'Svolvær sentrum, Norway',
       addressLabel: '用餐区域',
     },
@@ -964,12 +970,10 @@ const journeyDayEvents = {
     {
       id: 'oct05-lunch',
       type: '用餐',
-      title: 'McDonald’s Tromsø（特罗姆瑟麦当劳）',
+      title: '午餐与休息',
       startsAt: '11:30',
       endsAt: '12:30',
-      detail: "午餐与休息；预留 1 小时。",
-      navigation: 'McDonald’s Tromsø, Storgata 70, 9008 Tromsø, Norway',
-      addressLabel: '用餐地址',
+      detail: "餐厅待定，主街附近自由选择；预留 1 小时。",
     },
     {
       id: 'oct05-library',
@@ -1438,9 +1442,16 @@ function BookingAccess({ access }) {
     <aside aria-label="查看预订所需信息" className="booking-access">
       <div className="booking-access__header">
         <span>查看预订需要</span>
-        {access.url && <a href={access.url} rel="noopener noreferrer" target="_blank">
-          查询预订<ArrowIcon />
-        </a>}
+        <div className="booking-access__links">
+          {access.url && <a href={access.url} rel="noopener noreferrer" target="_blank">
+            查询预订<ArrowIcon />
+          </a>}
+          {access.links?.map((link) => (
+            <a href={link.url} key={link.url} rel="noopener noreferrer" target="_blank">
+              {link.label}<ArrowIcon />
+            </a>
+          ))}
+        </div>
       </div>
       <div className="booking-access__credentials">
         {access.credentials.map((credential) => (

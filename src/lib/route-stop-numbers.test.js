@@ -24,8 +24,8 @@ test('golden circle alternatives only number the saved option', () => {
 });
 
 test('library and shopping follow the same rule', () => {
-  assert.deepEqual(numbers(norway['2026-10-05'].stops, 'direct'), ['0', '1', '2', '+', '3', '4', '5']);
-  assert.deepEqual(numbers(norway['2026-10-05'].stops, 'library'), ['0', '1', '2', '3', '4', '5', '6']);
+  assert.deepEqual(numbers(norway['2026-10-05'].stops, 'direct'), ['0', '1', '+', '2', '3', '4']);
+  assert.deepEqual(numbers(norway['2026-10-05'].stops, 'library'), ['0', '1', '2', '3', '4', '5']);
   assert.equal(numbers(iceland['2026-09-29'].stops, 'direct').at(-1), '+');
   assert.equal(numbers(iceland['2026-09-29'].stops, 'shopping').at(-1), '7');
 });

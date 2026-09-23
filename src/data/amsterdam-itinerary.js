@@ -2,6 +2,9 @@
 // Transport: 9292 checked for 2026-09-26; shuttle timetable linked by ibis (July 2026 file).
 // Sources: https://9292.nl/en/ ; https://www.ibisschipholamsterdamairport.com/the-hotel/airport-shuttle-park-sleep-and-fly-parking/
 // Begijnhof: https://begijnhofkapelamsterdam.nl/begijnhofkapel/toegang-entrance-begijnhof-en-begijnhofkapel/
+// Van Gogh: two issued e-tickets reviewed 2026-09-17; names, ticket numbers and codes stay private.
+// Entry window: https://tickets.vangoghmuseum.com/en/vincentopvrijdag/tickets (checked 2026-09-17).
+// The printed 19:00-22:00 window conflicts with the ticket notes; preserve that warning below.
 export const amsterdamStay = {
   "id": "netherlands-stay",
   "startsOn": "2026-09-25",
@@ -98,13 +101,18 @@ export const amsterdamDays = {
     {
       "id": "sep25-van-gogh",
       "type": "行程",
-      "title": "Van Gogh Museum · Vincent on Friday",
+      "title": "梵高博物馆 · Vincent on Friday",
       "startsAt": "19:30",
-      "detail": "Vincent on Friday：看画、音乐与活动。成人 EUR 11／人，2 人预计 EUR 22；待购票。",
+      "detail": "已出票：2 张成人票，EUR 11／张，合计 EUR 22。看画、音乐与活动。\n19:15 左右到主入口，暂按 19:30 入场。票面时间与入场须知不一致，详见「预定信息」。",
       "endsAt": "23:00",
-      "navigation": "Van Gogh Museum, Museumplein 6, Amsterdam",
-      "reservationStatus": "未预定",
-      "paymentStatus": "未付款"
+      "navigation": "Van Gogh Museum, Museumplein 6, 1071 DJ Amsterdam, Netherlands",
+      "reservationStatus": "已预定",
+      "paymentStatus": "已付款",
+      "reservation": {
+        "reference": "已保存的梵高博物馆电子票 PDF：共 2 页，每页 1 张成人票。购票日期：2026.09.16。",
+        "time": "2026.09.25（周五，阿姆斯特丹当地时间）\n行程暂按 19:30–23:00；官网及票券须知：19:30–22:30 可入场，票券须知注明 23:00 结束。\n注意：票面另写 19:00–22:00，与须知不一致，出发前请向馆方确认。",
+        "instruction": "2 张成人票，EUR 11／张，合计 EUR 22。直接前往博物馆主入口（Museumplein 6），分别出示两页电子票扫码入场。\n提前在手机离线保存原票，勿折损或涂改二维码；仅限票载日期使用，不可退款。\n馆方咨询电话：+31 20 570 5200。"
+      }
     },
     {
       "id": "sep25-night-bus",
@@ -137,16 +145,16 @@ export const amsterdamDays = {
     {
       "id": "sep26-jordaan",
       "type": "行程",
-      "title": "Brouwersgracht、Haarlemmerstraat 散步",
+      "title": "运河散步 · Haarlemmerstraat 购物街",
       "startsAt": "13:30",
-      "detail": "沿运河、街巷向中央站慢逛；Jordaan 体验融入集市周边，不另绕远。",
+      "detail": "沿 Brouwersgracht 运河散步，再到 Haarlemmerstraat 购物街逛小店，向中央站慢行；Jordaan 体验融入集市周边，不另绕远。",
       "endsAt": "14:15",
       "navigation": "Brouwersgracht, Amsterdam"
     },
     {
       "id": "sep26-damrak",
       "type": "行程",
-      "title": "Damrak",
+      "title": "Damrak 运河街景",
       "startsAt": "14:15",
       "endsAt": "15:00",
       "detail": "从中央站沿 Damrak 向南，运河拍照、逛街。",
@@ -192,13 +200,12 @@ export const amsterdamDays = {
       "title": "老城晚餐",
       "startsAt": "18:30",
       "detail": "下船后在老城附近用餐。",
-      "endsAt": "19:30",
-      "navigation": "Nieuwmarkt, Amsterdam"
+      "endsAt": "19:30"
     },
     {
       "id": "sep26-de-wallen",
       "type": "行程",
-      "title": "De Wallen 红灯区",
+      "title": "Oude Kerk 老教堂 · De Wallen 红灯区",
       "startsAt": "19:30",
       "detail": "老教堂、Oudezijds 运河周边；20:25 结束，步行前往中央站。",
       "endsAt": "20:25",

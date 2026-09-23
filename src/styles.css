@@ -942,7 +942,14 @@ body {
   font-weight: 600;
 }
 
-.booking-access__header a {
+.booking-access__links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 7px 12px;
+}
+
+.booking-access__links a {
   display: inline-flex;
   flex: 0 0 auto;
   gap: 5px;
@@ -952,7 +959,7 @@ body {
   font-weight: 600;
 }
 
-.booking-access__header svg {
+.booking-access__links svg {
   width: 12px;
   height: 12px;
 }
@@ -2116,10 +2123,11 @@ body {
 .daily-map--volcanic .daily-map__controls button + button { border-color: #68725b; }
 
 /* Amsterdam city / northern Norway fjord map chrome. */
-.daily-map--amsterdam .daily-map__caption { background: #faf6efed; }
-.daily-map--amsterdam .daily-map__caption span { color: #756255; }
-.daily-map--amsterdam .daily-map__controls button { background: #faf6ef; color: #756255; }
-.daily-map--amsterdam .daily-map__controls .daily-map__reset, .daily-map--amsterdam .daily-map__zoom { border-color: #d9cabb; }
+.daily-map.daily-map--amsterdam .daily-map__caption { background: #fffdf8ed; }
+.daily-map--amsterdam .daily-map__caption span { color: #526768; }
+.daily-map--amsterdam .daily-map__controls button { background: #fffdf8; color: #526768; }
+.daily-map--amsterdam .daily-map__controls .daily-map__reset, .daily-map--amsterdam .daily-map__zoom { border-color: #d2dfd8; }
+.daily-map--amsterdam .daily-map__controls button + button { border-color: #d2dfd8; }
 .daily-map--fjords .daily-map__caption { background: #f1faffed; }
 .daily-map--fjords .daily-map__caption span { color: #35617f; }
 .daily-map--fjords .daily-map__controls button { background: #f1faff; color: #35617f; }
@@ -2130,7 +2138,7 @@ body {
 .daily-map .daily-map__marker.is-selected strong .daily-map__title-trigger { color: var(--ink); }
 .daily-map .daily-map__marker.is-selected.is-highlighted strong { color: var(--ink); }
 .daily-map--fjords .daily-map__marker > span { background: #ff6257; }
-.daily-map--amsterdam .daily-map__marker > span { background: #cc6839; }
+.daily-map--amsterdam .daily-map__marker > span { background: #bf5062; }
 
 .day-tabs__divider { flex: none; align-self: center; height: 20px; margin: 0 6px; border-left: 1px solid #dcdde1; }
 

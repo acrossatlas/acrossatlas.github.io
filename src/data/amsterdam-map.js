@@ -5,7 +5,6 @@ import walkingRoutes from './amsterdam-walking-routes.json';
 export const amsterdamPlaces = {
   airport: [4.764, 52.309],
   museumplein: [4.8834415, 52.3587124],
-  nieuwmarkt: [4.9003449, 52.3725948],
   hotel: [4.79388, 52.3250454],
   nineStreets: [4.8829642, 52.3704248],
   begijnhof: [4.8900431, 52.3694314],
@@ -38,13 +37,12 @@ export const amsterdamMapDays = {
   ], [[4.875, 52.353], [4.9, 52.376]]),
   '2026-09-26': day([
     stop('market', 1, 'Noordermarkt 农夫集市', ['sep26-market', 'sep26-lunch']),
-    stop('haarlemmerstraat', 2, 'Haarlemmerstraat', ['sep26-jordaan'], 'Haarlemmerstraat, Amsterdam'),
+    stop('haarlemmerstraat', 2, 'Haarlemmerstraat 购物街', ['sep26-jordaan'], 'Haarlemmerstraat, Amsterdam'),
     stop('centraal', 3, 'Amsterdam Centraal 中央站', [], 'Stationsplein, Amsterdam'),
-    stop('damrak', 4, 'Damrak', ['sep26-damrak']),
+    stop('damrak', 4, 'Damrak 运河街景', ['sep26-damrak']),
     stop('dam', 5, 'Dam 广场', ['sep26-dam', 'sep26-coffee-break']),
     stop('cruise', 6, 'Flagship 中央站码头', ['sep26-cruise']),
-    stop('nieuwmarkt', 7, 'Nieuwmarkt', ['sep26-dinner']),
-    stop('oudeKerk', 8, 'Oude Kerk · De Wallen', ['sep26-de-wallen']),
+    stop('oudeKerk', 7, 'Oude Kerk 老教堂 · 红灯区', ['sep26-de-wallen']),
     stop('hotel', 0, 'ibis Schiphol Amsterdam Airport', ['sep26-amsterdam-stay']),
   ], [[4.881, 52.368], [4.909, 52.385]]),
 };
@@ -60,7 +58,7 @@ function connection(from, to, mode) {
       travelNote: `约 ${Math.round(route.meters)} 米；不含逛店、拍照与休息` };
   }
   const route = transitRoutes.routes[key];
-  return { from, to, mode, ...route, color: '#cc6839', schematic: false };
+  return { from, to, mode, ...route, schematic: false };
 
 }
 export const amsterdamVisitRoutes = {
@@ -85,8 +83,7 @@ export const amsterdamVisitRoutes = {
     connection('damrak', 'dam', 'walking'),
     connection('dam', 'damrak', 'walking'),
     // The cruise itself is not drawn until its operator and route are known.
-    connection('damrak', 'nieuwmarkt', 'walking'),
-    connection('nieuwmarkt', 'oudeKerk', 'walking'),
+    connection('damrak', 'oudeKerk', 'walking'),
     connection('oudeKerk', 'centraal', 'walking'),
     connection('centraal', 'airport', 'transit'),
   ] },

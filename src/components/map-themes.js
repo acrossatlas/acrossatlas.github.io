@@ -13,8 +13,9 @@ function paint({ land, green, urban, water, river, building }) {
 }
 export const countryThemes = {
   NL: {
-    name: 'amsterdam', road: '#faf6ee', text: '#665b55', halo: '#eee7dd', route: '#cc6839', optional: '#a49589',
-    paint: paint({ land: '#e9e3da', green: '#c3c9b1', urban: '#e2d8cc', water: '#9fbfc2', river: '#89afb6', building: '#c7afa0' }),
+    // Sunlit streets, clear canals, pastel facades, and a restrained tulip accent.
+    name: 'amsterdam', road: '#fffdf8', text: '#526768', halo: '#faf8f0', route: '#bf5062', optional: '#91aaa5',
+    paint: paint({ land: '#f5f3e9', green: '#d6e3c7', urban: '#f2eee5', water: '#b6dcd9', river: '#96c9c6', building: '#e8e5de' }),
   },
   NO: {
     name: 'fjords', road: '#f5f8fa', text: '#334b5c', halo: '#edf4f7', route: '#ff6257', optional: '#94a7b4',
