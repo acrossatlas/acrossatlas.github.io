@@ -1115,6 +1115,7 @@ const packingChecklistGroups = [
       { id: 'checked-sanitary-pads', label: '卫生巾' },
       { id: 'checked-slippers', label: '拖鞋' },
       { id: 'checked-milk-tea-bags', label: '奶茶袋' },
+      { id: 'checked-drip-coffee', label: '挂耳咖啡' },
       { id: 'checked-disposable-tableware', label: '一次性餐具' },
       { id: 'checked-instant-noodles', label: '泡面 × 6' },
       { id: 'checked-seasonings', label: '调料', detail: '六婆、芥末、酱油、火锅底料' },
