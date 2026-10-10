@@ -2161,3 +2161,112 @@ body {
 .template-country-label { display: flex; flex-direction: column; gap: 4px; padding: 10px 15px; border: 1px solid #dfe5ec; border-radius: 10px; background: #fffffff2; font-size: 14px; font-weight: 600; cursor: pointer; }
 .template-country-label small { font-size: 10px; color: #85858b; font-weight: 400; }
 .template-map-disclaimer { position: absolute; bottom: 24px; left: 16px; z-index: 2; margin: 0; padding: 6px 10px; border-radius: 8px; font-size: 10px; color: #737b85; background: #ffffffed; pointer-events: none; }
+
+/* Completed journeys share one archive, viewed by country or by trip. */
+.home-page--archive .home-hero {
+  min-height: 0;
+  padding-bottom: 20px;
+}
+
+.home-page--archive .archive-section { margin-top: 28px; }
+.archive-panel { margin-top: 28px; }
+.country-card-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+.trip-card-list { display: grid; gap: 20px; }
+
+.archive-card {
+  display: block;
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid #e9edf0;
+  border-radius: 26px;
+  background: var(--white);
+  transition: border-color 160ms ease;
+}
+
+.archive-card:hover { border-color: #b9cce6; }
+.archive-card:hover .archive-card__arrow { color: var(--accent-ink); }
+.archive-cover { overflow: hidden; aspect-ratio: 520 / 270; background: #f4f6f8; border-radius: 18px; }
+.archive-cover svg { display: block; width: 100%; height: 100%; }
+.archive-card__body { padding: 22px 12px 14px; }
+.archive-card__title { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; }
+.archive-card__title h2 { margin: 0; font-size: 24px; line-height: 1.25; font-weight: 650; letter-spacing: -.025em; }
+.archive-card__arrow { color: #979797; font-size: 22px; }
+.archive-card__subtitle { margin: 10px 0 0; color: #777; font-size: 12px; }
+.archive-card__places { margin: 16px 0 0; color: #777; font-size: 12px; line-height: 1.7; }
+.country-card .archive-card__places { min-height: 41px; }
+.archive-card__dates { margin: 20px 0 0; color: #979797; font-size: 12px; font-variant-numeric: tabular-nums; }
+.archive-card__eyebrow { margin: 0 0 16px; color: #979797; font-size: 11px; }
+.archive-content-note { margin: 24px 0 0; color: #979797; font-size: 11px; line-height: 1.7; }
+.trip-card { display: grid; grid-template-columns: minmax(240px, .8fr) minmax(0, 1.4fr); align-items: stretch; }
+.trip-card .archive-cover { min-height: 225px; height: 100%; aspect-ratio: auto; }
+.trip-card .archive-card__body { align-self: center; padding: 26px 30px; }
+.trip-card .archive-card__title h2 { font-size: 28px; }
+
+.archive-back { display: inline-block; margin-top: 36px; color: #777; font-size: 13px; }
+.archive-back:hover { color: var(--accent-ink); }
+.archived-journey-page .journey-overview { margin-top: 24px; }
+.archived-journey-page .notebook-content { margin-top: 48px; }
+.journey-archive-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 16px 0 0; color: #979797; font-size: 12px; }
+.journey-archive-meta span { padding: 4px 9px; border-radius: 999px; background: #f5f5f7; color: #777; font-size: 10px; }
+.journey-search-empty { margin: 24px 16px; color: #777; font-size: 13px; }
+
+.country-archive-heading { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 24px; margin-top: 24px; }
+.country-archive-heading h1 { margin: 0; font-size: clamp(30px, 3.3vw, 42px); font-weight: 650; letter-spacing: -.035em; }
+.country-archive-heading p { margin: 12px 0 0; color: #777; font-size: 13px; }
+.country-archive-heading > span { color: #979797; font-size: 12px; }
+.country-archive-explorer { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(260px, .85fr); gap: 12px; margin-top: 40px; padding: 12px; background: #f7f7f8; border-radius: 28px; }
+.country-region-list { max-height: 496px; padding: 14px 10px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #d9dce1 transparent; }
+.country-region-list h2 { margin: 0 12px 20px; color: #777; font-size: 12px; font-weight: 500; }
+.country-region { padding: 14px 12px; border-radius: 18px; }
+.country-region + .country-region { margin-top: 8px; }
+.country-region.is-selected { background: var(--white); }
+.country-region > button { display: flex; align-items: center; gap: 12px; width: 100%; padding: 0; border: 0; background: transparent; text-align: left; cursor: pointer; }
+.country-region__number { display: grid; flex: 0 0 24px; width: 24px; height: 24px; place-items: center; color: var(--white); background: var(--ink); border-radius: 7px; font-size: 11px; }
+.country-region.is-selected .country-region__number { background: var(--accent-ink); }
+.country-region strong { display: block; font-size: 15px; font-weight: 600; }
+.country-region small { display: block; margin-top: 4px; color: #979797; font-size: 11px; }
+.country-region p { margin: 12px 0 0 36px; color: #777; font-size: 12px; line-height: 1.6; }
+.country-region > a { display: inline-block; margin: 12px 0 0 36px; color: var(--accent-ink); font-size: 11px; }
+.country-region > a:hover { text-decoration: underline; }
+.country-map .country-map__marker.is-current > span { background: var(--accent-ink); }
+.country-map .country-map__marker strong { display: none; }
+.country-map .country-map__marker:hover strong,
+.country-map .country-map__marker:focus-visible strong,
+.country-map .country-map__marker.is-current strong { display: block; }
+.country-map .country-map__marker.is-current strong { color: var(--accent-ink); }
+.country-map .maplibregl-marker:has(.is-current),
+.country-map .maplibregl-marker:hover { z-index: 10; }
+.country-visits { margin-top: 64px; }
+
+@media (max-width: 900px) {
+  .country-card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .country-archive-explorer { grid-template-columns: minmax(0, 1fr) 270px; }
+  .trip-card .archive-card__body { padding: 24px; }
+  .trip-card .archive-card__title h2 { font-size: 24px; }
+}
+
+@media (max-width: 700px) {
+  .country-archive-explorer { grid-template-columns: minmax(0, 1fr); }
+  .country-region-list { max-height: none; padding: 16px 4px 4px; overflow: visible; }
+  .country-region-list h2 { margin-bottom: 10px; }
+  .country-region { background: var(--white); }
+  .country-region.is-selected { box-shadow: inset 0 0 0 1px #b9cce6; }
+  .trip-card { grid-template-columns: minmax(0, 1fr); }
+  .trip-card .archive-cover { min-height: 0; height: auto; aspect-ratio: 520 / 230; }
+}
+
+@media (max-width: 560px) {
+  .home-page--archive .home-hero { padding-bottom: 16px; }
+  .home-page--archive .archive-section { margin-top: 24px; }
+  .archive-panel { margin-top: 24px; }
+  .country-card-grid { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+  .country-card .archive-card__places { min-height: 0; }
+  .archive-back { margin-top: 28px; }
+  .archived-journey-page .notebook-content { margin-top: 36px; }
+  .country-archive-heading { gap: 16px; }
+  .country-archive-explorer { margin-top: 28px; padding: 10px; }
+  .country-map .daily-map__surface { height: 400px; }
+  .country-visits { margin-top: 44px; }
+  .trip-card .archive-card__body { padding: 22px 12px 14px; }
+  .trip-card .archive-card__title h2 { font-size: 24px; }
+}

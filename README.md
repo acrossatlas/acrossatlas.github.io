@@ -4,7 +4,9 @@ A personal travel fieldbook for public guides, trip records, map-based memories,
 
 ## Current status
 
-The React prototype includes two home-screen logs, Map and Trip. A separate Ongoing card appears only while the configured journey dates are active; its notebook route now contains the responsive trip-header, itinerary, checklist, album-link, and travel-detail modal framework.
+The home page archives completed journeys in two views: Map log groups them by country, while Trip log keeps each journey together. Country pages show regional maps and date-specific links to the shared trip notebook. An ongoing card appears only for an active, unfinished journey; without one, the archive follows directly beneath the title.
+
+The Netherlands–Iceland–Norway journey (2026-09-24–10-07) is archived with its original itinerary, maps, transport, stays, checklist, and album section. Actual visits and skipped stops will be reviewed separately. See [the archive guide](docs/TRAVEL-ARCHIVE.md) for routes and the content structure.
 
 ## Local preview
 
