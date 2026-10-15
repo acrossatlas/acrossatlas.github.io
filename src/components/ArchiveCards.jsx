@@ -2,13 +2,33 @@ import { Link } from 'react-router-dom';
 import CountryMapCover from './CountryMapCover';
 import TravelSummary from './TravelSummary';
 import TripSummary from './TripSummary';
-import DottedWorldMap from './DottedWorldMap';
+import dottedWorldUrl from '../assets/travel-world-dots.svg';
+import countryDotsUrl from '../assets/travel-country-dots.svg';
+import countryDotBounds from '../data/country-dot-bounds.json';
 import { archiveCountries, archiveDateRange, countryOnlyVisits, countryVisits, journeys, tripUrl } from '../data/archive';
 import { getJourneyDayCount } from '../lib/journey-dates';
 
+const countryByCode = new Map(archiveCountries.map(country => [country.code, country]));
+
+// Crops the dotted world map to the visited countries, padded so neighbors give context.
+function tripViewBox(countryCodes) {
+  const boxes = countryCodes.map(code => countryDotBounds[code]).filter(Boolean);
+  if (!boxes.length) return '0 12 800 364';
+  const [x0, y0, x1, y1] = [Math.min(...boxes.map(b => b[0])), Math.min(...boxes.map(b => b[1])), Math.max(...boxes.map(b => b[2])), Math.max(...boxes.map(b => b[3]))];
+  // The map panel is wide, so frame a wide window; slice-cropping then trims only the margins.
+  const height = Math.min(Math.max(y1 - y0 + 60, 100), 444);
+  const width = Math.min(Math.max(x1 - x0 + 120, 220, height * 2.2), 800);
+  const left = Math.min(Math.max((x0 + x1) / 2 - width / 2, 0), 800 - width);
+  const top = Math.min(Math.max((y0 + y1) / 2 - height / 2, 0), 444 - height);
+  return [left, top, width, height].map(value => Math.round(value * 10) / 10).join(' ');
+}
+
 function TripWorldCover({ countryCodes }) {
-  return <div className="archive-cover trip-world-cover" aria-hidden="true">
-    <DottedWorldMap countryCodes={countryCodes} landClassName="trip-world-cover__land" highlightClassName="trip-world-cover__highlight" viewBox="0 12 800 364" />
+  return <div className="trip-card__map" aria-hidden="true">
+    <svg viewBox={tripViewBox(countryCodes)} preserveAspectRatio="xMidYMid slice" focusable="false">
+      <use href={`${dottedWorldUrl}#world-dots`} className="trip-card__land" />
+      {countryCodes.map(code => <use key={code} href={`${countryDotsUrl}#dots-country-${code}`} className="trip-card__visited" style={{ fill: countryByCode.get(code)?.color }} />)}
+    </svg>
   </div>;
 }
 
@@ -47,18 +67,29 @@ function CountryCard({ country }) {
 
 export function TripArchiveCard({ journey, visit }) {
   const countryCodes = [...new Set(journey.countries)];
-  const countryCount = countryCodes.length;
+  const dayCount = getJourneyDayCount(journey);
+  const stops = journey.visits?.length ? journey.visits : countryCodes.map(country => ({ country }));
   return <Link className="archive-card trip-card" to={tripUrl(journey, visit?.startsOn)}>
-    <TripWorldCover countryCodes={countryCodes} />
-    <div className="archive-card__body">
-      <div className="trip-card__heading">
-        <div className="archive-card__title"><h3>{journey.title}</h3></div>
-        <p className="archive-card__dates">{archiveDateRange(journey.startsOn, journey.endsOn)}</p>
-      </div>
-      <div className="trip-card__footer">
-        <p className="archive-card__country-count">{countryCount} {countryCount === 1 ? 'country' : 'countries'}</p>
-      </div>
+    <div className="trip-card__body">
+      <p className="trip-card__meta">
+        <span>{readableDateRange(journey.startsOn, journey.endsOn)}</span>
+        <span aria-hidden="true">·</span>
+        <span>{dayCount} {dayCount === 1 ? 'day' : 'days'}</span>
+      </p>
+      <h3>{journey.title}</h3>
+      <ol className="trip-card__route" aria-label={`${countryCodes.length} ${countryCodes.length === 1 ? 'country' : 'countries'}`}>
+        {stops.map((stop, index) => {
+          const country = countryByCode.get(stop.country);
+          const days = stop.startsOn && stop.endsOn ? getJourneyDayCount(stop) : null;
+          return <li key={`${stop.country}-${index}`}>
+            <i style={{ background: country?.color }} aria-hidden="true" />
+            <span>{country?.name ?? stop.country}</span>
+            {days !== null && <small>{days}d</small>}
+          </li>;
+        })}
+      </ol>
     </div>
+    <TripWorldCover countryCodes={countryCodes} />
   </Link>;
 }
 

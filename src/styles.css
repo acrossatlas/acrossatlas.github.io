@@ -2279,12 +2279,6 @@ body {
   background: transparent;
 }
 
-.archive-cover { overflow: hidden; aspect-ratio: 520 / 270; background: rgb(var(--archive-surface-rgb)); border-radius: 18px; }
-.archive-cover svg { display: block; width: 100%; height: 100%; }
-.archive-card__body { padding: 18px 2px 0; }
-.archive-card__title { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; }
-.archive-card__title h3 { margin: 0; font-size: 24px; line-height: 1.25; font-weight: 650; letter-spacing: -.025em; }
-.archive-card__dates { margin: 10px 0 0; color: #979797; font-size: 12px; font-weight: 400; line-height: 1.4; font-variant-numeric: tabular-nums; }
 .country-card {
   --country-card-ink: #213a33;
   --country-card-muted: #7b8f88;
@@ -2350,15 +2344,43 @@ body {
   .country-card:hover, .country-card:hover .country-card__cover > .country-map-cover { transform: none; }
   .ticket-printer__paper { animation: none; }
 }
-.trip-card { position: relative; isolation: isolate; display: flex; min-height: 152px; overflow: hidden; border-radius: 28px; background: rgb(var(--archive-surface-rgb)); }
-.trip-card::after { content: ''; position: absolute; z-index: 1; inset: 0; pointer-events: none; background: linear-gradient(90deg, rgb(var(--archive-surface-rgb)) 0%, rgb(var(--archive-surface-rgb)) 36%, rgb(var(--archive-surface-rgb) / 94%) 44%, rgb(var(--archive-surface-rgb) / 45%) 58%, rgb(var(--archive-surface-rgb) / 0%) 72%); }
-.trip-card .archive-cover { position: absolute; inset: 0 0 0 34%; height: 100%; aspect-ratio: auto; border-radius: 0; background: transparent; }
-.trip-world-cover__land { fill: #b8c2d0; }
-.trip-world-cover__highlight { fill: #304d7c; }
-.trip-card .archive-card__body { position: relative; z-index: 2; display: flex; width: 60%; min-width: 0; min-height: 152px; flex-direction: column; justify-content: space-between; gap: 20px; padding: 24px 28px; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
-.trip-card .archive-card__title h3 { font-size: 24px; }
-.trip-card__footer { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 18px; }
-.archive-card__country-count { align-self: flex-start; margin: 0; color: var(--ink); font-size: 12px; font-weight: 500; line-height: 1.4; font-variant-numeric: tabular-nums; }
+.trip-card {
+  --trip-card-ink: #1f2a3d;
+  --trip-card-muted: #7d8696;
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 46%);
+  gap: 6px;
+  min-height: 188px;
+  padding: 6px;
+  overflow: hidden;
+  border-radius: 26px;
+  background: #fff;
+  box-shadow: 0 0 0 1px rgb(31 42 61 / .07), 0 1px 2px rgb(31 42 61 / .04), 0 12px 28px -18px rgb(31 42 61 / .3);
+  color: var(--trip-card-ink);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  text-decoration: none;
+  transition: transform .25s cubic-bezier(.2, .8, .2, 1), box-shadow .25s ease;
+}
+.trip-card:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px rgb(31 42 61 / .09), 0 2px 4px rgb(31 42 61 / .05), 0 20px 36px -20px rgb(31 42 61 / .4); }
+.trip-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.trip-card__body { display: flex; min-width: 0; flex-direction: column; padding: 20px 18px 18px 22px; }
+.trip-card__meta { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; color: var(--trip-card-muted); font-size: 12px; line-height: 1.4; font-variant-numeric: tabular-nums; }
+.trip-card__body h3 { margin: 8px 0 0; color: var(--trip-card-ink); font-size: 24px; font-weight: 650; letter-spacing: -.03em; line-height: 1.15; text-wrap: balance; }
+.trip-card__route { display: flex; flex-wrap: wrap; gap: 6px; margin: auto 0 0; padding: 22px 0 0; list-style: none; }
+.trip-card__route li { display: inline-flex; align-items: center; gap: 6px; padding: 5px 9px 5px 8px; border-radius: 999px; background: #f3f5f8; color: var(--trip-card-ink); font-size: 12px; font-weight: 500; line-height: 1.2; white-space: nowrap; }
+.trip-card__route i { width: 7px; height: 7px; flex: none; border-radius: 50%; }
+.trip-card__route small { color: var(--trip-card-muted); font-size: 11px; font-weight: 400; font-variant-numeric: tabular-nums; }
+.trip-card__map { position: relative; min-height: 176px; overflow: hidden; border-radius: 20px; background: #f3f5f8; }
+.trip-card__map::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgb(31 42 61 / .05); pointer-events: none; }
+.trip-card__map svg { position: absolute; inset: 0; display: block; width: 100%; height: 100%; transition: transform .6s cubic-bezier(.2, .8, .2, 1); }
+.trip-card:hover .trip-card__map svg { transform: scale(1.04); }
+.trip-card__land { fill: #d4dae3; }
+.trip-card__visited { fill: var(--trip-card-ink); }
+@media (prefers-reduced-motion: reduce) {
+  .trip-card, .trip-card__map svg { transition: none; }
+  .trip-card:hover, .trip-card:hover .trip-card__map svg { transform: none; }
+}
 
 .archived-journey-page .journey-overview { margin-top: 24px; }
 .archived-journey-page .notebook-content { margin-top: 48px; }
@@ -2392,8 +2414,7 @@ body {
   .summary-season { order: 1; }
   .summary-years { order: 2; }
   .country-card-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .trip-card .archive-card__body { width: 64%; padding: 22px 24px; }
-  .trip-card .archive-card__title h3 { font-size: 22px; }
+  .trip-card__body h3 { font-size: 22px; }
 }
 
 @media (max-width: 700px) {
@@ -2410,11 +2431,11 @@ body {
   .summary-compass__content strong { font-size: clamp(15px, 4vw, 19px); }
   .summary-compass__content small { font-size: 8px; }
   .country-card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .trip-card { min-height: 176px; }
-  .trip-card::after { background: linear-gradient(90deg, rgb(var(--archive-surface-rgb)) 0%, rgb(var(--archive-surface-rgb)) 36%, rgb(var(--archive-surface-rgb) / 90%) 52%, rgb(var(--archive-surface-rgb) / 0%) 85%); }
-  .trip-card .archive-cover { inset: 0 -80px 0 20%; height: 100%; }
-  .trip-card .archive-card__body { width: 88%; min-height: 176px; gap: 18px; padding: 20px; }
-  .trip-card .archive-card__title h3 { max-width: 390px; font-size: 20px; }
+  .trip-card { grid-template-columns: 1fr; padding: 5px; border-radius: 22px; }
+  .trip-card__map { order: -1; min-height: 0; aspect-ratio: 16 / 9; border-radius: 17px; }
+  .trip-card__body { padding: 14px 12px 12px; }
+  .trip-card__body h3 { font-size: 20px; }
+  .trip-card__route { padding-top: 16px; }
 }
 
 @media (max-width: 560px) {
