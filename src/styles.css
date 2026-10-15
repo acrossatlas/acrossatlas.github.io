@@ -2285,12 +2285,36 @@ body {
 .archive-card__title { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; }
 .archive-card__title h3 { margin: 0; font-size: 24px; line-height: 1.25; font-weight: 650; letter-spacing: -.025em; }
 .archive-card__dates { margin: 10px 0 0; color: #979797; font-size: 12px; font-weight: 400; line-height: 1.4; font-variant-numeric: tabular-nums; }
-.country-card { position: relative; isolation: isolate; aspect-ratio: 420 / 328; overflow: hidden; border-radius: 22px; background: #b9e8f8; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+.country-card {
+  --country-card-ink: #213a33;
+  --country-card-muted: #7b8f88;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 6px;
+  overflow: hidden;
+  border-radius: 22px;
+  background: #fff;
+  box-shadow: 0 0 0 1px rgb(33 58 51 / .07), 0 1px 2px rgb(33 58 51 / .04), 0 10px 24px -16px rgb(33 58 51 / .28);
+  color: var(--country-card-ink);
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  text-decoration: none;
+  transition: transform .25s cubic-bezier(.2, .8, .2, 1), box-shadow .25s ease;
+}
+.country-card:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px rgb(33 58 51 / .09), 0 2px 4px rgb(33 58 51 / .05), 0 18px 32px -18px rgb(33 58 51 / .38); }
+.country-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .country-map-cover { display: block; width: 100%; height: 100%; }
-.country-card > .country-map-cover { position: absolute; inset: 0; }
-.country-card__copy { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; gap: 5px; padding: 18px; background: linear-gradient(180deg, #fff0 42%, #ffffff42 60%, #fffffff2 86%, #fff 100%); }
-.country-card__copy h3 { margin: 0; color: #28473f; font-size: 18px; font-weight: 650; letter-spacing: -.035em; line-height: 1.2; }
-.country-card__copy p { margin: 0; color: #617b73; font-size: 11px; font-weight: 400; letter-spacing: -.025em; line-height: 1.4; font-variant-numeric: tabular-nums; }
+.country-card__cover { position: relative; aspect-ratio: 420 / 300; overflow: hidden; border-radius: 16px; background: #b9e8f8; }
+.country-card__cover > .country-map-cover { position: absolute; inset: 0; width: 100%; height: 100%; transition: transform .6s cubic-bezier(.2, .8, .2, 1); }
+.country-card:hover .country-card__cover > .country-map-cover { transform: scale(1.035); }
+.country-card__cover::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgb(33 58 51 / .06); pointer-events: none; }
+.country-card__code { position: absolute; top: 10px; left: 10px; padding: 3px 7px; border-radius: 999px; background: rgb(255 255 255 / .78); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); color: var(--country-card-ink); font-size: 10px; font-weight: 650; letter-spacing: .08em; line-height: 1.3; }
+.country-card__copy { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; padding: 12px 10px 8px; }
+.country-card__text { display: grid; gap: 3px; min-width: 0; }
+.country-card__copy h3 { margin: 0; overflow: hidden; color: var(--country-card-ink); font-size: 17px; font-weight: 650; letter-spacing: -.03em; line-height: 1.2; text-overflow: ellipsis; white-space: nowrap; }
+.country-card__copy p { margin: 0; color: var(--country-card-muted); font-size: 11.5px; font-weight: 400; letter-spacing: -.01em; line-height: 1.4; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.country-card__days { display: inline-flex; flex: none; align-items: baseline; gap: 3px; color: var(--country-card-muted); font-size: 11px; line-height: 1; }
+.country-card__days strong { color: var(--country-card-ink); font-size: 17px; font-weight: 650; letter-spacing: -.03em; font-variant-numeric: tabular-nums; }
 .country-ticket { display: block; width: 100%; height: auto; }
 .country-ticket__paper { fill: rgb(var(--archive-surface-rgb)); }
 .country-ticket__date { font-variant-numeric: tabular-nums; }
@@ -2322,6 +2346,8 @@ body {
 }
 @media (prefers-reduced-motion: reduce) {
   .summary-stat--tickets { transition: none; }
+  .country-card, .country-card__cover > .country-map-cover { transition: none; }
+  .country-card:hover, .country-card:hover .country-card__cover > .country-map-cover { transform: none; }
   .ticket-printer__paper { animation: none; }
 }
 .trip-card { position: relative; isolation: isolate; display: flex; min-height: 152px; overflow: hidden; border-radius: 28px; background: rgb(var(--archive-surface-rgb)); }
@@ -2412,10 +2438,13 @@ body {
   .summary-season__icon { top: 42px; right: 14px; width: 44px; height: 44px; }
   .summary-season__value strong { font-size: 26px; }
   .country-card-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
-  .country-card { border-radius: 18px; }
-  .country-card__copy { gap: 4px; padding: 12px; }
+  .country-card { padding: 5px; border-radius: 18px; }
+  .country-card__cover { border-radius: 13px; }
+  .country-card__code { top: 8px; left: 8px; font-size: 9px; }
+  .country-card__copy { gap: 6px; padding: 10px 7px 6px; }
   .country-card__copy h3 { font-size: 15px; }
-  .country-card__copy p { font-size: 9px; letter-spacing: -.035em; }
+  .country-card__copy p { font-size: 10px; }
+  .country-card__days strong { font-size: 15px; }
   .ticket-printer-dialog__content { padding: 20px; }
   .archived-journey-page .notebook-content { margin-top: 36px; }
   .country-archive-heading { gap: 12px; margin-top: 28px; }

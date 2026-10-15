@@ -12,16 +12,35 @@ function TripWorldCover({ countryCodes }) {
   </div>;
 }
 
+const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+
+function readableDateRange(startsOn, endsOn) {
+  const [sy, sm, sd] = startsOn.split('-').map(Number);
+  const [ey, em, ed] = endsOn.split('-').map(Number);
+  const start = `${MONTHS[sm - 1]} ${sd}`;
+  if (sy !== ey) return `${start}, ${sy} – ${MONTHS[em - 1]} ${ed}, ${ey}`;
+  if (sm !== em) return `${start} – ${MONTHS[em - 1]} ${ed}, ${ey}`;
+  if (sd !== ed) return `${start} – ${ed}, ${ey}`;
+  return `${start}, ${ey}`;
+}
+
 function CountryCard({ country }) {
   const visits = countryVisits(country.code, journeys, countryOnlyVisits);
   const visit = visits[0];
-  const dayCount = visit.startsOn && visit.endsOn ? getJourneyDayCount(visit) : null;
+  const hasDates = Boolean(visit.startsOn && visit.endsOn);
+  const dayCount = hasDates ? getJourneyDayCount(visit) : null;
   const label = dayCount === null ? country.name : `${country.name} · ${archiveDateRange(visit.startsOn, visit.endsOn)} · ${dayCount} ${dayCount === 1 ? 'day' : 'days'}`;
   return <Link className="archive-card country-card" to={`/countries/${country.slug}`} aria-label={label}>
-    <CountryMapCover country={country} />
+    <div className="country-card__cover">
+      <CountryMapCover country={country} fill />
+      <span className="country-card__code" aria-hidden="true">{country.code}</span>
+    </div>
     <div className="country-card__copy">
-      <h3>{country.name}</h3>
-      {visit.startsOn && visit.endsOn && <p>{archiveDateRange(visit.startsOn, visit.endsOn)}</p>}
+      <div className="country-card__text">
+        <h3>{country.name}</h3>
+        {hasDates && <p>{readableDateRange(visit.startsOn, visit.endsOn)}</p>}
+      </div>
+      {dayCount !== null && <span className="country-card__days" aria-hidden="true"><strong>{dayCount}</strong>{dayCount === 1 ? 'day' : 'days'}</span>}
     </div>
   </Link>;
 }
