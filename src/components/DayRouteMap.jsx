@@ -1,5 +1,4 @@
 import { Component, useEffect, useMemo, useState } from 'react';
-import { RotateCcw, Plus, Minus, Expand } from 'lucide-react';
 import { Map, MapMarker, MarkerContent, MapRoute, useMap } from './ui/map';
 import routes from '../data/golden-circle-routes.json';
 import durations from '../data/golden-circle-durations.json';
@@ -16,8 +15,11 @@ import { nodeFocusZoom } from '../lib/node-focus-zoom';
 import CountryFlag, { countriesForDay } from './CountryFlag';
 import MigrationMap, { migrationDays } from './MigrationMap';
 import { countryThemes, overviewForDay, basemapPaint, volcanicPaint } from './map-themes';
+import { countryDayMaps } from '../data/country-day-maps';
+import MapControls from './MapControls';
 
 const visitRoutes = { ...savedVisitRoutes, '2026-10-03': oct03Optional.legs, '2026-09-30': sep30Checkout.legs };
+const mapDaysByCountry = { NL: amsterdamMapDays, IS: icelandDays, NO: norwayDays };
 const stops = [
   { id: 'city', number: '0', name: 'Reykjavík 雷克雅未克', subtitle: '出发 / 返回 · 市区示意', coordinates: [-21.9426, 64.1466], eventIds: ['sep28-reykjavik-stay'] },
   { id: 'thingvellir', number: '1', name: 'Þingvellir 辛格维利尔国家公园', subtitle: '国家公园 · Hakið P1', coordinates: [-21.129, 64.2558], eventIds: ['sep28-thingvellir'] },
@@ -105,7 +107,7 @@ function MapTools({ selected, focusedLegs, routeFocus, isGoldenCircle, isIceland
       if (map.getLayer(layer)) map.setPaintProperty(layer, property, color);
     }
     for (const layer of map.getStyle().layers) {
-      if (layer.type === 'line' && /^road_.*fill/.test(layer.id)) {
+      if (layer.type === 'line' && (/^road_.*fill/.test(layer.id) || /^highway_(path|minor|.+_inner)$/.test(layer.id))) {
         map.setPaintProperty(layer.id, 'line-color', isIceland ? '#66695f' : countryTheme?.road || '#fafaf7');
       }
       if ((isIceland || countryTheme) && layer.type === 'symbol' && layer.layout?.['text-field']) {
@@ -146,14 +148,7 @@ function MapTools({ selected, focusedLegs, routeFocus, isGoldenCircle, isIceland
   }, [map, isLoaded, routeFocus]);
   return <>
     {error && <p role="status" className="daily-map__error">底图加载失败，请检查网络后重试。下方行程仍可查看。</p>}
-    <div className="daily-map__controls" aria-label="地图控制">
-      {overviewBounds && <button type="button" aria-label="查看酒店与全部行程地点" title="查看酒店与全部行程地点" onClick={() => { onReset(); map?.fitBounds(overviewBounds, { ...fitOptions, bearing: 0, pitch: 0 }); }}><Expand size={16} strokeWidth={1.8} aria-hidden="true" /></button>}
-      <div className="daily-map__zoom">
-      <button type="button" aria-label="放大地图" onClick={() => map?.zoomIn()}><Plus size={16} strokeWidth={1.8} aria-hidden="true" /></button>
-      <button type="button" aria-label="缩小地图" onClick={() => map?.zoomOut()}><Minus size={16} strokeWidth={1.8} aria-hidden="true" /></button>
-      </div>
-      <button className="daily-map__reset" type="button" aria-label="恢复默认位置" title="恢复默认位置" onClick={resetView}><RotateCcw size={16} strokeWidth={1.8} aria-hidden="true" /></button>
-    </div>
+    <MapControls onReset={resetView} onShowAll={overviewBounds ? () => { onReset(); map?.fitBounds(overviewBounds, { ...fitOptions, bearing: 0, pitch: 0 }); } : undefined} />
   </>;
 }
 
@@ -161,8 +156,10 @@ export default function DayRouteMap(props) {
   return <DayRouteMapContent key={props.day.key} {...props} />;
 }
 
-function DayRouteMapContent({ day, events }) {
-  const config = day.key === '2026-09-30' ? sep30Checkout.day : day.key === '2026-10-03' ? oct03Optional.day : amsterdamMapDays[day.key] || norwayDays[day.key] || icelandDays[day.key];
+function DayRouteMapContent({ day, events, country: countryScope }) {
+  const dailyConfig = countryScope ? mapDaysByCountry[countryScope]?.[day.key] : amsterdamMapDays[day.key] || norwayDays[day.key] || icelandDays[day.key];
+  const config = countryDayMaps[countryScope]?.[day.key] || (day.key === '2026-09-30' ? sep30Checkout.day : day.key === '2026-10-03' ? oct03Optional.day : dailyConfig);
+  const visitRouteOptions = config?.visitRoutes || visitRoutes[day.key];
   const dayRoutes = config?.routes || routes;
   const dayStops = config?.stops || mapStops;
   const dayLegs = config?.legs || visibleLegs;
@@ -179,11 +176,11 @@ function DayRouteMapContent({ day, events }) {
   const [saveError, setSaveError] = useState(false);
   const [routeFocus, setRouteFocus] = useState(null);
   const numberedStops = numberPlannedStops(dayStops, activeRoute);
-  const focusedLegs = useMemo(() => routeFocus ? [routeFocus] : adjacentVisitLegs(visitRoutes[day.key], activeRoute, selected, dayStops), [day.key, activeRoute, selected, dayStops, routeFocus]);
+  const focusedLegs = useMemo(() => routeFocus ? [routeFocus] : adjacentVisitLegs(visitRouteOptions, activeRoute, selected, dayStops), [visitRouteOptions, activeRoute, selected, dayStops, routeFocus]);
   const isFocused = Boolean(selected || routeFocus);
   const focusNodeIds = new Set([selected, ...focusedLegs.flatMap(leg => [leg.from, leg.to])]);
   const shownLegs = isFocused ? focusedLegs.map(leg => ({ ...leg, coordinates: pointAlongLeg(leg.path).coordinates })) : dayLegs;
-  const clickableLegs = useMemo(() => Object.keys(visitRoutes[day.key] || {}).sort((a, b) => Number(a === activeRoute) - Number(b === activeRoute)).flatMap(route => visitRoutes[day.key][route].map(leg => ({ ...leg, route }))), [day.key, activeRoute]);
+  const clickableLegs = useMemo(() => Object.keys(visitRouteOptions || {}).sort((a, b) => Number(a === activeRoute) - Number(b === activeRoute)).flatMap(route => visitRouteOptions[route].map(leg => ({ ...leg, route }))), [visitRouteOptions, activeRoute]);
   function focusSegment(leg) {
     setSelected(null);
     setPreviewRoute(null);
@@ -214,7 +211,7 @@ function DayRouteMapContent({ day, events }) {
     return () => window.removeEventListener('storage', syncPlan);
   }, [storageKey]);
   const isGoldenCircle = day.key === '2026-09-28' || Boolean(config);
-  const countries = countriesForDay(day.key);
+  const countries = countryScope ? [countryScope] : countriesForDay(day.key);
   // On a travel day the destination determines the basemap; both flags remain visible.
   const country = countries.at(-1);
   const isIceland = country === 'IS';
@@ -222,11 +219,11 @@ function DayRouteMapContent({ day, events }) {
   const routeColor = countryTheme?.route || '#ef9155';
   const optionalColor = countryTheme?.optional || '#929b81';
   const overview = overviewForDay(day.key, country);
-  if (migrationDays[day.key]) return <MapBoundary><MigrationMap day={day} events={events} /></MapBoundary>;
+  if (!countryScope && migrationDays[day.key]) return <MapBoundary><MigrationMap day={day} events={events} /></MapBoundary>;
   return <figure className={`day-map daily-map${isIceland ? ' daily-map--volcanic' : countryTheme ? ` daily-map--${countryTheme.name}` : ''}`}  aria-label={`${day.label} 每日地图`}>
     <div className="daily-map__surface">
       <MapBoundary>
-        <Map theme={isIceland ? "dark" : "light"} bounds={isGoldenCircle ? dayBounds : undefined} center={overview.center} zoom={overview.zoom} fitBoundsOptions={fitOptions} scrollZoom={true} touchZoomRotate={true} dragPan={true} attributionControl={false}>
+        <Map theme={isIceland ? "dark" : "light"} bounds={isGoldenCircle ? dayBounds : undefined} center={overview.center} zoom={overview.zoom} fitBoundsOptions={fitOptions} scrollZoom={true} touchZoomRotate={true} dragPan={true}>
           {isGoldenCircle && <>
             {clickableLegs.map((leg, index) => <MapRoute key={`${activeRoute}-${index}`} id={`daily-segment-${index}`} coordinates={leg.path} dashArray={leg.dashArray} color={leg.color || (leg.route === activeRoute ? routeColor : optionalColor)} width={leg.route === activeRoute ? 4 : 3} opacity={isFocused ? .18 : leg.route === activeRoute ? .95 : .65} />)}
             {focusedLegs.map((leg, index) => <MapRoute key={`focus-${leg.from}-${leg.to}`} coordinates={leg.path} dashArray={leg.dashArray} color={leg.color || routeColor} width={4} opacity={1} interactive={false} active />)}

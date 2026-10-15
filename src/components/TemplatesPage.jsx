@@ -1,10 +1,13 @@
-import { Fragment, lazy, Suspense, useEffect, useRef, useState } from 'react';
+import { lazy, Suspense, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { CarFront, House, Search, X } from 'lucide-react';
 import journey from '../../public/templates/journey.json';
 import EventCard from './EventCard';
+import DayTabs from './DayTabs';
 import ChecklistGroup from './ChecklistGroup';
 const TemplateRouteMap = lazy(() => import('./TemplateRouteMap'));
+const templateDates = journey.days.map(day => ({ key: day.id, label: day.dateLabel, tabLabel: `${day.dateLabel} · ${day.label}` }));
+const templateGroups = Object.fromEntries(journey.days.filter((day, index) => index === 0 || day.group !== journey.days[index - 1].group).map(day => [day.id, day.group]));
 
 function TemplateModal({ panel, onClose }) {
   const ref = useRef(null);
@@ -34,21 +37,6 @@ export default function TemplatesPage() {
   const [selected, setSelected] = useState(null);
   const [panel, setPanel] = useState(null);
   const [query, setQuery] = useState('');
-  const tabsRef = useRef(null);
-  const [overflow, setOverflow] = useState({ left: false, right: false });
-  useEffect(() => {
-    const tabs = tabsRef.current;
-    const update = () => setOverflow({ left: tabs.scrollLeft > 2, right: tabs.scrollLeft + tabs.clientWidth < tabs.scrollWidth - 2 });
-    update();
-    tabs.addEventListener('scroll', update, { passive: true });
-    const observer = new ResizeObserver(update); observer.observe(tabs);
-    return () => { tabs.removeEventListener('scroll', update); observer.disconnect(); };
-  }, []);
-  useEffect(() => {
-    const tabs = tabsRef.current;
-    const tab = document.getElementById(`template-tab-${active}`);
-    if (tabs && tab) tabs.scrollTo({ left: tab.offsetLeft - (tabs.clientWidth - tab.offsetWidth) / 2, behavior: 'instant' });
-  }, [active]);
   const day = journey.days[active];
   const focus = day.events.find(event => event.id === day.focusEventId) ?? day.events[0];
   const events = day.events.filter(event => `${event.title} ${event.type} ${event.detail}`.toLowerCase().includes(query.trim().toLowerCase()));
@@ -75,8 +63,8 @@ export default function TemplatesPage() {
         <div className="today-focus__title-row"><h3>{focus.title}</h3></div><p>{focus.detail}</p>
       </article></section>
       <section className="notebook-section" aria-label="每日模板">
-        <div ref={tabsRef} className={`day-tabs${overflow.left ? " has-left-overflow" : ""}${overflow.right ? " has-right-overflow" : ""}`} role="tablist" aria-label="单日模板">{journey.days.map((item,i)=><Fragment key={item.id}>{(i===0 || item.group!==journey.days[i-1].group) && <span className="day-tabs__country" role="presentation">{item.group}</span>}<button type="button" key={item.id} id={`template-tab-${i}`} role="tab" tabIndex={active===i?0:-1} aria-selected={active===i} aria-controls={`template-panel-${i}`} className={active===i?'is-active':''} onClick={()=>selectDay(i)} onKeyDown={event=>{let next;if(event.key==='ArrowRight')next=(i+1)%4;if(event.key==='ArrowLeft')next=(i+3)%4;if(event.key==='Home')next=0;if(event.key==='End')next=3;if(next!==undefined){event.preventDefault();selectDay(next);document.getElementById(`template-tab-${next}`).focus();}}} aria-label={`${item.dateLabel} · ${item.label}`}>{item.dateLabel}</button></Fragment>)}</div>
-        <div role="tabpanel" id={`template-panel-${active}`} aria-labelledby={`template-tab-${active}`}>
+        <DayTabs days={templateDates} activeIndex={active} onSelect={selectDay} sectionLabels={templateGroups} idPrefix="template" label="单日模板" />
+        <div role="tabpanel" id={`template-${active + 1}-panel`} aria-labelledby={`template-${active + 1}-tab`}>
           <div className="day-detail"><Suspense fallback={<div className="day-map daily-map__loading">正在加载纽约地图…</div>}><TemplateRouteMap key={day.id} day={day} selected={selected} onSelect={selectStop}/></Suspense>
             <section className="day-events" aria-label="事件卡片"><ol className="day-event-list">{events.map(event=><EventCard key={event.id} event={event} selected={selected===event.id}/>)}</ol>{!events.length && <p className="template-muted">当天没有匹配的事件。</p>}</section>
           </div>

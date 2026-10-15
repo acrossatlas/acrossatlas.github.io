@@ -1,12 +1,13 @@
 # Travel archive
 
-Map log and Trip log are two views of the same journey records. Content lives in `src/data/journeys/`; `src/data/archive.js` provides the index and country metadata.
+Map log and Trip log share journey records. Content lives in `src/data/journeys/`; `src/data/archive.js` provides the index, country metadata, and country-only visits whose trip details have not yet been supplied.
 
 ## Routes
 
-- `/?log=map`: one card per country with completed journeys.
-- `/?log=trip`: one card per completed journey.
-- `/countries/netherlands`, `/countries/iceland`, `/countries/norway`: country overview, cities and regions, and related journey entries.
+- `/?log=map`: a summary with the dotted continent map, unique country and continent counts, and the northernmost and southernmost archived regions. The gray Countries count card opens a small ticket printer dialog; selecting a country feeds its SVG ticket out of the slot. Tickets retain their flag palettes, country motifs, bold vertical dates and duration, with two circular notches at the date stub. Countries below contains compact blue-water/green-land map cards with names and dates over a white bottom fade. Country cards open the country itinerary and fit four per row on desktop, two on mobile.
+- `/?log=trip`: a summary with completed trip count, a country dot matrix spanning two grid columns, and most common departure season; Journeys below contains one compact rounded card per completed journey. Summary cards appear directly below the tabs, without an Overview heading. The journey title and dates sit at the upper left, country count below, and a dotted world map on the right under a fading text backdrop. Visited countries share a blue highlight. Travel style fields are not displayed.
+- `/countries/netherlands`, `/countries/iceland`, `/countries/norway`: the original daily maps and itinerary for that country. The title links home; the date range sits to the right of the country name.
+- `/countries/singapore`, `/countries/thailand`: country map covers with confirmed visit dates in the header, ready for itinerary content when provided. Their collectible tickets are available from the homepage Countries count card; Singapore's ticket uses a simplified Merlion motif.
 - `/trips/2026-netherlands-iceland-norway`: the archived notebook. `?date=2026-09-28` selects a specific day and survives refresh and browser history navigation.
 - `/ongoing`: redirects to an active journey if available, otherwise the latest archived journey. Existing links remain usable.
 
@@ -14,7 +15,11 @@ Map log and Trip log are two views of the same journey records. Content lives in
 
 Each record has a stable `id`, `status`, title, full date range, country codes, displayed itinerary dates, daily events, country tab labels, transport, stays, and checklists. Set `status: 'completed'` to include it in both archives and remove the notebook's current/upcoming focus card. Completed transport and stay records keep chronological order without a current-record indicator.
 
-`visits` contains one entry per country per journey: the segment's dates and its regions. Each region has a stable `id`, display names, broad map coordinates, a description, relevant `dates`, and `firstDate` for the notebook link. Country pages aggregate completed visits, retaining one marker per region linked to its most recent journey; all journey entries remain listed below the map. Country cover artwork shows the relevant mainland outlines. Trip cover markers belong only to that trip.
+`visits` contains one entry per country per journey: the segment's dates and its regions. Each region has a stable `id`, display names, broad map coordinates, a description, relevant `dates`, and `firstDate`. Country pages aggregate completed visits and reuse `DayTabs`, `DayItinerary`, `DayRouteMap` and `JourneyEvents` from the full notebook. The shared date tabs sit above the map and event cards. Country palettes, routed geometry, navigation addresses and reservation dialogs remain shared. `MapControls` also supplies the same borderless tools to itinerary and template maps. `?date=YYYY-MM-DD&trip=journey-id` preserves the selected day. Repeated or overlapping visits to the same country within a journey share one tab per day. Trip covers and the continent summary reuse `DottedWorldMap` and the static SVG in `src/assets/travel-world-dots.svg`. Country highlights in `src/assets/travel-country-dots.svg` use the same dot grid as the world artwork, keeping unused country geometry out of the continent card's asset.
+
+Each local event has a `country` code; `country: null` marks an international transfer that belongs only to the complete trip. Country pages filter events by that code and omit dates without local events. A shared travel date therefore ends at the departure country's last local event and begins with the arrival country's first local event. Domestic flights and ferries remain. Untagged events in older records retain the visit's country scope. `DayRouteMap` accepts a country scope, suppresses the cross-country overview, and uses that country's local stops and saved geometry. Netherlands 09.27, Iceland 09.27 and Norway 10.01 have local arrival/departure maps; the full Trip log retains all international maps and events.
+
+Interactive maps share the public OpenFreeMap light/dark styles in `src/lib/basemaps.js`, with OpenStreetMap raster tiles as a fallback. This replaces the Carto tiles that returned API-key warning images. Required map attribution remains visible.
 
 ## Current content
 
@@ -22,4 +27,18 @@ The autumn 2026 record preserves the existing planned content. `contentStatus: '
 
 The full journey ends on October 7, when the return flight arrives. Daily itinerary tabs still end on October 6, matching the original record; that day's flight card already contains the next-day arrival. Checklist storage uses the original start date to preserve existing local selections.
 
+Singapore and Thailand were added at the user's request in `countryOnlyVisits`: Singapore June 19–22, 2026 (4 days), and Thailand August 18–22, 2026 (5 days). Their tickets and country headers share these dates. These visits count in Map log's country and continent totals without creating Trip log journeys or adding countries to the autumn trip. Singapore has a broad city-state reference for the latitude summary; Thailand's cities remain unspecified. Country-only latitude links open the country page without date or trip query parameters.
+
 To add another journey, add a data module and register it in `journeys`. Add country metadata if it introduces a new destination. Review public content against the project charter before publishing.
+
+## Travel overview
+
+Country metadata includes a `continent` using the seven-continent convention. `getArchiveSummary` in `src/lib/archive-summary.js` derives the overview from completed visits: repeated countries and continents count once, and international flight connections do not add destinations. The latitude cards compare signed archived region coordinates and open each region's first itinerary date. The overview follows the same archive records when actual visits are updated. The world card lists visited continent names without repeating the count or showing a completion target.
+
+The mint world card uses `src/assets/travel-world-dots.svg`, a static dot illustration with reusable groups per continent, including Antarctica. Visited continents are green and the remaining land is gray; journey covers add blue country dots from `src/assets/travel-country-dots.svg`. Regenerate both assets with `node scripts/update-travel-summary-map.mjs` or pass a saved Natural Earth GeoJSON file as the first argument. Small countries retain a representative dot when necessary. Their public-domain source is recorded in the script and SVGs. This illustration needs no tile service.
+
+Country entrance maps use the static SVG in `src/assets/country-map-covers.svg`, generated from public-domain Natural Earth 1:50m countries and lakes, with 1:10m country geometry for Singapore's coastline. Each country's `overviewBounds` controls its viewport. Regenerate with `node scripts/update-country-map-covers.mjs`, optionally passing cached 1:50m countries, 1:50m lakes and 1:10m countries GeoJSON files as three arguments. Maps use shared sky-blue water and mint-green land without point markers or live tile requests. `CountryTicketPrinter` reuses `CountryTicket` in a native dialog with Escape/backdrop dismissal and focus restoration; the click-triggered feed plays once and respects reduced-motion preferences.
+
+`getTripSummary` in `src/lib/trip-summary.js` counts only completed journeys. Each journey belongs to its departure year and departure-month season, including trips crossing New Year. The dot matrix lights one dot for each distinct destination country in that year's trips; revisiting a country in the same year does not add a dot. There are no visible year axes or captions. Each lit dot reveals its year and country on hover or keyboard focus; empty dots carry no fabricated dates. The matrix expands as more destinations are recorded. Country-only visits are excluded until they belong to a dated journey. Seasons are explicitly grouped as March–May, June–August, September–November, and December–February. Tied seasons remain tied. The Top travel season card uses a neutral gray surface and a monochrome seasonal motif, with a maple leaf for autumn. Both archive summaries use compact spacing and type. Latitude cards sit side by side at all widths, using pale blue and mint surfaces with subdued compass ticks; the continent map is scaled down to keep the desktop overview compact. There is no cumulative day count.
+
+Journey `travelStyles` metadata remains editable in the data records, but no style summary card or journey style labels are displayed.

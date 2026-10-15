@@ -1,8 +1,8 @@
 import { useEffect } from 'react';
 import { templateBasemap, templateFallbackBasemap } from './template-basemap';
-import { Plus, Minus, RotateCcw } from 'lucide-react';
 import { Map, MapRoute, MapGeoJSON, MapMarker, MarkerContent, useMap } from './ui/map';
 import DayMapStop from './DayMapStop';
+import MapControls from './MapControls';
 import routes from '../data/template-new-york-routes.json';
 import { templateRouteLine } from '../lib/template-route-line';
 import countryBase from '../data/migration-countries.json';
@@ -20,10 +20,7 @@ function Controls({ preview, onReset }) {
     observer.observe(map.getContainer());
     return () => observer.disconnect();
   }, [map]);
-  return <div className="daily-map__controls" aria-label="地图控制">
-    <div className="daily-map__zoom"><button type="button" aria-label="放大地图" onClick={() => map?.zoomIn()}><Plus size={16}/></button><button type="button" aria-label="缩小地图" onClick={() => map?.zoomOut()}><Minus size={16}/></button></div>
-    <button type="button" className="daily-map__reset" aria-label={preview.bounds ? '恢复国家总览' : '恢复纽约视图'} onClick={() => { if (preview.bounds) map?.fitBounds(preview.bounds, fitOptions); else map?.jumpTo({center: preview.center, zoom: preview.zoom}); onReset(); }}><RotateCcw size={16}/></button>
-  </div>;
+  return <MapControls resetLabel={preview.bounds ? '恢复国家总览' : '恢复纽约视图'} onReset={() => { if (preview.bounds) map?.fitBounds(preview.bounds, fitOptions); else map?.jumpTo({center: preview.center, zoom: preview.zoom}); onReset(); }} />;
 }
 export default function TemplateRouteMap({ day, selected, onSelect }) {
   const preview = day.map.preview;

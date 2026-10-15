@@ -23,17 +23,13 @@ import { createPortal } from "react-dom";
 import { X, Minus, Plus, Locate, Maximize, Loader2 } from "lucide-react";
 
 import { cn } from "../../lib/utils";
+import { basemapStyles as defaultStyles, fallbackBasemap } from "../../lib/basemaps";
 
 if (typeof window !== "undefined" && !MapLibreGL.getWorkerUrl()) {
   MapLibreGL.setWorkerUrl(
     mapWorkerUrl,
   );
 }
-
-const defaultStyles = {
-  dark: "https://basemaps.cartocdn.com/gl/dark-matter-gl-style/style.json",
-  light: "https://basemaps.cartocdn.com/gl/positron-gl-style/style.json",
-};
 
 // A tile-less, dependency-free style with a transparent background. Use it for
 // data visualizations (choropleths, world arcs, dot maps) where you draw your
@@ -185,13 +181,13 @@ type MapProps = {
    * Pass your theme value here.
    */
   theme?: Theme;
-  /** Custom map styles for light and dark themes. Overrides the default Carto styles. */
+  /** Custom map styles for light and dark themes. Overrides the default public styles. */
   styles?: {
     light?: MapStyleOption;
     dark?: MapStyleOption;
   };
   /**
-   * Use a transparent, tile-less basemap instead of the default Carto street
+   * Use a transparent, tile-less basemap instead of the default street
    * basemap — a blank canvas. Used alone it renders nothing; add your own
    * layers on top (`<MapGeoJSON>`, `<MapArc>`, markers, etc.). Ideal for data
    * visualizations (choropleths, arcs, dot maps).
@@ -247,7 +243,7 @@ const Map = forwardRef<MapRef, MapProps>(function Map(
     theme: themeProp,
     styles,
     blank = false,
-    fallbackStyle,
+    fallbackStyle = fallbackBasemap as MapLibreGL.StyleSpecification,
     projection,
     viewport,
     onViewportChange,
@@ -277,7 +273,7 @@ const Map = forwardRef<MapRef, MapProps>(function Map(
 
   const mapStyles = useMemo(() => {
     // Explicit styles win. Otherwise `blank` opts into the transparent
-    // tile-less basemap; with neither, fall back to the Carto defaults.
+    // tile-less basemap; with neither, use the public OpenFreeMap styles.
     if (stableStyles) {
       return {
         dark: stableStyles.dark ?? defaultStyles.dark,

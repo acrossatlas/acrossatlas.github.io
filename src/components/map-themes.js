@@ -2,7 +2,7 @@
 function paint({ land, green, urban, water, river, building }) {
   return [
     ['background', 'background-color', land],
-    ...['landcover', 'park_national_park', 'park_nature_reserve', 'landuse'].map(id => [id, 'fill-color', green]),
+    ...['landcover', 'landcover_wood', 'park', 'landuse_park', 'park_national_park', 'park_nature_reserve', 'landuse'].map(id => [id, 'fill-color', green]),
     ['landuse_residential', 'fill-color', urban],
     ['water', 'fill-color', water],
     ['waterway', 'line-color', river],
@@ -43,6 +43,9 @@ export function overviewForDay(date, country) {
 export const basemapPaint = [
   ['background', 'background-color', '#eef0ed'],
   ['landcover', 'fill-color', '#d5decf'],
+  ['landcover_wood', 'fill-color', '#d5decf'],
+  ['park', 'fill-color', '#d5decf'],
+  ['landuse_park', 'fill-color', '#d5decf'],
   ['park_national_park', 'fill-color', '#d5decf'],
   ['park_nature_reserve', 'fill-color', '#d5decf'],
   ['landuse', 'fill-color', '#dde4d7'],
@@ -53,6 +56,9 @@ export const basemapPaint = [
 export const volcanicPaint = [
   ['background', 'background-color', '#30322f'],
   ['landcover', 'fill-color', '#536048'],
+  ['landcover_wood', 'fill-color', '#536048'],
+  ['park', 'fill-color', '#536048'],
+  ['landuse_park', 'fill-color', '#536048'],
   ['park_national_park', 'fill-color', '#536048'],
   ['park_nature_reserve', 'fill-color', '#536048'],
   ['landuse', 'fill-color', '#41493a'],

@@ -1,8 +1,9 @@
 import ChecklistGroup from './components/ChecklistGroup';
-import EventCard from './components/EventCard';
+import { ArrowIcon, CloseIcon, CopyableAddress, CopyableEventTitle, EventFlightDetails, FlightLegCaption, getReservationHeading, ReservationDetails, ReservationModal, useModalBehavior } from './components/JourneyEvents';
 import TemplatesPage from './components/TemplatesPage';
-import { Fragment, lazy, Suspense, useEffect, useRef, useState } from 'react';
-const DayRouteMap = lazy(() => import('./components/DayRouteMap'));
+import { useEffect, useState } from 'react';
+import DayItinerary from './components/DayItinerary';
+import DayTabs from './components/DayTabs';
 import { Link, Navigate, Route, Routes, useLocation, useParams, useSearchParams } from 'react-router-dom';
 import { journeys, archiveDateRange, tripUrl, findJourney } from './data/archive';
 import { dateFromKey, getJourneyDayCount, resolveJourneyDayIndex } from './lib/journey-dates';
@@ -128,14 +129,6 @@ function getRelevantRecordId(records, today = new Date()) {
   return records.find((record) => record.startsOn > todayKey)?.id ?? records[0]?.id;
 }
 
-function ArrowIcon() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 24 24">
-      <path d="M5 12h13M14 7l5 5-5 5" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.6" />
-    </svg>
-  );
-}
-
 function SearchIcon() {
   return (
     <svg aria-hidden="true" fill="currentColor" viewBox="0 0 24 24">
@@ -156,14 +149,6 @@ function StayIcon() {
   return (
     <svg aria-hidden="true" fill="currentColor" viewBox="0 0 24 24">
       <path d="M21 20C21 20.5523 20.5523 21 20 21H4C3.44772 21 3 20.5523 3 20V9.48907C3 9.18048 3.14247 8.88917 3.38606 8.69972L11.3861 2.47749C11.7472 2.19663 12.2528 2.19663 12.6139 2.47749L20.6139 8.69972C20.8575 8.88917 21 9.18048 21 9.48907V20ZM11 13V19H13V13H11Z" />
-    </svg>
-  );
-}
-
-function CloseIcon() {
-  return (
-    <svg aria-hidden="true" fill="currentColor" viewBox="0 0 24 24">
-      <path d="M11.9997 10.5865L16.9495 5.63672L18.3637 7.05093L13.4139 12.0007L18.3637 16.9504L16.9495 18.3646L11.9997 13.4149L7.04996 18.3646L5.63574 16.9504L10.5855 12.0007L5.63574 7.05093L7.04996 5.63672L11.9997 10.5865Z" />
     </svg>
   );
 }
@@ -236,7 +221,11 @@ function HomePage() {
 
   return (
     <div className={`page home-page${ongoingJourney ? '' : ' home-page--archive'}`}>
-      <nav className="home-navigation" aria-label="主导航"><Link to="/templates">模板 ↗</Link></nav>
+      <nav className="home-navigation" aria-label="主导航">
+        <Link className="home-template-link" to="/templates" aria-label="打开旅行模板" title="模板">
+          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M10.6663 4C11.4027 4 12.0003 4.5976 12.0003 5.33398V11.334H10.6663V6.27734L4.47198 12.4717L3.52863 11.5283L9.72296 5.33398H4.66632V4H10.6663Z" fill="currentColor" /></svg>
+        </Link>
+      </nav>
       <main>
         <section className="home-hero" aria-labelledby="home-title">
           <h1 id="home-title">across</h1>
@@ -279,79 +268,8 @@ function HomePage() {
   );
 }
 
-function useModalBehavior(onClose) {
-  useEffect(() => {
-    const previousOverflow = document.body.style.overflow;
-    const handleKeyDown = (event) => {
-      if (event.key === 'Escape') onClose();
-    };
-
-    document.body.style.overflow = 'hidden';
-    window.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [onClose]);
-}
-
 function CurrentIndicator({ visible }) {
   return visible ? <span className="info-card__current">当前</span> : null;
-}
-
-function CopyableAddress({ label, value }) {
-  const [copied, setCopied] = useState(false);
-
-  useEffect(() => {
-    if (!copied) return undefined;
-    const timer = window.setTimeout(() => setCopied(false), 1500);
-    return () => window.clearTimeout(timer);
-  }, [copied]);
-
-  const handleCopy = async () => setCopied(await copyText(value));
-
-  return (
-    <div className="copyable-address-row">
-      <button aria-label={copied ? `${label}已复制` : `复制${label}`} className="copyable-address" onClick={handleCopy} type="button">
-        <span className="copyable-address__label">{label}</span>
-        <span>{value}</span>
-        <span className="copy-cue">{copied ? <CheckIcon /> : <CopyIcon />}</span>
-      </button>
-    </div>
-  );
-}
-
-function BookingAccess({ access }) {
-  if (!access) return null;
-
-  return (
-    <aside aria-label="查看预订所需信息" className="booking-access">
-      <div className="booking-access__header">
-        <span>查看预订需要</span>
-        <div className="booking-access__links">
-          {access.url && <a href={access.url} rel="noopener noreferrer" target="_blank">
-            查询预订<ArrowIcon />
-          </a>}
-          {access.links?.map((link) => (
-            <a href={link.url} key={link.url} rel="noopener noreferrer" target="_blank">
-              {link.label}<ArrowIcon />
-            </a>
-          ))}
-        </div>
-      </div>
-      <div className="booking-access__credentials">
-        {access.credentials.map((credential) => (
-          credential.label.includes('邮箱')
-            ? <div className="booking-access__identity" key={credential.label}>
-                <span className="copyable-address__label">{credential.label}</span>
-                <span>{credential.value}</span>
-              </div>
-            : <CopyableAddress key={credential.label} label={credential.label} value={credential.value} />
-        ))}
-      </div>
-    </aside>
-  );
 }
 
 function LocationCardTitle({ record }) {
@@ -360,23 +278,6 @@ function LocationCardTitle({ record }) {
       <h3>{record.title}</h3>
       <CopyableAddress label={record.addressLabel ?? '住宿地址'} value={record.navigation} />
     </div>
-  );
-}
-
-function FlightLegCaption({ text }) {
-  const flightNumber = text.match(/\b[A-Z0-9]{2}\d{3,4}\b/);
-
-  if (!flightNumber) return <small>{text}</small>;
-
-  const start = flightNumber.index;
-  const end = start + flightNumber[0].length;
-
-  return (
-    <small>
-      {text.slice(0, start)}
-      <b>{flightNumber[0]}</b>
-      {text.slice(end)}
-    </small>
   );
 }
 
@@ -507,135 +408,6 @@ function SectionHeading({ children }) {
 }
 
 
-function legacyCopyText(text) {
-  const textarea = document.createElement('textarea');
-  textarea.value = text;
-  textarea.setAttribute('readonly', '');
-  textarea.style.position = 'fixed';
-  textarea.style.opacity = '0';
-  document.body.appendChild(textarea);
-  textarea.select();
-  const copied = document.execCommand('copy');
-  textarea.remove();
-  return copied;
-}
-
-async function copyText(text) {
-  // Keep the first attempt inside the click event's user-activation window.
-  if (legacyCopyText(text)) return true;
-
-  if (navigator.clipboard?.writeText) {
-    try {
-      await navigator.clipboard.writeText(text);
-      return true;
-    } catch {
-      // Some mobile and embedded browsers deny Clipboard API access.
-    }
-  }
-
-  return false;
-}
-
-function CopyableEventTitle({ className, event }) {
-  return (
-    <div className={`${className} copyable-title-block`}>
-      <h3>{event.title}</h3>
-      {event.navigation && (
-        <CopyableAddress
-          label={event.addressLabel ?? (event.type === '住宿' ? '住宿地址' : '导航地址')}
-          value={event.navigation}
-        />
-      )}
-      {event.photoSpots?.length > 0 && (
-        <details className="photo-spots">
-          <summary><span>拍照点</span><span className="photo-spots__count">{event.photoSpots.length}</span><svg aria-hidden="true" viewBox="0 0 16 16"><path d="m6 4 4 4-4 4" /></svg></summary>
-          {event.photoSpots.map((spot) => (
-            <div className="photo-spots__item" key={spot.name}>
-              <CopyableAddress label="拍照点" value={spot.query} />
-              <p>{spot.note}</p>
-            </div>
-          ))}
-        </details>
-      )}
-    </div>
-  );
-}
-
-function getReservationHeading() {
-  return '预定信息';
-}
-
-function ReservationDetails({ event, showContext = false }) {
-  if (!event.reservation) {
-    const pending = event.reservationStatus === '未预定';
-
-    return (
-      <div className={`reservation-state${pending ? ' is-pending' : ''}`}>
-        <strong>{pending ? '未预定' : '无需预定'}</strong>
-        <p>{pending ? '预定方式和凭证将在这里补充。' : '此项行程没有预定信息。'}</p>
-      </div>
-    );
-  }
-
-  const fields = event.infoType === 'flight'
-    ? [
-
-        ['航班号', event.reservation.flightNumber],
-
-        ['航班时间', event.reservation.time],
-
-      ]
-    : [
-        ['查看预订', event.reservation.reference],
-        ['使用时间', event.reservation.time],
-        ['使用方式', event.reservation.instruction],
-      ];
-
-  return (
-    <div className={`reservation-details${showContext ? '' : ' is-embedded'}`}>
-      <div className="reservation-copy">
-        {showContext && (
-          <>
-            <span>{event.type}</span>
-            <h3>{event.title}</h3>
-          </>
-        )}
-        <dl className="info-card__details">
-          {fields.map(([label, value]) => (
-            <div key={label}>
-              <dt>{label}</dt>
-              <dd>{value ?? '待补充'}</dd>
-            </div>
-          ))}
-        </dl>
-        <BookingAccess access={event.bookingAccess} />
-      </div>
-    </div>
-  );
-}
-
-function ReservationModal({ event, onClose }) {
-  useModalBehavior(onClose);
-  const heading = getReservationHeading(event);
-
-  return (
-    <div className="modal-backdrop" onMouseDown={(mouseEvent) => mouseEvent.target === mouseEvent.currentTarget && onClose()}>
-      <section aria-labelledby="reservation-modal-title" aria-modal="true" className="journey-modal reservation-modal" role="dialog">
-        <header className="journey-modal__header">
-          <div>
-            <p>{event.infoType === 'flight' ? 'Flight' : 'Reservation'}</p>
-            <h2 id="reservation-modal-title">{heading}</h2>
-          </div>
-          <button aria-label={`关闭${heading}`} autoFocus onClick={onClose} type="button">
-            <CloseIcon />
-          </button>
-        </header>
-        <ReservationDetails event={event} showContext />
-      </section>
-    </div>
-  );
-}
-
 function MapStopModal({ onClose, selection }) {
   const { event, stop } = selection;
   useModalBehavior(onClose);
@@ -678,33 +450,6 @@ function MapStopModal({ onClose, selection }) {
   );
 }
 
-function EventFlightDetails({ event }) {
-  return (
-    <div className="flight-itinerary day-event-card__flight">
-      {event.flightLegs.map((leg, index) => (
-        <div key={`${event.id}-${leg.from}-${leg.depart}`}>
-          <div className="flight-leg">
-            <span>{leg.depart}</span>
-            <strong>{leg.from} → {leg.to}</strong>
-            <span>{leg.arrive}</span>
-            <FlightLegCaption text={leg.code} />
-          </div>
-          {index < event.flightLegs.length - 1 && event.flightConnections?.[index] && (
-            <div className="connection-note">{event.flightConnections[index]}</div>
-          )}
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function DayEventCard({ event, onOpenReservation }) {
-  return <EventCard event={event} onOpenReservation={onOpenReservation}
-    title={<CopyableEventTitle className="day-event-card__title-row" event={event} />}>
-    {event.flightLegs ? <EventFlightDetails event={event} /> : <p className="event-description">{event.detail}</p>}
-  </EventCard>;
-}
-
 function TodayFocusCard({ dayIndex, focus }) {
   if (!focus) return null;
 
@@ -732,26 +477,6 @@ function TodayFocusCard({ dayIndex, focus }) {
   );
 }
 
-function DayItinerary({ day, events, searchQuery, onOpenReservation, onOpenStop }) {
-  const query = searchQuery.trim().toLocaleLowerCase();
-  const visibleEvents = query ? events.filter(event => (
-    [event.title, event.detail, event.type, event.navigation].some(value => value?.toLocaleLowerCase().includes(query))
-  )) : events;
-  return (
-    <div className="day-detail">
-      <Suspense fallback={<div className="day-map daily-map__loading">正在加载地图…</div>}><DayRouteMap day={day} events={events} onOpenStop={onOpenStop} /></Suspense>
-      <section aria-label={`${day.label} 行程事件`} className="day-events">
-        <ol className="day-event-list">
-          {visibleEvents.map((event) => (
-            <DayEventCard event={event} key={event.id} onOpenReservation={onOpenReservation} />
-          ))}
-        </ol>
-        {query && visibleEvents.length === 0 && <p className="journey-search-empty" role="status">当天没有匹配的行程。</p>}
-      </section>
-    </div>
-  );
-}
-
 function JourneyPage({ journey }) {
   const archived = journey.status === 'completed';
   const { dates: journeyDates, dayEvents: journeyDayEvents, sectionLabels: journeySectionLabels, documentChecklist, packingChecklistGroups } = journey;
@@ -761,8 +486,6 @@ function JourneyPage({ journey }) {
   const [openReservation, setOpenReservation] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [now, setNow] = useState(() => new Date());
-  const [tabOverflow, setTabOverflow] = useState({ left: false, right: false });
-  const dayTabsRef = useRef(null);
 
   const todayIndex = getFocusedJourneyDayIndex(journey, journeyDates, now);
   const activeDay = resolveJourneyDayIndex(journeyDates, searchParams.get('date'), archived ? 0 : todayIndex);
@@ -781,55 +504,17 @@ function JourneyPage({ journey }) {
     return () => window.clearInterval(timer);
   }, [archived]);
 
-  useEffect(() => {
-    const tabList = dayTabsRef.current;
-    if (!tabList) return undefined;
-
-    const updateOverflow = () => {
-      const next = {
-        left: tabList.scrollLeft > 2,
-        right: tabList.scrollLeft + tabList.clientWidth < tabList.scrollWidth - 2,
-      };
-      setTabOverflow((current) => (
-        current.left === next.left && current.right === next.right ? current : next
-      ));
-    };
-
-    updateOverflow();
-    tabList.addEventListener('scroll', updateOverflow, { passive: true });
-    const resizeObserver = new ResizeObserver(updateOverflow);
-    resizeObserver.observe(tabList);
-
-    return () => {
-      tabList.removeEventListener('scroll', updateOverflow);
-      resizeObserver.disconnect();
-    };
-  }, []);
-
-  useEffect(() => {
-    const tabList = dayTabsRef.current;
-    const selectedTab = document.getElementById(`day-${activeDay + 1}-tab`);
-
-    if (tabList && selectedTab) {
-      tabList.scrollTo({
-        left: selectedTab.offsetLeft - (tabList.clientWidth - selectedTab.offsetWidth) / 2,
-        behavior: 'smooth',
-      });
-    }
-  }, [activeDay]);
-
   return (
     <div className={`page ongoing-page${archived ? ' archived-journey-page' : ''}`}>
       <main className="ongoing-shell">
         <header className="notebook-header">
           <SiteTitle linked />
-          {archived && <Link className="archive-back" to="/?log=trip">← Trip log</Link>}
           <div className="journey-overview">
             <div className="journey-heading">
               <div className="journey-heading__title">
                 <h1>{journey.title ?? journey.destinations.join(' ')}</h1>
               </div>
-              {archived && <p className="journey-archive-meta">{archiveDateRange(journey.startsOn, journey.endsOn)}<span>已完成</span></p>}
+              {archived && <p className="journey-archive-meta">{archiveDateRange(journey.startsOn, journey.endsOn)}</p>}
             </div>
             <div className="journey-tools" aria-label="行程工具">
               <button
@@ -893,31 +578,7 @@ function JourneyPage({ journey }) {
           </section>}
 
           <section className="notebook-section" aria-label="所有行程">
-            <div
-              className={`day-tabs${tabOverflow.left ? ' has-left-overflow' : ''}${tabOverflow.right ? ' has-right-overflow' : ''}`}
-              ref={dayTabsRef}
-              role="tablist"
-              aria-label="每日行程"
-            >
-              {journeyDates.map((day, index) => (
-                <Fragment key={day.key}>
-                {journeySectionLabels[day.key] && <span className="day-tabs__country" role="presentation">{journeySectionLabels[day.key]}</span>}
-                {journey.sectionDividers?.includes(day.key) && <span className="day-tabs__divider" aria-hidden="true" />}
-                <button
-                  aria-controls={`day-${index + 1}-panel`}
-                  aria-selected={activeDay === index}
-                  className={activeDay === index ? 'is-active' : ''}
-                  id={`day-${index + 1}-tab`}
-                  key={day.key}
-                  onClick={() => setActiveDay(index)}
-                  role="tab"
-                  type="button"
-                >
-                  {day.label}
-                </button>
-                </Fragment>
-              ))}
-            </div>
+            <DayTabs days={journeyDates} activeIndex={activeDay} onSelect={setActiveDay} sectionLabels={journeySectionLabels} dividers={journey.sectionDividers} />
             {journeyDates.map((day, index) => (
               <section
                 aria-labelledby={`day-${index + 1}-tab`}
@@ -972,7 +633,7 @@ function JourneyPage({ journey }) {
 function TripPage() {
   const { tripId } = useParams();
   const journey = findJourney(tripId);
-  if (!journey) return <div className="page"><main className="ongoing-shell"><SiteTitle linked /><Link className="archive-back" to="/?log=trip">← Trip log</Link><h1>尚未收录这次旅行</h1></main></div>;
+  if (!journey) return <div className="page"><main className="ongoing-shell"><SiteTitle linked /><h1>尚未收录这次旅行</h1></main></div>;
   return <JourneyPage key={journey.id} journey={journey} />;
 }
 
@@ -1009,4 +670,3 @@ function App() {
 }
 
 export default App;
-import { CopyIcon, CheckIcon } from './components/CopyIcons';

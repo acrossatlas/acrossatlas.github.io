@@ -24,7 +24,7 @@ function stop(id, number, name, eventIds, address) {
   return { id, number: String(number), name, coordinates: amsterdamPlaces[id], eventIds, ...(address ? { address } : {}) };
 }
 function day(stops, bounds) {
-  return { stops, bounds, overviewBounds: [[4.75, 52.30], [4.915, 52.40]], routes: { direct: { coordinates: [] } }, legs: [] };
+  return { stops, bounds, overviewBounds: [[4.75, 52.30], [4.915, 52.40]], routes: { direct: { coordinates: [] } }, legs: [], visitRoutes: { direct: [] } };
 }
 export const amsterdamMapDays = {
   '2026-09-25': day([
@@ -45,6 +45,11 @@ export const amsterdamMapDays = {
     stop('oudeKerk', 7, 'Oude Kerk 老教堂 · 红灯区', ['sep26-de-wallen']),
     stop('hotel', 0, 'ibis Schiphol Amsterdam Airport', ['sep26-amsterdam-stay']),
   ], [[4.881, 52.368], [4.909, 52.385]]),
+  '2026-09-27': day([
+    stop('hotel', 0, 'ibis Schiphol Amsterdam Airport', ['sep27-checkout', 'sep27-hotel-luggage']),
+    stop('rijksmuseum', 1, 'Rijksmuseum 国立博物馆', ['sep27-rijksmuseum']),
+    stop('airport', 2, 'Schiphol Airport', ['sep27-airport-taxi']),
+  ], [[4.75, 52.30], [4.915, 52.38]]),
 };
 
 // Scheduled public transport paths and times come from OVapi GTFS feed 9581.

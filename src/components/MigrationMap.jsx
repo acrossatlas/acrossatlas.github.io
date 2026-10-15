@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { Plus, Minus, RotateCcw } from 'lucide-react';
 import { Map, MapMarker, MarkerContent, MapRoute, MapGeoJSON, useMap } from './ui/map';
 import CountryFlag from './CountryFlag';
 import DayMapStop from './DayMapStop';
+import MapControls from './MapControls';
 import { countryThemes, volcanicPaint } from './map-themes';
 import countryBase from '../data/migration-countries.json';
 import longHaulCountries from '../data/long-haul-countries.json';
@@ -227,7 +227,7 @@ function MigrationScene({ config, events, focus, setFocus }) {
       const address = [...stopEvents].reverse().find(event => event.navigation)?.navigation;
       return <DayMapStop key={stop.name} stop={{ ...stop, id: stop.name, number: stop.number ?? (config.airportsOnly || stop.country === 'NL' ? index : index + 1) }} dimmed={config.airportsOnly && (!relevant.has(index) || Boolean(previewLine && ![previewLine.coordinates[0], previewLine.coordinates.at(-1)].some(p => Math.abs(p[0] - stop.coordinates[0]) < .001 && Math.abs(p[1] - stop.coordinates[1]) < .001)))} expanded={expanded} previewed={expanded || Boolean(previewLine)} onToggle={toggle} address={stop.address || address} />;
     })}
-    <div className="daily-map__controls" aria-label="地图控制"><div className="daily-map__zoom"><button type="button" aria-label="放大地图" onClick={() => map?.zoomIn()}><Plus size={16} strokeWidth={1.8} /></button><button type="button" aria-label="缩小地图" onClick={() => map?.zoomOut()}><Minus size={16} strokeWidth={1.8} /></button></div><button className="daily-map__reset" type="button" aria-label="恢复全天总览" title="恢复全天总览" onClick={reset}><RotateCcw size={16} strokeWidth={1.8} /></button></div>
+    <MapControls onReset={reset} resetLabel="恢复全天总览" />
     {error && <p role="status" className="daily-map__error">地图加载失败，请检查网络；当天行程仍可在行程卡片中查看。</p>}
   </>;
 }
@@ -238,7 +238,7 @@ export default function MigrationMap({ day, events }) {
   const themeClass = focus === 'IS' ? 'volcanic' : countryThemes[focus]?.name;
   return <figure className={`day-map daily-map migration-map${themeClass ? ` daily-map--${themeClass}` : ''}`} aria-label={`${day.label} 跨国行程地图`}>
     <div className="daily-map__surface">
-      <Map theme="light" bounds={config.bounds} fitBoundsOptions={{ padding: overviewPadding, duration: 0 }} scrollZoom touchZoomRotate dragPan attributionControl={false}>
+      <Map theme="light" bounds={config.bounds} fitBoundsOptions={{ padding: overviewPadding, duration: 0 }} scrollZoom touchZoomRotate dragPan>
         <MigrationScene config={config} events={events} focus={focus} setFocus={setFocus} />
       </Map>
       <figcaption className="day-map__caption daily-map__caption"><div className="daily-map__countries">{config.airportsOnly && <span>航线示意</span>}{(focus ? [focus] : config.countries).map((country, index) => <span className="daily-map__country-step" key={country}>{index > 0 && <span>→</span>}{config.countriesOnly ? <span>{countryNames[country] || country}</span> : <CountryFlag country={country} />}</span>)}</div><span className="daily-map__date">{day.label}</span></figcaption>

@@ -41,6 +41,7 @@ const journey = {
   endsOn: '2026-10-07',
   itineraryEndsOn: '2026-10-06',
   destinations: ['Netherlands', 'Iceland', 'Norway'],
+  travelStyles: ['road-trip', 'city-walk'],
 };
 
 const journeySectionLabels = { '2026-09-25': '荷兰', '2026-09-28': '冰岛', '2026-10-01': '挪威' };
@@ -203,6 +204,7 @@ const journeyDayEvents = {
   '2026-09-24': [
     {
       id: 'sep24-hkg-tpe-ams',
+      country: null,
       type: '交通',
       ...getTransportEventFields('outbound-flight'),
       startsAt: '17:35',
@@ -219,9 +221,10 @@ const journeyDayEvents = {
   ],
   ...amsterdamDays,
   '2026-09-27': [
-    ...amsterdamDepartureEvents,
+    ...amsterdamDepartureEvents.map(event => ({ ...event, country: 'NL' })),
     {
       id: 'sep27-ams-kef',
+      country: null,
       type: '交通',
       ...getTransportEventFields('ams-kef-flight'),
       startsAt: '17:00',
@@ -511,6 +514,7 @@ const journeyDayEvents = {
   '2026-10-01': [
     {
       id: 'oct01-kef-svj',
+      country: null,
       type: '交通',
       ...getTransportEventFields('kef-svj-flight'),
       startsAt: '08:40',
@@ -941,6 +945,7 @@ const journeyDayEvents = {
   '2026-10-06': [
     {
       id: 'oct06-osl-bkk-hkg',
+      country: null,
       type: '交通',
       ...getTransportEventFields('return-flight'),
       startsAt: '13:45',
@@ -1028,7 +1033,12 @@ export const autumnJourney = {
   dates: journeyDates,
   sectionLabels: journeySectionLabels,
   sectionDividers: ['2026-10-06'],
-  dayEvents: journeyDayEvents,
+  // Local events inherit the day's destination; null marks an international leg.
+  // Departure-country events on a shared date override this default above.
+  dayEvents: Object.fromEntries(Object.entries(journeyDayEvents).map(([date, events]) => [date, events.map(event => ({
+    country: date < '2026-09-27' ? 'NL' : date < '2026-10-01' ? 'IS' : 'NO',
+    ...event,
+  }))])),
   transportRecords,
   stayRecords,
   documentChecklist,
