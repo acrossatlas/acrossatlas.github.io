@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react';
-import { ChevronDown, Printer, RotateCw, X } from 'lucide-react';
+import { Printer, RotateCw, X } from 'lucide-react';
 import CountryTicket from './CountryTicket';
 import { countryOnlyVisits, countryVisits, journeys } from '../data/archive';
 
@@ -47,26 +47,34 @@ export default function CountryTicketPrinter({ countries, onClose }) {
   >
     <div className="ticket-printer-dialog__content">
       <header className="ticket-printer-dialog__header">
-        <div><Printer size={18} aria-hidden="true" /><h2 id={titleId}>Travel tickets</h2></div>
-        <button className="ticket-printer-dialog__close" type="button" aria-label="Close travel tickets" onClick={onClose}><X size={18} aria-hidden="true" /></button>
-      </header>
-      <div className="ticket-printer__toolbar">
-        <div className="ticket-printer__country">
-          <select aria-label="Choose a country ticket" value={selectedCode} onChange={event => print(event.target.value)}>
-            {countries.map(item => <option value={item.code} key={item.code}>{item.name}</option>)}
-          </select>
-          <ChevronDown size={14} aria-hidden="true" />
+        <span className="ticket-printer-dialog__icon" aria-hidden="true"><Printer size={17} strokeWidth={1.9} /></span>
+        <div>
+          <h2 id={titleId}>Travel tickets</h2>
+          <p>{countries.length} {countries.length === 1 ? 'country' : 'countries'} · pick one to print</p>
         </div>
-        <button className="ticket-printer__reprint" type="button" onClick={() => print(selectedCode)}><RotateCw size={14} aria-hidden="true" />Print again</button>
+        <button className="ticket-printer-dialog__close" type="button" aria-label="Close travel tickets" onClick={onClose}><X size={17} aria-hidden="true" /></button>
+      </header>
+      <div className="ticket-printer__countries" role="radiogroup" aria-label="Choose a country ticket">
+        {countries.map(item => <button type="button" role="radio" aria-checked={item.code === selectedCode} key={item.code}
+          className={item.code === selectedCode ? 'is-selected' : ''} onClick={() => print(item.code)}>
+          <i style={{ background: item.color }} aria-hidden="true" />{item.name}
+        </button>)}
       </div>
       <div className="ticket-printer" data-printing={printing}>
-        <div className="ticket-printer__housing" aria-hidden="true"><div className="ticket-printer__slot" /></div>
+        <div className="ticket-printer__housing" aria-hidden="true">
+          <span className="ticket-printer__light" />
+          <div className="ticket-printer__slot" />
+        </div>
         <div className="ticket-printer__output">
           <div className="ticket-printer__paper" key={`${selectedCode}-${printVersion}`} onAnimationEnd={() => setPrinting(false)}>
             <CountryTicket country={country} visit={visit} />
           </div>
         </div>
       </div>
+      <footer className="ticket-printer__footer">
+        <span>{printing ? 'Printing…' : `${country.name} ticket ready`}</span>
+        <button className="ticket-printer__reprint" type="button" onClick={() => print(selectedCode)} disabled={printing}><RotateCw size={14} aria-hidden="true" />Print again</button>
+      </footer>
       <p className="sr-only" role="status">{printing ? `Printing ${country.name} ticket` : `${country.name} ticket ready`}</p>
     </div>
   </dialog>;

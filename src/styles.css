@@ -2359,25 +2359,39 @@ a.summary-latitude:focus-visible { outline: 2px solid var(--accent); outline-off
 .country-ticket__paper { fill: rgb(var(--archive-surface-rgb)); }
 .country-ticket__date { font-variant-numeric: tabular-nums; }
 
-.ticket-printer-dialog { width: min(440px, calc(100vw - 32px)); max-height: calc(100dvh - 40px); margin: auto; padding: 0; overflow: auto; border: 0; border-radius: 26px; color: var(--ink); background: #fff; box-shadow: 0 20px 80px #1c28312b; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
-.ticket-printer-dialog::backdrop { background: #1b242e45; backdrop-filter: blur(5px); }
-.ticket-printer-dialog__content { padding: 24px; }
-.ticket-printer-dialog__header { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-.ticket-printer-dialog__header > div { display: flex; align-items: center; gap: 9px; }
-.ticket-printer-dialog__header h2 { margin: 0; font-size: 16px; font-weight: 650; letter-spacing: -.025em; }
-.ticket-printer-dialog__close { display: grid; width: 30px; height: 30px; place-items: center; padding: 0; border: 0; border-radius: 50%; background: rgb(var(--archive-surface-rgb)); cursor: pointer; }
-.ticket-printer__toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 24px 0 20px; }
-.ticket-printer__country { position: relative; min-width: 0; }
-.ticket-printer__country select { display: block; max-width: 100%; min-height: 34px; padding: 8px 32px 8px 12px; appearance: none; border: 0; border-radius: 9px; color: var(--ink); background: rgb(var(--archive-surface-rgb)); font: inherit; font-size: 12px; font-weight: 550; cursor: pointer; }
-.ticket-printer__country > svg { position: absolute; top: 50%; right: 10px; transform: translateY(-50%); pointer-events: none; }
-.ticket-printer__country select:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-.ticket-printer__reprint { display: flex; align-items: center; gap: 6px; flex: none; padding: 8px 0 8px 8px; border: 0; color: #74747b; background: transparent; font-size: 11px; cursor: pointer; }
-.ticket-printer__reprint:hover { color: var(--ink); }
-.ticket-printer { padding: 12px 0 0; }
-.ticket-printer__housing { position: relative; z-index: 2; height: 34px; border-radius: 12px; background: linear-gradient(180deg, #e9e9ee, #f5f5f7); box-shadow: 0 3px 5px #2020200d; }
-.ticket-printer__slot { position: absolute; inset: 17px 16px auto; height: 5px; border-radius: 4px; background: #323238; box-shadow: 0 1px 1px #fff; }
-.ticket-printer__output { position: relative; z-index: 1; margin-top: -14px; padding: 0 20px 16px; overflow: hidden; }
-.ticket-printer__paper { position: relative; padding-top: 8px; filter: drop-shadow(0 5px 5px #25252b15); animation: ticket-feed 1.5s linear both; }
+.ticket-printer-dialog { width: min(480px, calc(100vw - 32px)); max-height: calc(100dvh - 40px); margin: auto; padding: 0; overflow: auto; border: 0; border-radius: 28px; color: var(--ink); background: #fff; box-shadow: 0 0 0 1px rgb(31 42 44 / .06), 0 30px 80px -20px rgb(28 40 49 / .35); font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+.ticket-printer-dialog::backdrop { background: rgb(27 36 46 / .32); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.ticket-printer-dialog__content { padding: 22px 22px 18px; }
+.ticket-printer-dialog__header { display: flex; align-items: center; gap: 12px; }
+.ticket-printer-dialog__header > div { flex: 1; min-width: 0; }
+.ticket-printer-dialog__icon { display: grid; width: 36px; height: 36px; flex: none; place-items: center; border-radius: 50%; background: #fff1e8; color: #d0632d; }
+.ticket-printer-dialog__header h2 { margin: 0; font-size: 16px; font-weight: 650; letter-spacing: -.02em; line-height: 1.25; }
+.ticket-printer-dialog__header p { margin: 2px 0 0; color: #828c8f; font-size: 12px; line-height: 1.4; }
+.ticket-printer-dialog__close { display: grid; width: 32px; height: 32px; flex: none; place-items: center; padding: 0; border: 0; border-radius: 50%; color: var(--ink); background: #f1f3f4; cursor: pointer; transition: background-color .15s ease; }
+.ticket-printer-dialog__close:hover { background: #e6e9ea; }
+.ticket-printer-dialog__close:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.ticket-printer__countries { display: flex; gap: 6px; margin: 20px -22px 0; padding: 0 22px 4px; overflow-x: auto; scrollbar-width: none; }
+.ticket-printer__countries::-webkit-scrollbar { display: none; }
+.ticket-printer__countries button { display: inline-flex; flex: none; align-items: center; gap: 7px; padding: 7px 12px 7px 10px; border: 0; border-radius: 999px; color: #4c5558; background: #f1f3f4; font: inherit; font-size: 12px; font-weight: 500; line-height: 1.2; cursor: pointer; transition: background-color .15s ease, color .15s ease; }
+.ticket-printer__countries button:hover { background: #e6e9ea; }
+.ticket-printer__countries button.is-selected { color: #fff; background: #1f2a2c; }
+.ticket-printer__countries button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.ticket-printer__countries i { width: 7px; height: 7px; border-radius: 50%; }
+.ticket-printer__countries button.is-selected i { box-shadow: 0 0 0 1.5px #fff; }
+.ticket-printer { margin-top: 18px; }
+.ticket-printer__housing { position: relative; z-index: 2; height: 44px; border-radius: 16px; background: linear-gradient(180deg, #33383e, #1f2327); box-shadow: inset 0 1px 0 rgb(255 255 255 / .1), 0 6px 14px -6px rgb(20 24 28 / .5); }
+.ticket-printer__slot { position: absolute; inset: auto 18px 10px; height: 6px; border-radius: 4px; background: #0b0d0f; box-shadow: inset 0 1px 2px #000, 0 1px 0 rgb(255 255 255 / .08); }
+.ticket-printer__light { position: absolute; top: 11px; right: 18px; width: 6px; height: 6px; border-radius: 50%; background: #3a4046; }
+.ticket-printer[data-printing="true"] .ticket-printer__light { background: #4ade80; box-shadow: 0 0 8px #4ade80; animation: ticket-light 1s ease-in-out infinite; }
+.ticket-printer[data-printing="false"] .ticket-printer__light { background: #4ade80; }
+.ticket-printer__output { position: relative; z-index: 1; margin-top: -13px; padding: 0 26px 14px; overflow: hidden; }
+.ticket-printer__paper { position: relative; padding-top: 8px; filter: drop-shadow(0 8px 10px rgb(31 42 44 / .14)); animation: ticket-feed 1.5s linear both; }
+.ticket-printer__footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 12px; border-top: 1px solid #eef0f1; color: #828c8f; font-size: 12px; }
+.ticket-printer__reprint { display: inline-flex; align-items: center; gap: 6px; flex: none; padding: 7px 12px; border: 0; border-radius: 999px; color: var(--ink); background: #f1f3f4; font: inherit; font-size: 12px; font-weight: 500; cursor: pointer; transition: background-color .15s ease, opacity .15s ease; }
+.ticket-printer__reprint:hover:not(:disabled) { background: #e6e9ea; }
+.ticket-printer__reprint:disabled { cursor: default; opacity: .5; }
+.ticket-printer__reprint:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@keyframes ticket-light { 50% { opacity: .35; } }
 @keyframes ticket-feed {
   0%, 8% { transform: translateY(-110%); }
   48% { transform: translateY(-53%); }
@@ -2387,7 +2401,7 @@ a.summary-latitude:focus-visible { outline: 2px solid var(--accent); outline-off
 @media (prefers-reduced-motion: reduce) {
   .country-card, .country-card__cover > .country-map-cover { transition: none; }
   .country-card:hover, .country-card:hover .country-card__cover > .country-map-cover { transform: none; }
-  .ticket-printer__paper { animation: none; }
+  .ticket-printer__paper, .ticket-printer[data-printing="true"] .ticket-printer__light { animation: none; }
 }
 .trip-card {
   --trip-card-ink: #1f2a3d;
@@ -2466,7 +2480,9 @@ a.summary-latitude:focus-visible { outline: 2px solid var(--accent); outline-off
   .country-card__copy h3 { font-size: 15px; }
   .country-card__copy p { font-size: 10px; }
   .country-card__days strong { font-size: 15px; }
-  .ticket-printer-dialog__content { padding: 20px; }
+  .ticket-printer-dialog__content { padding: 18px 16px 14px; }
+  .ticket-printer__countries { margin: 16px -16px 0; padding: 0 16px 4px; }
+  .ticket-printer__output { padding: 0 16px 12px; }
   .archived-journey-page .notebook-content { margin-top: 36px; }
   .country-archive-heading { gap: 12px; margin-top: 28px; }
   .country-archive-heading h1 { font-size: clamp(24px, 7vw, 30px); }
