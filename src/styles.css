@@ -2370,38 +2370,36 @@ a.summary-latitude:focus-visible { outline: 2px solid var(--accent); outline-off
 .ticket-printer-dialog__close { display: grid; width: 32px; height: 32px; flex: none; place-items: center; padding: 0; border: 0; border-radius: 50%; color: var(--ink); background: #f1f3f4; cursor: pointer; transition: background-color .15s ease; }
 .ticket-printer-dialog__close:hover { background: #e6e9ea; }
 .ticket-printer-dialog__close:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.ticket-printer__countries { display: flex; gap: 6px; margin: 20px -22px 0; padding: 0 22px 4px; overflow-x: auto; scrollbar-width: none; }
-.ticket-printer__countries::-webkit-scrollbar { display: none; }
-.ticket-printer__countries button { display: inline-flex; flex: none; align-items: center; gap: 7px; padding: 7px 12px 7px 10px; border: 0; border-radius: 999px; color: #4c5558; background: #f1f3f4; font: inherit; font-size: 12px; font-weight: 500; line-height: 1.2; cursor: pointer; transition: background-color .15s ease, color .15s ease; }
-.ticket-printer__countries button:hover { background: #e6e9ea; }
-.ticket-printer__countries button.is-selected { color: #fff; background: #1f2a2c; }
-.ticket-printer__countries button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-.ticket-printer__countries i { width: 7px; height: 7px; border-radius: 50%; }
-.ticket-printer__countries button.is-selected i { box-shadow: 0 0 0 1.5px #fff; }
 .ticket-printer { margin-top: 18px; }
-.ticket-printer__housing { position: relative; z-index: 2; height: 44px; border-radius: 16px; background: linear-gradient(180deg, #33383e, #1f2327); box-shadow: inset 0 1px 0 rgb(255 255 255 / .1), 0 6px 14px -6px rgb(20 24 28 / .5); }
-.ticket-printer__slot { position: absolute; inset: auto 18px 10px; height: 6px; border-radius: 4px; background: #0b0d0f; box-shadow: inset 0 1px 2px #000, 0 1px 0 rgb(255 255 255 / .08); }
-.ticket-printer__light { position: absolute; top: 11px; right: 18px; width: 6px; height: 6px; border-radius: 50%; background: #3a4046; }
+.ticket-printer__housing { position: relative; z-index: 2; height: 44px; border-radius: 16px; background: linear-gradient(180deg, #ffffff, #eef0f1); box-shadow: 0 0 0 1px rgb(31 42 44 / .08), inset 0 1px 0 #fff, 0 8px 16px -10px rgb(31 42 44 / .35); }
+.ticket-printer__slot { position: absolute; inset: auto 18px 11px; height: 5px; border-radius: 4px; background: #3a4144; box-shadow: inset 0 1px 2px rgb(0 0 0 / .45), 0 1px 0 #fff; }
+.ticket-printer__light { position: absolute; top: 11px; right: 18px; width: 6px; height: 6px; border-radius: 50%; background: #d3d8da; }
 .ticket-printer[data-printing="true"] .ticket-printer__light { background: #4ade80; box-shadow: 0 0 8px #4ade80; animation: ticket-light 1s ease-in-out infinite; }
 .ticket-printer[data-printing="false"] .ticket-printer__light { background: #4ade80; }
-.ticket-printer__output { position: relative; z-index: 1; margin-top: -13px; padding: 0 26px 14px; overflow: hidden; }
-.ticket-printer__paper { position: relative; padding-top: 8px; filter: drop-shadow(0 8px 10px rgb(31 42 44 / .14)); animation: ticket-feed 1.5s linear both; }
+.ticket-printer__output { position: relative; z-index: 1; max-height: min(56dvh, 520px); margin-top: -13px; padding: 0 26px 16px; overflow: hidden; overscroll-behavior: contain; scrollbar-width: thin; }
+.ticket-printer[data-printing="false"] .ticket-printer__output { overflow-y: auto; }
+/* One continuous roll: the paper colour matches each ticket's own paper, so the tickets read as a single strip split by tear lines. */
+.ticket-printer__roll { position: relative; margin: 0; padding: 8px 0 0; border-radius: 0 0 22px 22px; background: #f7f6f2; list-style: none; filter: drop-shadow(0 8px 10px rgb(31 42 44 / .12)); animation-name: ticket-roll; animation-timing-function: cubic-bezier(.35, .1, .35, 1); animation-fill-mode: both; }
+.ticket-printer__roll li { position: relative; }
+.ticket-printer__roll li + li { border-top: 2px dashed #d9d7cf; }
+.ticket-printer__roll li + li::before,
+.ticket-printer__roll li + li::after { content: ""; position: absolute; top: -9px; width: 16px; height: 16px; border-radius: 50%; background: #fff; }
+.ticket-printer__roll li + li::before { left: -8px; }
+.ticket-printer__roll li + li::after { right: -8px; }
 .ticket-printer__footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 12px; border-top: 1px solid #eef0f1; color: #828c8f; font-size: 12px; }
 .ticket-printer__reprint { display: inline-flex; align-items: center; gap: 6px; flex: none; padding: 7px 12px; border: 0; border-radius: 999px; color: var(--ink); background: #f1f3f4; font: inherit; font-size: 12px; font-weight: 500; cursor: pointer; transition: background-color .15s ease, opacity .15s ease; }
 .ticket-printer__reprint:hover:not(:disabled) { background: #e6e9ea; }
 .ticket-printer__reprint:disabled { cursor: default; opacity: .5; }
 .ticket-printer__reprint:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 @keyframes ticket-light { 50% { opacity: .35; } }
-@keyframes ticket-feed {
-  0%, 8% { transform: translateY(-110%); }
-  48% { transform: translateY(-53%); }
-  55% { transform: translateY(-53%); }
-  93%, 100% { transform: translateY(0); }
+@keyframes ticket-roll {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(0); }
 }
 @media (prefers-reduced-motion: reduce) {
   .country-card, .country-card__cover > .country-map-cover { transition: none; }
   .country-card:hover, .country-card:hover .country-card__cover > .country-map-cover { transform: none; }
-  .ticket-printer__paper, .ticket-printer[data-printing="true"] .ticket-printer__light { animation: none; }
+  .ticket-printer__roll, .ticket-printer[data-printing="true"] .ticket-printer__light { animation: none; }
 }
 .trip-card {
   --trip-card-ink: #1f2a3d;
@@ -2481,8 +2479,7 @@ a.summary-latitude:focus-visible { outline: 2px solid var(--accent); outline-off
   .country-card__copy p { font-size: 10px; }
   .country-card__days strong { font-size: 15px; }
   .ticket-printer-dialog__content { padding: 18px 16px 14px; }
-  .ticket-printer__countries { margin: 16px -16px 0; padding: 0 16px 4px; }
-  .ticket-printer__output { padding: 0 16px 12px; }
+    .ticket-printer__output { padding: 0 16px 12px; }
   .archived-journey-page .notebook-content { margin-top: 36px; }
   .country-archive-heading { gap: 12px; margin-top: 28px; }
   .country-archive-heading h1 { font-size: clamp(24px, 7vw, 30px); }
