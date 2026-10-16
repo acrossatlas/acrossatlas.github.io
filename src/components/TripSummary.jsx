@@ -29,7 +29,7 @@ function TripCountCard() {
     <h3>Trips</h3>
     <strong>{summary.tripCount}</strong>
     <p className="summary-trip-count__note">
-      <span>{daysOnTheRoad} {daysOnTheRoad === 1 ? 'day' : 'days'} away</span>
+      <span>{daysOnTheRoad} {daysOnTheRoad === 1 ? 'day' : 'days'} traveled</span>
       <span>{countriesVisited} {countriesVisited === 1 ? 'country' : 'countries'}</span>
     </p>
   </article>;

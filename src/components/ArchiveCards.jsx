@@ -100,7 +100,7 @@ export function ArchivePanel({ type }) {
       {type === 'map' ? <TravelSummary /> : <TripSummary />}
     </section>
     <section className="archive-group" aria-labelledby={`${type}-records-title`}>
-      <h2 className="archive-group__title" id={`${type}-records-title`}>{type === 'map' ? 'Countries' : 'Journeys'}</h2>
+      <h2 className="archive-group__title" id={`${type}-records-title`}>{type === 'map' ? 'Countries' : 'Trips'}</h2>
       {type === 'map' ? <div className="country-card-grid">{countries.map(country => <CountryCard country={country} key={country.code} />)}</div>
         : <div className="trip-card-list">{completed.map(journey => <TripArchiveCard journey={journey} key={journey.id} />)}</div>}
     </section>
