@@ -34,7 +34,9 @@ jobs:
       - name: Keep the branch build for preview
         if: github.ref != 'refs/heads/main'
         run: |
-          cd dist
+          # Relative asset paths let the preview open from any host, such as a shared review page.
+          npx vite build --base ./ --outDir preview-dist
+          cd preview-dist
           git init -q -b preview
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
