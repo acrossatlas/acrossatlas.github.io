@@ -2502,7 +2502,7 @@ a.summary-latitude:focus-visible { outline: 2px solid var(--accent); outline-off
   --ink: #e8e9e9;
   --muted: #8f9598;
   --white: #131516;
-  --archive-surface-rgb: 33 37 39;
+  --archive-surface-rgb: 30 33 35;
   --accent: #6ea8ff;
   --accent-ink: #9cc2ff;
   --accent-soft: #1b2738;
@@ -2579,3 +2579,10 @@ a.summary-latitude:focus-visible { outline: 2px solid var(--accent); outline-off
 :root[data-theme="dark"] .ticket-printer__roll { filter: drop-shadow(0 8px 12px rgb(0 0 0 / .45)); }
 :root[data-theme="dark"] .template-modal-backdrop { background: rgb(0 0 0 / .55); }
 :root[data-theme="dark"] .country-ticket__paper { fill: #f7f6f2; }
+:root[data-theme="dark"] .today-focus,
+:root[data-theme="dark"] .day-event-card,
+:root[data-theme="dark"] .checklist-item,
+:root[data-theme="dark"] .info-card__current,
+:root[data-theme="dark"] .reservation-state,
+:root[data-theme="dark"] .map-stop-modal .reservation-copy { background: #272b2e; }
+:root[data-theme="dark"] .journey-modal { background: var(--surface); }
