@@ -2187,13 +2187,11 @@ body {
   min-width: 0;
   border-radius: 22px;
   background: #fff;
-  box-shadow: 0 0 0 1px rgb(31 42 44 / .07), 0 1px 2px rgb(31 42 44 / .04), 0 10px 24px -16px rgb(31 42 44 / .26);
+  box-shadow: 0 0 0 1px rgb(31 42 44 / .05), 0 4px 14px -10px rgb(31 42 44 / .14);
   color: var(--stat-ink);
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   text-decoration: none;
 }
-.stat-card__icon { position: absolute; top: 14px; right: 14px; display: grid; width: 32px; height: 32px; place-items: center; border-radius: 50%; background: var(--stat-tint); color: var(--stat-accent); }
-.stat-card__icon svg { width: 17px; height: 17px; }
 
 .travel-summary { display: grid; grid-template-columns: minmax(0, 1.06fr) minmax(0, 1fr); gap: 12px; }
 .travel-summary__details { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
@@ -2209,8 +2207,7 @@ body {
 .summary-world__unvisited { fill: #c5d5cb; }
 .summary-world__visited { fill: #16b057; }
 .summary-world__continents { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
-.summary-world__continents li { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px 5px 8px; border-radius: 999px; background: rgb(255 255 255 / .8); color: #2d4a3a; font-size: 12px; font-weight: 500; line-height: 1.2; }
-.summary-world__continents li::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: #16b057; }
+.summary-world__continents li { display: inline-flex; align-items: center; padding: 5px 10px; border-radius: 999px; background: rgb(255 255 255 / .8); color: #2d4a3a; font-size: 12px; font-weight: 500; line-height: 1.2; }
 .summary-world__empty { margin: 0; color: #6f8a7a; font-size: 12px; }
 
 .summary-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 0; }
@@ -2220,7 +2217,7 @@ body {
 .summary-stat__note { margin: 0; color: var(--stat-muted); font-size: 12px; line-height: 1.4; }
 .summary-stat--tickets { --stat-tint: #fff1e8; --stat-accent: #d0632d; transition: transform .25s cubic-bezier(.2, .8, .2, 1), box-shadow .25s ease; }
 .summary-stat--tickets .summary-stat__note { color: var(--stat-accent); font-weight: 500; }
-.summary-stat--tickets:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px rgb(31 42 44 / .09), 0 2px 4px rgb(31 42 44 / .05), 0 18px 32px -18px rgb(31 42 44 / .36); }
+.summary-stat--tickets:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px rgb(31 42 44 / .07), 0 10px 22px -14px rgb(31 42 44 / .22); }
 .summary-stat--continents { --stat-tint: #e8f7ee; --stat-accent: #0f9d4a; }
 .summary-stat__trigger { position: absolute; inset: 0; z-index: 1; width: 100%; padding: 0; border: 0; border-radius: inherit; background: transparent; cursor: pointer; }
 .summary-stat__trigger:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
@@ -2230,7 +2227,7 @@ body {
 .summary-latitude { display: flex; min-height: 132px; align-items: stretch; gap: 12px; padding: 16px 14px 16px 18px; transition: transform .25s cubic-bezier(.2, .8, .2, 1), box-shadow .25s ease; }
 .summary-latitude--north { --stat-accent: #2f6fb8; --stat-tint: #e9f1fb; }
 .summary-latitude--south { --stat-accent: #d0632d; --stat-tint: #fff1e8; }
-a.summary-latitude:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px rgb(31 42 44 / .09), 0 2px 4px rgb(31 42 44 / .05), 0 18px 32px -18px rgb(31 42 44 / .36); }
+a.summary-latitude:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px rgb(31 42 44 / .07), 0 10px 22px -14px rgb(31 42 44 / .22); }
 a.summary-latitude:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .summary-latitude__copy { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 3px; }
 .summary-latitude__label { display: inline-flex; align-items: center; gap: 4px; margin-bottom: auto; color: var(--stat-muted); font-size: 12px; font-weight: 500; line-height: 1.25; }
@@ -2297,9 +2294,7 @@ a.summary-latitude:focus-visible { outline: 2px solid var(--accent); outline-off
 
 @media (max-width: 560px) {
   .stat-card { border-radius: 20px; }
-  .stat-card__icon { top: 12px; right: 12px; width: 28px; height: 28px; }
-  .stat-card__icon svg { width: 15px; height: 15px; }
-  .summary-world__panel { padding: 14px; border-radius: 15px; }
+      .summary-world__panel { padding: 14px; border-radius: 15px; }
   .summary-stat { min-height: 100px; padding: 14px 16px; }
   .summary-stat dt { top: 16px; left: 16px; }
   .summary-stat dd { font-size: 36px; }
@@ -2335,19 +2330,19 @@ a.summary-latitude:focus-visible { outline: 2px solid var(--accent); outline-off
   overflow: hidden;
   border-radius: 22px;
   background: #fff;
-  box-shadow: 0 0 0 1px rgb(33 58 51 / .07), 0 1px 2px rgb(33 58 51 / .04), 0 10px 24px -16px rgb(33 58 51 / .28);
+  box-shadow: 0 0 0 1px rgb(31 42 44 / .05), 0 4px 14px -10px rgb(31 42 44 / .14);
   color: var(--country-card-ink);
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   text-decoration: none;
   transition: transform .25s cubic-bezier(.2, .8, .2, 1), box-shadow .25s ease;
 }
-.country-card:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px rgb(33 58 51 / .09), 0 2px 4px rgb(33 58 51 / .05), 0 18px 32px -18px rgb(33 58 51 / .38); }
+.country-card:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px rgb(31 42 44 / .07), 0 10px 22px -14px rgb(31 42 44 / .22); }
 .country-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .country-map-cover { display: block; width: 100%; height: 100%; }
 .country-card__cover { position: relative; aspect-ratio: 420 / 300; overflow: hidden; border-radius: 16px; background: #b9e8f8; }
 .country-card__cover > .country-map-cover { position: absolute; inset: 0; width: 100%; height: 100%; transition: transform .6s cubic-bezier(.2, .8, .2, 1); }
 .country-card:hover .country-card__cover > .country-map-cover { transform: scale(1.035); }
-.country-card__cover::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgb(33 58 51 / .06); pointer-events: none; }
+.country-card__cover::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgb(33 58 51 / .04); pointer-events: none; }
 .country-card__code { position: absolute; top: 10px; left: 10px; padding: 3px 7px; border-radius: 999px; background: rgb(255 255 255 / .78); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); color: var(--country-card-ink); font-size: 10px; font-weight: 650; letter-spacing: .08em; line-height: 1.3; }
 .country-card__copy { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; padding: 12px 10px 8px; }
 .country-card__text { display: grid; gap: 3px; min-width: 0; }
@@ -2359,7 +2354,7 @@ a.summary-latitude:focus-visible { outline: 2px solid var(--accent); outline-off
 .country-ticket__paper { fill: rgb(var(--archive-surface-rgb)); }
 .country-ticket__date { font-variant-numeric: tabular-nums; }
 
-.ticket-printer-dialog { width: min(480px, calc(100vw - 32px)); max-height: calc(100dvh - 40px); margin: auto; padding: 0; overflow: auto; border: 0; border-radius: 28px; color: var(--ink); background: #fff; box-shadow: 0 0 0 1px rgb(31 42 44 / .06), 0 30px 80px -20px rgb(28 40 49 / .35); font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+.ticket-printer-dialog { width: min(480px, calc(100vw - 32px)); max-height: calc(100dvh - 40px); margin: auto; padding: 0; overflow: auto; border: 0; border-radius: 28px; color: var(--ink); background: #fff; box-shadow: 0 0 0 1px rgb(31 42 44 / .05), 0 24px 60px -24px rgb(28 40 49 / .28); font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
 .ticket-printer-dialog::backdrop { background: rgb(27 36 46 / .32); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
 .ticket-printer-dialog__content { padding: 22px 22px 18px; }
 .ticket-printer-dialog__header { display: flex; align-items: center; gap: 12px; }
@@ -2382,10 +2377,6 @@ a.summary-latitude:focus-visible { outline: 2px solid var(--accent); outline-off
 .ticket-printer__roll { position: relative; margin: 0; padding: 8px 0 0; border-radius: 0 0 22px 22px; background: #f7f6f2; list-style: none; filter: drop-shadow(0 8px 10px rgb(31 42 44 / .12)); animation-name: ticket-roll; animation-timing-function: cubic-bezier(.35, .1, .35, 1); animation-fill-mode: both; }
 .ticket-printer__roll li { position: relative; }
 .ticket-printer__roll li + li { border-top: 2px dashed #d9d7cf; }
-.ticket-printer__roll li + li::before,
-.ticket-printer__roll li + li::after { content: ""; position: absolute; top: -9px; width: 16px; height: 16px; border-radius: 50%; background: #fff; }
-.ticket-printer__roll li + li::before { left: -8px; }
-.ticket-printer__roll li + li::after { right: -8px; }
 .ticket-printer__footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-top: 12px; border-top: 1px solid #eef0f1; color: #828c8f; font-size: 12px; }
 .ticket-printer__reprint { display: inline-flex; align-items: center; gap: 6px; flex: none; padding: 7px 12px; border: 0; border-radius: 999px; color: var(--ink); background: #f1f3f4; font: inherit; font-size: 12px; font-weight: 500; cursor: pointer; transition: background-color .15s ease, opacity .15s ease; }
 .ticket-printer__reprint:hover:not(:disabled) { background: #e6e9ea; }
@@ -2413,23 +2404,22 @@ a.summary-latitude:focus-visible { outline: 2px solid var(--accent); outline-off
   overflow: hidden;
   border-radius: 26px;
   background: #fff;
-  box-shadow: 0 0 0 1px rgb(31 42 61 / .07), 0 1px 2px rgb(31 42 61 / .04), 0 12px 28px -18px rgb(31 42 61 / .3);
+  box-shadow: 0 0 0 1px rgb(31 42 44 / .05), 0 4px 14px -10px rgb(31 42 44 / .14);
   color: var(--trip-card-ink);
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   text-decoration: none;
   transition: transform .25s cubic-bezier(.2, .8, .2, 1), box-shadow .25s ease;
 }
-.trip-card:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px rgb(31 42 61 / .09), 0 2px 4px rgb(31 42 61 / .05), 0 20px 36px -20px rgb(31 42 61 / .4); }
+.trip-card:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px rgb(31 42 44 / .07), 0 10px 22px -14px rgb(31 42 44 / .22); }
 .trip-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .trip-card__body { display: flex; min-width: 0; flex-direction: column; padding: 20px 18px 18px 22px; }
 .trip-card__meta { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; color: var(--trip-card-muted); font-size: 12px; line-height: 1.4; font-variant-numeric: tabular-nums; }
 .trip-card__body h3 { margin: 8px 0 0; color: var(--trip-card-ink); font-size: 24px; font-weight: 650; letter-spacing: -.03em; line-height: 1.15; text-wrap: balance; }
 .trip-card__route { display: flex; flex-wrap: wrap; gap: 6px; margin: auto 0 0; padding: 22px 0 0; list-style: none; }
-.trip-card__route li { display: inline-flex; align-items: center; gap: 6px; padding: 5px 9px 5px 8px; border-radius: 999px; background: #f3f5f8; color: var(--trip-card-ink); font-size: 12px; font-weight: 500; line-height: 1.2; white-space: nowrap; }
-.trip-card__route i { width: 7px; height: 7px; flex: none; border-radius: 50%; }
+.trip-card__route li { display: inline-flex; align-items: center; gap: 6px; padding: 5px 10px; border-radius: 999px; background: #f3f5f8; color: var(--trip-card-ink); font-size: 12px; font-weight: 500; line-height: 1.2; white-space: nowrap; }
 .trip-card__route small { color: var(--trip-card-muted); font-size: 11px; font-weight: 400; font-variant-numeric: tabular-nums; }
 .trip-card__map { position: relative; min-height: 176px; overflow: hidden; border-radius: 20px; background: #f3f5f8; }
-.trip-card__map::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgb(31 42 61 / .05); pointer-events: none; }
+.trip-card__map::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgb(31 42 61 / .035); pointer-events: none; }
 .trip-card__map svg { position: absolute; inset: 0; display: block; width: 100%; height: 100%; transition: transform .6s cubic-bezier(.2, .8, .2, 1); }
 .trip-card:hover .trip-card__map svg { transform: scale(1.04); }
 .trip-card__land { fill: #d4dae3; }

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowDown, ArrowUp, Globe, Printer } from 'lucide-react';
+import { ArrowDown, ArrowUp } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import DottedWorldMap from './DottedWorldMap';
 import CountryTicketPrinter from './CountryTicketPrinter';
@@ -26,12 +26,11 @@ function WorldSummaryCard() {
   </article>;
 }
 
-function StatCard({ label, value, note, Icon, tone, children }) {
+function StatCard({ label, value, note, tone, children }) {
   return <div className={`stat-card summary-stat summary-stat--${tone}`}>
     <dt>{label}</dt>
     <dd>{value}</dd>
     {note && <p className="summary-stat__note">{note}</p>}
-    <span className="stat-card__icon" aria-hidden="true"><Icon strokeWidth={1.9} /></span>
     {children}
   </div>;
 }
@@ -74,10 +73,10 @@ export default function TravelSummary() {
     <WorldSummaryCard />
     <div className="travel-summary__details">
       <dl className="summary-stats">
-        <StatCard label="Countries" value={summary.countryCount} note="Print tickets" Icon={Printer} tone="tickets">
+        <StatCard label="Countries" value={summary.countryCount} note="Print tickets" tone="tickets">
           <button className="summary-stat__trigger" type="button" title="Print country tickets" aria-label={`Print travel tickets for ${summary.countryCount} countries`} aria-haspopup="dialog" aria-expanded={ticketsOpen} disabled={!summary.countryCount} onClick={() => setTicketsOpen(true)} />
         </StatCard>
-        <StatCard label="Continents" value={summary.continentCount} note={`of ${CONTINENT_TOTAL}`} Icon={Globe} tone="continents" />
+        <StatCard label="Continents" value={summary.continentCount} note={`of ${CONTINENT_TOTAL}`} tone="continents" />
       </dl>
       <div className="summary-extremes">
         <LatitudeCard place={summary.northernmost} direction="north" />

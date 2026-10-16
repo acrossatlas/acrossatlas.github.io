@@ -82,7 +82,6 @@ export function TripArchiveCard({ journey, visit }) {
           const country = countryByCode.get(stop.country);
           const days = stop.startsOn && stop.endsOn ? getJourneyDayCount(stop) : null;
           return <li key={`${stop.country}-${index}`}>
-            <i style={{ background: country?.color }} aria-hidden="true" />
             <span>{country?.name ?? stop.country}</span>
             {days !== null && <small>{days}d</small>}
           </li>;
