@@ -5,7 +5,7 @@ name: Deploy
 # Pages serves. A failed build leaves the live site as is.
 on:
   push:
-    branches: ['**', '!gh-pages']
+    branches: ['**', '!gh-pages', '!preview']
   workflow_dispatch:
 
 permissions:
@@ -30,14 +30,17 @@ jobs:
 
       - run: npm run build
 
-      # Branch builds keep their output for a few days so changes can be previewed before merging.
+      # The latest branch build is kept on the preview branch so it can be checked before merging.
       - name: Keep the branch build for preview
         if: github.ref != 'refs/heads/main'
-        uses: actions/upload-artifact@v4
-        with:
-          name: site-${{ github.sha }}
-          path: dist
-          retention-days: 3
+        run: |
+          cd dist
+          git init -q -b preview
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "Preview ${GITHUB_REF_NAME} ${GITHUB_SHA::7}"
+          git push -q -f "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" preview
 
       - name: Publish to gh-pages
         if: github.ref == 'refs/heads/main'
