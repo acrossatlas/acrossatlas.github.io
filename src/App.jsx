@@ -1,4 +1,5 @@
 import ChecklistGroup from './components/ChecklistGroup';
+import ThemeToggle from './components/ThemeToggle';
 import { ArrowIcon, CloseIcon, CopyableAddress, CopyableEventTitle, EventFlightDetails, FlightLegCaption, getReservationHeading, ReservationDetails, ReservationModal, useModalBehavior } from './components/JourneyEvents';
 import TemplatesPage from './components/TemplatesPage';
 import { useEffect, useState } from 'react';
@@ -657,6 +658,7 @@ function App() {
   return (
     <>
       <ScrollToTop />
+      <div className="site-corner"><ThemeToggle /></div>
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/ongoing" element={<LegacyJourneyRedirect />} />
