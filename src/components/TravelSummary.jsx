@@ -1,5 +1,5 @@
-import { useId, useState } from 'react';
-import { Printer } from 'lucide-react';
+import { useState } from 'react';
+import { ArrowDown, ArrowUp, Globe, Printer } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import DottedWorldMap from './DottedWorldMap';
 import CountryTicketPrinter from './CountryTicketPrinter';
@@ -7,55 +7,46 @@ import { archiveCountries, countryOnlyVisits, countryVisits, journeys } from '..
 import { getArchiveSummary } from '../lib/archive-summary';
 
 const summary = getArchiveSummary(journeys, archiveCountries, countryOnlyVisits);
+const CONTINENT_TOTAL = 7;
 
 function WorldSummaryCard() {
-  const chevronId = useId();
-
-  return <article className="summary-world" aria-label={`Visited continents: ${summary.continents.join(', ') || 'none'}`}>
-    <div className="summary-world__face">
+  return <article className="stat-card summary-world" aria-label={`Visited continents: ${summary.continents.join(', ') || 'none'}`}>
+    <div className="summary-world__panel">
       <header className="summary-world__header">
-        <div className="summary-world__heading">
-          <svg viewBox="0 0 600 24" preserveAspectRatio="xMinYMid slice" aria-hidden="true">
-            <defs><pattern id={chevronId} width="14" height="24" patternUnits="userSpaceOnUse"><path d="m10 3-7 9 7 9" /></pattern></defs>
-            <rect width="600" height="24" fill={`url(#${chevronId})`} />
-          </svg>
-          <h3>Continents visited</h3>
-        </div>
+        <h3>Continents visited</h3>
+        <span className="summary-world__count">{summary.continentCount}<small> / {CONTINENT_TOTAL}</small></span>
       </header>
       <div className="summary-world__art" aria-hidden="true">
         <DottedWorldMap continents={summary.continents} landClassName="summary-world__unvisited" highlightClassName="summary-world__visited" />
       </div>
-      <div className="summary-world__footer">
-        {summary.continents.length ? <ul className="summary-world__continents">
-          {summary.continents.map(continent => <li key={continent}>{continent}</li>)}
-        </ul> : <span>A world to explore</span>}
-      </div>
+      {summary.continents.length ? <ul className="summary-world__continents">
+        {summary.continents.map(continent => <li key={continent}>{continent}</li>)}
+      </ul> : <p className="summary-world__empty">A world to explore</p>}
     </div>
   </article>;
 }
 
-function ContinentIcon({ strokeWidth = 2.1, ...props }) {
-  return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" {...props}>
-    <path d="m2.5 6 3-2 4 .5 1.5 3-3 2 .5 2.5-2 1.5-1.5-3-2.5-1Z" />
-    <path d="m8 14 3 1-1 4-2 2-1-3Z" />
-    <path d="m14 4 4-1 3.5 4-1 3-3.5-1-3 2-1.5-4Z" />
-    <path d="m14 13 4 .5.5 3.5-2.5 4-2-4Z" />
-  </svg>;
+function StatCard({ label, value, note, Icon, tone, children }) {
+  return <div className={`stat-card summary-stat summary-stat--${tone}`}>
+    <dt>{label}</dt>
+    <dd>{value}</dd>
+    {note && <p className="summary-stat__note">{note}</p>}
+    <span className="stat-card__icon" aria-hidden="true"><Icon strokeWidth={1.9} /></span>
+    {children}
+  </div>;
 }
 
-function CompassTicks() {
-  return <svg className="summary-compass__ticks" viewBox="0 0 480 152" preserveAspectRatio="none" aria-hidden="true">
-    {Array.from({ length: 39 }, (_, index) => {
-      const x = 12 + index * 12;
-      const length = index % 5 === 4 ? 16 : 9;
-      return <path key={`x-${x}`} d={`M${x} 0v${length}M${x} 152v-${length}`} />;
-    })}
-    {Array.from({ length: 11 }, (_, index) => {
-      const y = 16 + index * 12;
-      const length = index === 5 ? 17 : 9;
-      return <path key={`y-${y}`} d={`M0 ${y}h${length}M480 ${y}h-${length}`} />;
-    })}
-  </svg>;
+// Places the latitude on a pole-to-pole scale so north and south read at a glance.
+function LatitudeGauge({ latitude }) {
+  const position = `${((90 - latitude) / 180) * 100}%`;
+  return <span className="summary-latitude__gauge" aria-hidden="true">
+    <span className="summary-latitude__pole">N</span>
+    <span className="summary-latitude__track">
+      <span className="summary-latitude__equator" />
+      <span className="summary-latitude__marker" style={{ top: position }} />
+    </span>
+    <span className="summary-latitude__pole">S</span>
+  </span>;
 }
 
 function LatitudeCard({ place, direction }) {
@@ -63,39 +54,30 @@ function LatitudeCard({ place, direction }) {
   const destination = place ? { to: `/countries/${place.country.slug}${place.date && place.journeyId ? `?date=${encodeURIComponent(place.date)}&trip=${encodeURIComponent(place.journeyId)}` : ''}` } : {};
   const latitude = place ? `${Math.abs(place.latitude).toFixed(2)}° ${place.latitude < 0 ? 'S' : 'N'}` : '';
   const label = direction === 'north' ? 'Farthest north' : 'Farthest south';
+  const Arrow = direction === 'north' ? ArrowUp : ArrowDown;
 
-  return <Tag className={`summary-compass summary-compass--${direction}`} {...destination} aria-label={place ? `${label}: ${place.name}, ${place.country.name}, ${latitude}. ${place.journeyId ? 'Open itinerary' : 'Open country'}` : `${label}: no places yet`}>
-    <CompassTicks />
-    <span className="summary-compass__direction summary-compass__direction--n" aria-hidden="true">N</span>
-    <span className="summary-compass__direction summary-compass__direction--e" aria-hidden="true">E</span>
-    <span className="summary-compass__direction summary-compass__direction--s" aria-hidden="true">S</span>
-    <span className="summary-compass__direction summary-compass__direction--w" aria-hidden="true">W</span>
-    <div className="summary-compass__content">
+  return <Tag className={`stat-card summary-latitude summary-latitude--${direction}`} {...destination} aria-label={place ? `${label}: ${place.name}, ${place.country.name}, ${latitude}. ${place.journeyId ? 'Open itinerary' : 'Open country'}` : `${label}: no places yet`}>
+    <div className="summary-latitude__copy">
+      <span className="summary-latitude__label"><Arrow aria-hidden="true" strokeWidth={2.2} />{label}</span>
       <strong>{place?.name ?? '—'}</strong>
-      <span>{label}</span>
       {place && <small>{latitude} · {place.country.name}</small>}
     </div>
+    {place && <LatitudeGauge latitude={place.latitude} />}
   </Tag>;
 }
 
 export default function TravelSummary() {
   const [ticketsOpen, setTicketsOpen] = useState(false);
   const countries = archiveCountries.filter(country => countryVisits(country.code, journeys, countryOnlyVisits).length);
-  const stats = [
-    { label: 'Countries', value: summary.countryCount, Icon: Printer, tickets: true },
-    { label: 'Continents', value: summary.continentCount, Icon: ContinentIcon },
-  ];
 
   return <><section className="travel-summary" aria-label="Travel overview">
     <WorldSummaryCard />
     <div className="travel-summary__details">
       <dl className="summary-stats">
-        {stats.map(({ label, value, Icon, tickets }) => <div className={`summary-stat${tickets ? ' summary-stat--tickets' : ''}`} key={label}>
-          <dt>{label}</dt>
-          <dd>{value}</dd>
-          <Icon aria-hidden="true" strokeWidth={2.1} />
-          {tickets && <button className="summary-stat__trigger" type="button" title="Print country tickets" aria-label={`Print travel tickets for ${value} countries`} aria-haspopup="dialog" aria-expanded={ticketsOpen} disabled={!value} onClick={() => setTicketsOpen(true)} />}
-        </div>)}
+        <StatCard label="Countries" value={summary.countryCount} note="Print tickets" Icon={Printer} tone="tickets">
+          <button className="summary-stat__trigger" type="button" title="Print country tickets" aria-label={`Print travel tickets for ${summary.countryCount} countries`} aria-haspopup="dialog" aria-expanded={ticketsOpen} disabled={!summary.countryCount} onClick={() => setTicketsOpen(true)} />
+        </StatCard>
+        <StatCard label="Continents" value={summary.continentCount} note={`of ${CONTINENT_TOTAL}`} Icon={Globe} tone="continents" />
       </dl>
       <div className="summary-extremes">
         <LatitudeCard place={summary.northernmost} direction="north" />

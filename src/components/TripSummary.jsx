@@ -1,45 +1,80 @@
 import { useId, useState } from 'react';
-import { Luggage, Snowflake, Sprout, Sun } from 'lucide-react';
+import { Leaf, Luggage, Snowflake, Sprout, Sun } from 'lucide-react';
 import { archiveCountries, journeys } from '../data/archive';
+import { getJourneyDayCount } from '../lib/journey-dates';
 import { getTripSummary } from '../lib/trip-summary';
 
 const summary = getTripSummary(journeys);
-const destinations = [...summary.years].reverse().flatMap(({ year, countries }) => countries.map(code => ({
-  year, code, name: archiveCountries.find(country => country.code === code)?.name ?? code,
-})));
+const completed = journeys.filter(journey => journey.status === 'completed');
+const daysOnTheRoad = completed.reduce((total, journey) => total + getJourneyDayCount(journey), 0);
+const countryByCode = new Map(archiveCountries.map(country => [country.code, country]));
+const countriesVisited = new Set(completed.flatMap(journey => journey.countries ?? [])).size;
+
+const YEAR_ROWS = 4;
+const DOTS_PER_YEAR = 16;
+const latestYear = summary.years[0]?.year ?? new Date().getFullYear();
+// Show the most recent years, newest first, so a quiet year reads as an empty row.
+const yearRows = Array.from({ length: YEAR_ROWS }, (_, index) => {
+  const year = latestYear - index;
+  const record = summary.years.find(item => item.year === year);
+  return {
+    year,
+    trips: record?.count ?? 0,
+    destinations: (record?.countries ?? []).map(code => ({ year, code, name: countryByCode.get(code)?.name ?? code, color: countryByCode.get(code)?.color })),
+  };
+});
+
+function TripCountCard() {
+  return <article className="stat-card trip-summary-card summary-trip-count">
+    <h3>Trips</h3>
+    <span className="stat-card__icon" aria-hidden="true"><Luggage strokeWidth={1.9} /></span>
+    <strong>{summary.tripCount}</strong>
+    <p className="summary-trip-count__note">
+      <span>{daysOnTheRoad} {daysOnTheRoad === 1 ? 'day' : 'days'} away</span>
+      <span>{countriesVisited} {countriesVisited === 1 ? 'country' : 'countries'}</span>
+    </p>
+  </article>;
+}
 
 function TravelYearsCard() {
   const tooltipId = useId();
   const [hovered, setHovered] = useState(null);
   const [focused, setFocused] = useState(null);
   const inspected = hovered ?? focused;
-  const dotCount = Math.max(140, Math.ceil(destinations.length / 20) * 20);
   const inspect = (destination, button) => {
     const card = button.closest('.summary-years').getBoundingClientRect();
     const dot = button.getBoundingClientRect();
-    const below = dot.bottom - card.top + 7;
-    return { ...destination, left: Math.max(88, Math.min(card.width - 88, dot.left - card.left + dot.width / 2)), top: below + 64 > card.height - 12 ? dot.top - card.top - 64 : below };
+    const below = dot.bottom - card.top + 8;
+    return { ...destination, left: Math.max(84, Math.min(card.width - 84, dot.left - card.left + dot.width / 2)), top: below + 60 > card.height - 8 ? dot.top - card.top - 60 : below };
   };
 
-  return <article className="trip-summary-card summary-years">
-    <h3>Travel by year</h3>
-    <div className="summary-years__calendar" role="group" aria-label="Countries visited by departure year">
-      {Array.from({ length: dotCount }, (_, index) => {
-        const destination = destinations[index];
-        if (!destination) return <span className="summary-years__cell" aria-hidden="true" key={`empty-${index}`}><span className="summary-years__dot" /></span>;
-        const key = `${destination.year}-${destination.code}`;
-        return <button className="summary-years__cell is-lit" type="button" key={key}
-          data-year={destination.year} data-country={destination.code}
-          aria-label={`${destination.year} · ${destination.name}`}
-          aria-describedby={inspected?.key === key ? tooltipId : undefined}
-          onMouseEnter={event => setHovered({ ...inspect(destination, event.currentTarget), key })}
-          onMouseLeave={() => setHovered(null)}
-          onFocus={event => setFocused({ ...inspect(destination, event.currentTarget), key })}
-          onBlur={() => setFocused(null)}
-          onKeyDown={event => { if (event.key === 'Escape') { setHovered(null); setFocused(null); } }}>
-          <span className="summary-years__dot" aria-hidden="true" />
-        </button>;
-      })}
+  return <article className="stat-card trip-summary-card summary-years">
+    <header className="summary-years__header">
+      <h3>Travel by year</h3>
+      <span>{latestYear - YEAR_ROWS + 1} – {latestYear}</span>
+    </header>
+    <div className="summary-years__rows" role="group" aria-label="Countries visited by departure year">
+      {yearRows.map(({ year, trips, destinations }) => <div className={`summary-years__row${trips ? ' has-trips' : ''}`} key={year}>
+        <span className="summary-years__year">{year}</span>
+        <div className="summary-years__track">
+          {Array.from({ length: DOTS_PER_YEAR }, (_, index) => {
+            const destination = destinations[index];
+            if (!destination) return <span className="summary-years__cell" aria-hidden="true" key={`empty-${index}`}><span className="summary-years__dot" /></span>;
+            const key = `${destination.year}-${destination.code}`;
+            return <button className="summary-years__cell is-lit" type="button" key={key}
+              aria-label={`${destination.year} · ${destination.name}`}
+              aria-describedby={inspected?.key === key ? tooltipId : undefined}
+              onMouseEnter={event => setHovered({ ...inspect(destination, event.currentTarget), key })}
+              onMouseLeave={() => setHovered(null)}
+              onFocus={event => setFocused({ ...inspect(destination, event.currentTarget), key })}
+              onBlur={() => setFocused(null)}
+              onKeyDown={event => { if (event.key === 'Escape') { setHovered(null); setFocused(null); } }}>
+              <span className="summary-years__dot" style={{ background: destination.color }} aria-hidden="true" />
+            </button>;
+          })}
+        </div>
+        <span className="summary-years__total">{destinations.length || '–'}</span>
+      </div>)}
     </div>
     {inspected && <div className="summary-years__tooltip" id={tooltipId} role="tooltip" style={{ left: inspected.left, top: inspected.top }}>
       <span>{inspected.year}</span><strong>{inspected.name}</strong>
@@ -47,39 +82,31 @@ function TravelYearsCard() {
   </article>;
 }
 
-function SeasonMotif({ season }) {
-  const Icon = { spring: Sprout, summer: Sun, winter: Snowflake }[season];
-  if (Icon) return <Icon className="summary-season__icon" aria-hidden="true" strokeWidth={1.5} />;
-  return <svg className="summary-season__icon" viewBox="0 0 64 64" aria-hidden="true" focusable="false">
-    {season === 'autumn' ? <>
-      <path fill="currentColor" d="M32 4L39 19L49 12L46 27L59 25L51 38L56 44L37 47L34 60H30L29 47L10 44L15 38L7 25L20 27L17 12L27 19Z" />
-      <path className="summary-season__vein" d="M32 18V47M32 31L23 25M32 39L43 30" fill="none" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" />
-    </> : <g fill="none" stroke="currentColor" strokeWidth="2.5">
-      <circle cx="32" cy="32" r="22" /><path d="M32 10V54M10 32H54" />
-    </g>}
-  </svg>;
-}
+const seasonIcons = { spring: Sprout, summer: Sun, autumn: Leaf, winter: Snowflake };
 
 function TravelSeasonCard() {
   const favourite = summary.favouriteSeasons;
   const single = favourite.length === 1 ? favourite[0] : null;
-  return <article className="trip-summary-card summary-season">
+  const Icon = seasonIcons[single?.id] ?? Sun;
+  return <article className={`stat-card trip-summary-card summary-season${single ? ` summary-season--${single.id}` : ''}`}>
     <h3>Top travel season</h3>
-    <SeasonMotif season={single?.id} />
+    <span className="stat-card__icon" aria-hidden="true"><Icon strokeWidth={1.9} /></span>
     <div className="summary-season__value">
       <strong>{single?.label ?? (favourite.length === 4 ? 'All seasons' : favourite.length ? 'Mixed' : '—')}</strong>
-      <span>{single ? single.range : favourite.map(season => season.label).join(' · ') || 'A season to discover'}</span>
+      <span>{single ? single.range.replace(' — ', ' – ') : favourite.map(season => season.label).join(' · ') || 'A season to discover'}</span>
     </div>
+    <ol className="summary-season__scale" aria-label="Trips by departure season">
+      {summary.seasons.map(season => <li className={favourite.some(item => item.id === season.id) ? 'is-top' : ''} data-season={season.id} key={season.id}
+        aria-label={`${season.label}: ${season.count} ${season.count === 1 ? 'trip' : 'trips'}`}>
+        <span aria-hidden="true">{season.label.slice(0, 3)}</span>
+      </li>)}
+    </ol>
   </article>;
 }
 
 export default function TripSummary() {
   return <div className="trip-summary">
-    <article className="trip-summary-card summary-trip-count">
-      <h3>Trips</h3>
-      <strong>{summary.tripCount}</strong>
-      <Luggage aria-hidden="true" strokeWidth={1.8} />
-    </article>
+    <TripCountCard />
     <TravelYearsCard />
     <TravelSeasonCard />
   </div>;

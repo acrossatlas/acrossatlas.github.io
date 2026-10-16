@@ -1,10 +1,11 @@
 name: Deploy
 
-# Builds the site on every push to main and publishes dist/ to the gh-pages
-# branch, which GitHub Pages serves. A failed build leaves the live site as is.
+# Builds every pushed branch so changes are checked before they ship; only
+# main is published, by copying dist/ to the gh-pages branch that GitHub
+# Pages serves. A failed build leaves the live site as is.
 on:
   push:
-    branches: [main]
+    branches: ['**']
   workflow_dispatch:
 
 permissions:
@@ -30,6 +31,7 @@ jobs:
       - run: npm run build
 
       - name: Publish to gh-pages
+        if: github.ref == 'refs/heads/main'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
