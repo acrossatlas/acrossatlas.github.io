@@ -16,10 +16,10 @@ test('Reine dinner is visit 7 and focuses Å → dinner → home, not visit 5', 
   assert.deepEqual(pairs(adjacentVisitLegs(routes['2026-10-02'], 'direct', 'reine', stops)), ['sakrisoy>reine', 'reine>a']);
 });
 test('optional preview uses its branch without changing saved numbering', () => {
-  const stops = norway['2026-10-02'].stops;
-  assert.deepEqual(pairs(adjacentVisitLegs(routes['2026-10-02'], 'direct', 'skagsanden', stops)), ['haukland>skagsanden', 'skagsanden>ramberg']);
-  assert.equal(numberPlannedStops(stops, 'direct').find(stop => stop.id === 'skagsanden').number, '+');
-  assert.deepEqual(adjacentVisitLegs(routes['2026-10-02'], 'skagsanden', null, stops), []);
+  const stops = iceland['2026-09-28'].stops;
+  assert.deepEqual(pairs(adjacentVisitLegs(routes['2026-09-28'], 'direct', 'shopping', stops)), ['beach>shopping', 'shopping>home']);
+  assert.equal(numberPlannedStops(stops, 'direct').find(stop => stop.id === 'shopping').number, '+');
+  assert.deepEqual(adjacentVisitLegs(routes['2026-09-28'], 'shopping', null, stops), []);
 });
 test('all routed legs have a directed path, duration and existing visit IDs', () => {
   for (const [day, variants] of Object.entries(routes)) {
@@ -33,7 +33,7 @@ test('all routed legs have a directed path, duration and existing visit IDs', ()
   }
 });
 test('hotel luggage is a distinct visit before the airport; final stays have no invented return', () => {
-  assert.deepEqual(pairs(adjacentVisitLegs(routes['2026-10-05'], 'direct', 'hotel-luggage', norway['2026-10-05'].stops)), ['square>hotel-luggage', 'hotel-luggage>airport']);
+  assert.deepEqual(pairs(adjacentVisitLegs(routes['2026-10-05'], 'direct', 'hotel-luggage', norway['2026-10-05'].stops)), ['cable>hotel-luggage', 'hotel-luggage>airport']);
   assert.deepEqual(pairs(adjacentVisitLegs(routes['2026-10-04'], 'direct', 'hotel-night', norway['2026-10-04'].stops)), ['dinner>hotel-night']);
 });
 test('direction follows path orientation', () => {

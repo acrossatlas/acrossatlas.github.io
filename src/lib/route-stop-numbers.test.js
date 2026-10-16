@@ -8,10 +8,10 @@ const iceland = JSON.parse(readFileSync(new URL('../data/iceland-day-routes.json
 const numbers = (stops, route) => numberPlannedStops(stops, route).map(stop => stop.number);
 
 test('intermediate optional stop inserts a number and removal restores following numbers', () => {
-  const stops = norway['2026-10-02'].stops;
-  assert.deepEqual(numbers(stops, 'direct'), ['0', '1', '+', '2', '3', '4', '5', '6', '7']);
-  assert.deepEqual(numbers(stops, 'skagsanden'), ['0', '1', '2', '3', '4', '5', '6', '7', '8']);
-  assert.deepEqual(numbers(stops, 'direct'), ['0', '1', '+', '2', '3', '4', '5', '6', '7']);
+  const stops = [{ number: '0' }, { number: '1' }, { number: '+', option: 'extra' }, { number: '2' }, { number: '3' }];
+  assert.deepEqual(numbers(stops, 'direct'), ['0', '1', '+', '2', '3']);
+  assert.deepEqual(numbers(stops, 'extra'), ['0', '1', '2', '3', '4']);
+  assert.deepEqual(numbers(stops, 'direct'), ['0', '1', '+', '2', '3']);
 });
 
 test('golden circle alternatives only number the saved option', () => {
@@ -23,9 +23,8 @@ test('golden circle alternatives only number the saved option', () => {
   assert.equal(stops[4].number, '4');
 });
 
-test('library and shopping follow the same rule', () => {
-  assert.deepEqual(numbers(norway['2026-10-05'].stops, 'direct'), ['0', '1', '+', '2', '3', '4']);
-  assert.deepEqual(numbers(norway['2026-10-05'].stops, 'library'), ['0', '1', '2', '3', '4', '5']);
+test('shopping follows the same rule; days without options keep plain numbers', () => {
+  assert.deepEqual(numbers(norway['2026-10-05'].stops, 'direct'), ['0', '1', '2', '3', '4']);
   assert.equal(numbers(iceland['2026-09-28'].stops, 'direct').at(-1), '+');
   assert.equal(numbers(iceland['2026-09-28'].stops, 'shopping').at(-1), '7');
 });
