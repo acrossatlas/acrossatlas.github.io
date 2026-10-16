@@ -26,8 +26,8 @@ test('golden circle alternatives only number the saved option', () => {
 test('library and shopping follow the same rule', () => {
   assert.deepEqual(numbers(norway['2026-10-05'].stops, 'direct'), ['0', '1', '+', '2', '3', '4']);
   assert.deepEqual(numbers(norway['2026-10-05'].stops, 'library'), ['0', '1', '2', '3', '4', '5']);
-  assert.equal(numbers(iceland['2026-09-29'].stops, 'direct').at(-1), '+');
-  assert.equal(numbers(iceland['2026-09-29'].stops, 'shopping').at(-1), '7');
+  assert.equal(numbers(iceland['2026-09-28'].stops, 'direct').at(-1), '+');
+  assert.equal(numbers(iceland['2026-09-28'].stops, 'shopping').at(-1), '7');
 });
 
 test('days without optional stops keep existing location numbering', () => {

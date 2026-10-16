@@ -21,12 +21,12 @@ import MapControls from './MapControls';
 const visitRoutes = { ...savedVisitRoutes, '2026-10-03': oct03Optional.legs, '2026-09-30': sep30Checkout.legs };
 const mapDaysByCountry = { NL: amsterdamMapDays, IS: icelandDays, NO: norwayDays };
 const stops = [
-  { id: 'city', number: '0', name: 'Reykjavík 雷克雅未克', subtitle: '出发 / 返回 · 市区示意', coordinates: [-21.9426, 64.1466], eventIds: ['sep28-reykjavik-stay'] },
-  { id: 'thingvellir', number: '1', name: 'Þingvellir 辛格维利尔国家公园', subtitle: '国家公园 · Hakið P1', coordinates: [-21.129, 64.2558], eventIds: ['sep28-thingvellir'] },
-  { id: 'geysir', number: '2', name: 'Geysir 盖锡尔间歇泉', subtitle: '午餐 / 间歇泉', coordinates: [-20.3024, 64.3093], eventIds: ['sep28-geysir-lunch', 'sep28-geysir'] },
-  { id: 'gullfoss', number: '3', name: 'Gullfoss 黄金瀑布', subtitle: '黄金瀑布 · 停车场', coordinates: [-20.1364, 64.3266], eventIds: ['sep28-gullfoss'] },
-  { id: 'kerid', number: '4', name: 'Kerið 凯瑞斯火山口', subtitle: '可选 · 火山口', coordinates: [-20.8853, 64.0413], eventIds: ['sep28-kerid-optional'], option: 'kerid' },
-  { id: 'lagoon', number: '4', name: 'Secret Lagoon 秘密温泉', subtitle: '可选 · 秘密温泉', coordinates: [-20.3094, 64.1375], eventIds: ['sep28-secret-lagoon-optional'], option: 'lagoon' },
+  { id: 'city', number: '0', name: 'Reykjavík 雷克雅未克', subtitle: '出发 / 返回 · 市区示意', coordinates: [-21.9426, 64.1466], eventIds: ['sep29-reykjavik-stay'] },
+  { id: 'thingvellir', number: '1', name: 'Þingvellir 辛格维利尔国家公园', subtitle: '国家公园 · Hakið P1', coordinates: [-21.129, 64.2558], eventIds: ['sep29-thingvellir'] },
+  { id: 'geysir', number: '2', name: 'Geysir 盖锡尔间歇泉', subtitle: '午餐 / 间歇泉', coordinates: [-20.3024, 64.3093], eventIds: ['sep29-geysir-lunch', 'sep29-geysir'] },
+  { id: 'gullfoss', number: '3', name: 'Gullfoss 黄金瀑布', subtitle: '黄金瀑布 · 停车场', coordinates: [-20.1364, 64.3266], eventIds: ['sep29-gullfoss'] },
+  { id: 'kerid', number: '4', name: 'Kerið 凯瑞斯火山口', subtitle: '可选 · 火山口', coordinates: [-20.8853, 64.0413], eventIds: ['sep29-kerid-optional'], option: 'kerid' },
+  { id: 'lagoon', number: '4', name: 'Secret Lagoon 秘密温泉', subtitle: '可选 · 秘密温泉', coordinates: [-20.3094, 64.1375], eventIds: ['sep29-secret-lagoon-optional'], option: 'lagoon' },
 ];
 const bounds = [[-22.02, 63.97], [-19.96, 64.40]];
 const fitOptions = { padding: { top: 95, bottom: 55, left: 55, right: 85 }, duration: 0 };
@@ -210,7 +210,7 @@ function DayRouteMapContent({ day, events, country: countryScope }) {
     window.addEventListener('storage', syncPlan);
     return () => window.removeEventListener('storage', syncPlan);
   }, [storageKey]);
-  const isGoldenCircle = day.key === '2026-09-28' || Boolean(config);
+  const isGoldenCircle = day.key === '2026-09-29' || Boolean(config);
   const countries = countryScope ? [countryScope] : countriesForDay(day.key);
   // On a travel day the destination determines the basemap; both flags remain visible.
   const country = countries.at(-1);
