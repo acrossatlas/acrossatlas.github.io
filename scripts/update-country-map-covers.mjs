@@ -41,7 +41,13 @@ function clipRing(ring, bounds) {
   return points;
 }
 
-function createCover(country) {
+// Light and dark palettes share geometry; the site swaps sprites with the theme.
+const palettes = {
+  light: { waterFrom: '#a9d8ec', waterTo: '#dff1f8', landFrom: '#eaf5ee', landTo: '#d8ecdf', border: '#f3fcf7', selected: '#c4e3cf', lakes: '#b8dcec', label: '#73998c' },
+  dark: { waterFrom: '#1b2b35', waterTo: '#22343f', landFrom: '#2b3631', landTo: '#26302b', border: '#3a4741', selected: '#3d5a48', lakes: '#1e3240', label: '#8aa496' },
+};
+
+function createCover(country, palette) {
   const [[west, south], [east, north]] = country.overviewBounds;
   const targetNorth = mercator(north), targetSouth = mercator(south);
   const centerX = longitude((west + east) / 2), centerY = (targetNorth + targetSouth) / 2;
@@ -75,20 +81,23 @@ function createCover(country) {
   });
   return `<g id="cover-${country.code}">
 <rect width="${width}" height="${height}" fill="url(#cover-water)"/>
-<g fill="url(#cover-land)" stroke="#f3fcf7" stroke-width=".7" fill-rule="evenodd">${paths.map(({ path }) => `<path d="${path}"/>`).join('')}</g>
-<path d="${selected.path}" fill="#c4e3cf" fill-rule="evenodd"/>
-<path d="${water}" fill="#b8dcec" fill-rule="evenodd"/>
-<g font-family="Arial,sans-serif" font-size="8.5" text-anchor="middle" fill="#73998c" opacity=".7">${labels.join('')}</g>
+<g fill="url(#cover-land)" stroke="${palette.border}" stroke-width=".7" fill-rule="evenodd">${paths.map(({ path }) => `<path d="${path}"/>`).join('')}</g>
+<path d="${selected.path}" fill="${palette.selected}" fill-rule="evenodd"/>
+<path d="${water}" fill="${palette.lakes}" fill-rule="evenodd"/>
+<g font-family="Arial,sans-serif" font-size="8.5" text-anchor="middle" fill="${palette.label}" opacity=".7">${labels.join('')}</g>
 </g>`;
 }
 
-const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}">
+for (const [theme, palette] of Object.entries(palettes)) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}">
 <!-- Natural Earth country/lake geometry, public domain: 1:50m, with 1:10m countries for Singapore. Sources: ${sources.map(file => `${baseUrl}${file}`).join(' ')} -->
 <defs>
-<linearGradient id="cover-water" x2=".25" y2="1"><stop stop-color="#a9d8ec"/><stop offset="1" stop-color="#dff1f8"/></linearGradient>
-<linearGradient id="cover-land" x2=".7" y2="1"><stop stop-color="#eaf5ee"/><stop offset="1" stop-color="#d8ecdf"/></linearGradient>
+<linearGradient id="cover-water" x2=".25" y2="1"><stop stop-color="${palette.waterFrom}"/><stop offset="1" stop-color="${palette.waterTo}"/></linearGradient>
+<linearGradient id="cover-land" x2=".7" y2="1"><stop stop-color="${palette.landFrom}"/><stop offset="1" stop-color="${palette.landTo}"/></linearGradient>
 </defs>
-${archiveCountries.map(createCover).join('\n')}
+${archiveCountries.map(country => createCover(country, palette)).join('\n')}
 </svg>\n`;
-await writeFile(new URL('../src/assets/country-map-covers.svg', import.meta.url), svg);
-console.log(`Saved ${archiveCountries.length} country map covers (${Math.round(Buffer.byteLength(svg) / 1024)} KB).`);
+  const file = theme === 'light' ? 'country-map-covers.svg' : `country-map-covers-${theme}.svg`;
+  await writeFile(new URL(`../src/assets/${file}`, import.meta.url), svg);
+  console.log(`Saved ${archiveCountries.length} ${theme} country map covers (${Math.round(Buffer.byteLength(svg) / 1024)} KB).`);
+}

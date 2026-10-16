@@ -2567,7 +2567,9 @@ a.summary-latitude:focus-visible { outline: 2px solid var(--accent); outline-off
 :root[data-theme="dark"] .summary-years__cell.is-lit .summary-years__dot { background: var(--ink); }
 :root[data-theme="dark"] .summary-years__tooltip { color: #1f2a2c; background: #e8e9e9; }
 :root[data-theme="dark"] .summary-years__tooltip > span { color: #5f6b6e; }
-:root[data-theme="dark"] .country-map-cover { filter: brightness(.82) saturate(.9); }
+:root[data-theme="dark"] .country-card__cover,
+:root[data-theme="dark"] .country-archive-memory { background: #1b2b35; }
+:root[data-theme="dark"] .country-card__cover::after { box-shadow: inset 0 0 0 1px rgb(255 255 255 / .04); }
 :root[data-theme="dark"] .country-card__code { background: rgb(19 21 22 / .72); color: var(--ink); }
 :root[data-theme="dark"] .trip-card__route li { background: var(--fill); }
 :root[data-theme="dark"] .trip-card__map { background: var(--fill); }

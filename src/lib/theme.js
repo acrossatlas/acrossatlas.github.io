@@ -1,3 +1,5 @@
+import { useEffect, useState } from 'react';
+
 // The theme lives on <html data-theme>; index.html sets it before first paint.
 export const THEME_KEY = 'across-theme';
 
@@ -25,4 +27,16 @@ export function storeTheme(theme) {
   } catch {
     // Private browsing can block storage; the choice then lasts for this visit only.
   }
+}
+
+// Re-renders when <html data-theme> changes, for artwork that needs a separate dark file.
+export function useTheme() {
+  const [theme, setTheme] = useState(() => document.documentElement.dataset.theme || 'light');
+  useEffect(() => {
+    const root = document.documentElement;
+    const observer = new MutationObserver(() => setTheme(root.dataset.theme || 'light'));
+    observer.observe(root, { attributes: true, attributeFilter: ['data-theme'] });
+    return () => observer.disconnect();
+  }, []);
+  return theme;
 }
