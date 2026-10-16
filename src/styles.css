@@ -2359,7 +2359,6 @@ a.summary-latitude:focus-visible { outline: 2px solid var(--accent); outline-off
 .ticket-printer-dialog__content { padding: 22px 22px 18px; }
 .ticket-printer-dialog__header { display: flex; align-items: center; gap: 12px; }
 .ticket-printer-dialog__header > div { flex: 1; min-width: 0; }
-.ticket-printer-dialog__icon { display: grid; width: 36px; height: 36px; flex: none; place-items: center; border-radius: 50%; background: #fff1e8; color: #d0632d; }
 .ticket-printer-dialog__header h2 { margin: 0; font-size: 16px; font-weight: 650; letter-spacing: -.02em; line-height: 1.25; }
 .ticket-printer-dialog__header p { margin: 2px 0 0; color: #828c8f; font-size: 12px; line-height: 1.4; }
 .ticket-printer-dialog__close { display: grid; width: 32px; height: 32px; flex: none; place-items: center; padding: 0; border: 0; border-radius: 50%; color: var(--ink); background: #f1f3f4; cursor: pointer; transition: background-color .15s ease; }

@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react';
-import { Printer, RotateCw, X } from 'lucide-react';
+import { RotateCw, X } from 'lucide-react';
 import CountryTicket from './CountryTicket';
 import { countryOnlyVisits, countryVisits, journeys } from '../data/archive';
 
@@ -46,7 +46,6 @@ export default function CountryTicketPrinter({ countries, onClose }) {
   >
     <div className="ticket-printer-dialog__content">
       <header className="ticket-printer-dialog__header">
-        <span className="ticket-printer-dialog__icon" aria-hidden="true"><Printer size={17} strokeWidth={1.9} /></span>
         <div>
           <h2 id={titleId}>Travel tickets</h2>
           <p>{tickets.length} {tickets.length === 1 ? 'ticket' : 'tickets'} on one roll</p>
