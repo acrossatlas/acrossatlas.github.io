@@ -7,10 +7,20 @@
       name="description"
       content="across — a personal travel fieldbook for places, days, and memories."
     />
-    <meta name="theme-color" content="#f6f6f2" />
+    <meta name="theme-color" content="#ffffff" />
+    <script>
+      // Set the theme before first paint so dark mode never flashes white.
+      (function () {
+        var theme;
+        try { theme = localStorage.getItem('across-theme'); } catch (e) {}
+        if (theme !== 'light' && theme !== 'dark') theme = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+        document.documentElement.dataset.theme = theme;
+        if (theme === 'dark') document.querySelector('meta[name="theme-color"]').setAttribute('content', '#131516');
+      })();
+    </script>
     <title>across</title>
-    <script type="module" crossorigin src="/assets/index-Cv2ApG0F.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-B0TlS3Gy.css">
+    <script type="module" crossorigin src="/assets/index-BUn-y4ne.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-CBAuVo_3.css">
   </head>
   <body>
     <div id="root"></div>
