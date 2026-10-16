@@ -76,8 +76,8 @@ function createCover(country) {
   return `<g id="cover-${country.code}">
 <rect width="${width}" height="${height}" fill="url(#cover-water)"/>
 <g fill="url(#cover-land)" stroke="#f3fcf7" stroke-width=".7" fill-rule="evenodd">${paths.map(({ path }) => `<path d="${path}"/>`).join('')}</g>
-<path d="${selected.path}" fill="#b2e6c9" fill-rule="evenodd"/>
-<path d="${water}" fill="#a4e0f6" fill-rule="evenodd"/>
+<path d="${selected.path}" fill="#c4e3cf" fill-rule="evenodd"/>
+<path d="${water}" fill="#b8dcec" fill-rule="evenodd"/>
 <g font-family="Arial,sans-serif" font-size="8.5" text-anchor="middle" fill="#73998c" opacity=".7">${labels.join('')}</g>
 </g>`;
 }
@@ -85,8 +85,8 @@ function createCover(country) {
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}">
 <!-- Natural Earth country/lake geometry, public domain: 1:50m, with 1:10m countries for Singapore. Sources: ${sources.map(file => `${baseUrl}${file}`).join(' ')} -->
 <defs>
-<linearGradient id="cover-water" x2=".25" y2="1"><stop stop-color="#91daf7"/><stop offset="1" stop-color="#cef3ff"/></linearGradient>
-<linearGradient id="cover-land" x2=".7" y2="1"><stop stop-color="#e6f7ec"/><stop offset="1" stop-color="#d3f0e0"/></linearGradient>
+<linearGradient id="cover-water" x2=".25" y2="1"><stop stop-color="#a9d8ec"/><stop offset="1" stop-color="#dff1f8"/></linearGradient>
+<linearGradient id="cover-land" x2=".7" y2="1"><stop stop-color="#eaf5ee"/><stop offset="1" stop-color="#d8ecdf"/></linearGradient>
 </defs>
 ${archiveCountries.map(createCover).join('\n')}
 </svg>\n`;

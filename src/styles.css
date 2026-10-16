@@ -2177,6 +2177,14 @@ body {
 .archive-group + .archive-group { margin-top: 26px; }
 .archive-group__title { margin: 0 0 12px; color: var(--ink); font-size: 13px; font-weight: 650; letter-spacing: -.01em; line-height: 1.4; }
 
+/* Map log palette, taken from the country map covers: one sea and one land colour carry every accent. */
+:root {
+  --map-sea-strong: #2f7ea8;
+  --map-sea-tint: #e6f1f7;
+  --map-land-strong: #4a9e6e;
+  --map-land-tint: #e8f3ec;
+}
+
 /* Summary cards share the archive card surface: white, hairline ring, soft shadow. */
 .stat-card {
   --stat-ink: #1f2a2c;
@@ -2196,18 +2204,18 @@ body {
 .travel-summary { display: grid; grid-template-columns: minmax(0, 1.06fr) minmax(0, 1fr); gap: 12px; }
 .travel-summary__details { display: flex; flex-direction: column; gap: 12px; min-width: 0; }
 
-.summary-world { --stat-accent: #0f9d4a; padding: 6px; }
-.summary-world__panel { display: flex; flex-direction: column; height: 100%; gap: 10px; padding: 16px 18px 16px; border-radius: 17px; background: radial-gradient(120% 90% at 50% 40%, #f2fbf5 0%, #e9f7ee 100%); }
+.summary-world { padding: 6px; }
+.summary-world__panel { display: flex; flex-direction: column; height: 100%; gap: 10px; padding: 16px 18px 16px; border-radius: 17px; background: #f5f7f6; }
 .summary-world__header { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
-.summary-world__header h3 { margin: 0; color: #2d4a3a; font-size: 13px; font-weight: 650; letter-spacing: -.01em; }
-.summary-world__count { color: var(--stat-accent); font-size: 22px; font-weight: 700; letter-spacing: -.04em; line-height: 1; font-variant-numeric: tabular-nums; }
-.summary-world__count small { color: #8aa897; font-size: 13px; font-weight: 500; letter-spacing: 0; }
+.summary-world__header h3 { margin: 0; color: var(--stat-ink); font-size: 13px; font-weight: 650; letter-spacing: -.01em; }
+.summary-world__count { color: var(--stat-ink); font-size: 22px; font-weight: 700; letter-spacing: -.04em; line-height: 1; font-variant-numeric: tabular-nums; }
+.summary-world__count small { color: var(--stat-muted); font-size: 13px; font-weight: 500; letter-spacing: 0; }
 .summary-world__art { display: flex; flex: 1; align-items: center; min-height: 0; }
 .summary-world__art > svg { display: block; width: 100%; height: auto; max-height: 168px; }
-.summary-world__unvisited { fill: #c5d5cb; }
-.summary-world__visited { fill: #16b057; }
+.summary-world__unvisited { fill: #d6dcdb; }
+.summary-world__visited { fill: var(--map-land-strong); }
 .summary-world__continents { display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; list-style: none; }
-.summary-world__continents li { display: inline-flex; align-items: center; padding: 5px 10px; border-radius: 999px; background: rgb(255 255 255 / .8); color: #2d4a3a; font-size: 12px; font-weight: 500; line-height: 1.2; }
+.summary-world__continents li { display: inline-flex; align-items: center; padding: 5px 10px; border-radius: 999px; background: #fff; box-shadow: 0 0 0 1px rgb(31 42 44 / .06); color: var(--stat-ink); font-size: 12px; font-weight: 500; line-height: 1.2; }
 .summary-world__empty { margin: 0; color: #6f8a7a; font-size: 12px; }
 
 .summary-stats { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin: 0; }
@@ -2215,18 +2223,17 @@ body {
 .summary-stat dt { position: absolute; top: 18px; left: 18px; color: var(--stat-muted); font-size: 12px; font-weight: 500; line-height: 1.25; }
 .summary-stat dd { margin: 0; font-size: 40px; font-weight: 700; letter-spacing: -.055em; line-height: 1; font-variant-numeric: tabular-nums; }
 .summary-stat__note { margin: 0; color: var(--stat-muted); font-size: 12px; line-height: 1.4; }
-.summary-stat--tickets { --stat-tint: #fff1e8; --stat-accent: #d0632d; transition: transform .25s cubic-bezier(.2, .8, .2, 1), box-shadow .25s ease; }
+.summary-stat--tickets { --stat-tint: var(--map-sea-tint); --stat-accent: var(--map-sea-strong); transition: transform .25s cubic-bezier(.2, .8, .2, 1), box-shadow .25s ease; }
 .summary-stat--tickets .summary-stat__note { color: var(--stat-accent); font-weight: 500; }
 .summary-stat--tickets:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px rgb(31 42 44 / .07), 0 10px 22px -14px rgb(31 42 44 / .22); }
-.summary-stat--continents { --stat-tint: #e8f7ee; --stat-accent: #0f9d4a; }
+.summary-stat--continents { --stat-tint: var(--map-land-tint); --stat-accent: var(--map-land-strong); }
 .summary-stat__trigger { position: absolute; inset: 0; z-index: 1; width: 100%; padding: 0; border: 0; border-radius: inherit; background: transparent; cursor: pointer; }
 .summary-stat__trigger:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .summary-stat__trigger:disabled { cursor: default; }
 
 .summary-extremes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); flex: 1; gap: 12px; min-width: 0; }
 .summary-latitude { display: flex; min-height: 132px; align-items: stretch; gap: 12px; padding: 16px 14px 16px 18px; transition: transform .25s cubic-bezier(.2, .8, .2, 1), box-shadow .25s ease; }
-.summary-latitude--north { --stat-accent: #2f6fb8; --stat-tint: #e9f1fb; }
-.summary-latitude--south { --stat-accent: #d0632d; --stat-tint: #fff1e8; }
+.summary-latitude { --stat-accent: var(--map-sea-strong); --stat-tint: var(--map-sea-tint); }
 a.summary-latitude:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px rgb(31 42 44 / .07), 0 10px 22px -14px rgb(31 42 44 / .22); }
 a.summary-latitude:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .summary-latitude__copy { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 3px; }
@@ -2339,7 +2346,7 @@ a.summary-latitude:focus-visible { outline: 2px solid var(--accent); outline-off
 .country-card:hover { transform: translateY(-2px); box-shadow: 0 0 0 1px rgb(31 42 44 / .07), 0 10px 22px -14px rgb(31 42 44 / .22); }
 .country-card:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
 .country-map-cover { display: block; width: 100%; height: 100%; }
-.country-card__cover { position: relative; aspect-ratio: 420 / 300; overflow: hidden; border-radius: 16px; background: #b9e8f8; }
+.country-card__cover { position: relative; aspect-ratio: 420 / 300; overflow: hidden; border-radius: 16px; background: #cbe7f2; }
 .country-card__cover > .country-map-cover { position: absolute; inset: 0; width: 100%; height: 100%; transition: transform .6s cubic-bezier(.2, .8, .2, 1); }
 .country-card:hover .country-card__cover > .country-map-cover { transform: scale(1.035); }
 .country-card__cover::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1px rgb(33 58 51 / .04); pointer-events: none; }
@@ -2439,7 +2446,7 @@ a.summary-latitude:focus-visible { outline: 2px solid var(--accent); outline-off
 .country-archive-heading h1 { margin: 0; font-size: clamp(30px, 3.3vw, 42px); font-weight: inherit; letter-spacing: -.035em; }
 .country-archive-heading p { margin: 0 0 0 auto; font-family: inherit; font-size: 13px; font-weight: inherit; letter-spacing: -.035em; text-align: right; white-space: nowrap; }
 .country-archive-itinerary { margin-top: 32px; }
-.country-archive-memory { width: min(100%, 640px); aspect-ratio: 420 / 328; margin-top: 32px; overflow: hidden; border-radius: 24px; background: #b9e8f8; }
+.country-archive-memory { width: min(100%, 640px); aspect-ratio: 420 / 328; margin-top: 32px; overflow: hidden; border-radius: 24px; background: #cbe7f2; }
 
 @media (max-width: 900px) {
   .country-card-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
