@@ -18,6 +18,26 @@ export const countryOnlyVisits = [
   { country: 'TH', startsOn: '2026-08-18', endsOn: '2026-08-22', regions: [] },
 ];
 
+// Trip log records: completed journeys plus each country-only visit as its own
+// single-country trip (no itinerary page; its card opens the country page). Newest first.
+export const tripLogRecords = [
+  ...journeys.filter(journey => journey.status === 'completed'),
+  ...countryOnlyVisits.map(visit => {
+    const country = archiveCountries.find(item => item.code === visit.country);
+    return {
+      id: `visit-${visit.country}-${visit.startsOn}`,
+      status: 'completed',
+      countryOnly: true,
+      title: country?.name ?? visit.country,
+      countrySlug: country?.slug,
+      startsOn: visit.startsOn,
+      endsOn: visit.endsOn,
+      countries: [visit.country],
+      visits: [{ country: visit.country, startsOn: visit.startsOn, endsOn: visit.endsOn }],
+    };
+  }),
+].sort((a, b) => b.startsOn.localeCompare(a.startsOn));
+
 export function findJourney(id) {
   return journeys.find(journey => journey.id === id);
 }

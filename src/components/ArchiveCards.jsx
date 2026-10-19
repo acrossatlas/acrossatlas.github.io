@@ -5,7 +5,7 @@ import TripSummary from './TripSummary';
 import dottedWorldUrl from '../assets/travel-world-dots.svg';
 import countryDotsUrl from '../assets/travel-country-dots.svg';
 import countryDotBounds from '../data/country-dot-bounds.json';
-import { archiveCountries, archiveDateRange, countryOnlyVisits, countryVisits, journeys, tripUrl } from '../data/archive';
+import { archiveCountries, archiveDateRange, countryOnlyVisits, countryVisits, journeys, tripLogRecords, tripUrl } from '../data/archive';
 import { getJourneyDayCount } from '../lib/journey-dates';
 
 const countryByCode = new Map(archiveCountries.map(country => [country.code, country]));
@@ -27,7 +27,7 @@ function TripWorldCover({ countryCodes }) {
   return <div className="trip-card__map" aria-hidden="true">
     <svg viewBox={tripViewBox(countryCodes)} preserveAspectRatio="xMidYMid slice" focusable="false">
       <use href={`${dottedWorldUrl}#world-dots`} className="trip-card__land" />
-      {countryCodes.map(code => <use key={code} href={`${countryDotsUrl}#dots-country-${code}`} className="trip-card__visited" style={{ fill: countryByCode.get(code)?.color }} />)}
+      {countryCodes.map(code => <use key={code} href={`${countryDotsUrl}#dots-country-${code}`} className="trip-card__visited" style={{ '--dot': countryByCode.get(code)?.color }} />)}
     </svg>
   </div>;
 }
@@ -69,7 +69,9 @@ export function TripArchiveCard({ journey, visit }) {
   const countryCodes = [...new Set(journey.countries)];
   const dayCount = getJourneyDayCount(journey);
   const stops = journey.visits?.length ? journey.visits : countryCodes.map(country => ({ country }));
-  return <Link className="archive-card trip-card" to={tripUrl(journey, visit?.startsOn)}>
+  // Country-only trips have no itinerary page, so their card opens the country page.
+  const to = journey.countryOnly ? `/countries/${journey.countrySlug}` : tripUrl(journey, visit?.startsOn);
+  return <Link className="archive-card trip-card" to={to}>
     <div className="trip-card__body">
       <p className="trip-card__meta">
         <span>{readableDateRange(journey.startsOn, journey.endsOn)}</span>
@@ -93,7 +95,6 @@ export function TripArchiveCard({ journey, visit }) {
 }
 
 export function ArchivePanel({ type }) {
-  const completed = journeys.filter(journey => journey.status === 'completed');
   const countries = archiveCountries.filter(country => countryVisits(country.code, journeys, countryOnlyVisits).length);
   return <div role="tabpanel" id={`${type}-panel`} aria-labelledby={`${type}-tab`} className="archive-panel" tabIndex={0}>
     <section className="archive-group" aria-label={type === 'map' ? 'Travel summary' : 'Trip summary'}>
@@ -102,7 +103,7 @@ export function ArchivePanel({ type }) {
     <section className="archive-group" aria-labelledby={`${type}-records-title`}>
       <h2 className="archive-group__title" id={`${type}-records-title`}>{type === 'map' ? 'Countries' : 'Trips'}</h2>
       {type === 'map' ? <div className="country-card-grid">{countries.map(country => <CountryCard country={country} key={country.code} />)}</div>
-        : <div className="trip-card-list">{completed.map(journey => <TripArchiveCard journey={journey} key={journey.id} />)}</div>}
+        : <div className="trip-card-list">{tripLogRecords.map(journey => <TripArchiveCard journey={journey} key={journey.id} />)}</div>}
     </section>
   </div>;
 }

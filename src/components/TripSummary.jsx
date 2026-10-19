@@ -1,10 +1,10 @@
 import { useId, useState } from 'react';
-import { archiveCountries, journeys } from '../data/archive';
+import { archiveCountries, tripLogRecords } from '../data/archive';
 import { getJourneyDayCount } from '../lib/journey-dates';
 import { getTripSummary } from '../lib/trip-summary';
 
-const summary = getTripSummary(journeys);
-const completed = journeys.filter(journey => journey.status === 'completed');
+const summary = getTripSummary(tripLogRecords);
+const completed = tripLogRecords;
 const daysOnTheRoad = completed.reduce((total, journey) => total + getJourneyDayCount(journey), 0);
 const countryByCode = new Map(archiveCountries.map(country => [country.code, country]));
 const countriesVisited = new Set(completed.flatMap(journey => journey.countries ?? [])).size;

@@ -1,12 +1,12 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { journeys } from '../data/archive.js';
+import { journeys, tripLogRecords } from '../data/archive.js';
 import { getTripSummary } from './trip-summary.js';
 
 test('the current trip is an autumn departure with two overlapping travel styles', () => {
   const result = getTripSummary(journeys);
   assert.equal(result.tripCount, 1);
-  assert.deepEqual(result.years, [{ year: 2026, count: 1, countries: ['IS', 'NL', 'NO'] }]);
+  assert.deepEqual(result.years, [{ year: 2026, count: 1, countries: ['NL', 'IS', 'NO'] }]);
   assert.deepEqual(result.favouriteSeasons.map(season => season.id), ['autumn']);
   assert.deepEqual(result.styles.map(style => [style.id, style.count]), [['road-trip', 1], ['city-walk', 1], ['hiking', 0]]);
   assert.equal(result.untaggedTrips, 0);
@@ -42,6 +42,14 @@ test('an empty archive has no winning season, no invented years, and zero style 
   assert.ok(result.styles.every(style => style.count === 0));
 });
 
+test('the Trip log counts Singapore and Thailand as trips and orders countries by visit date', () => {
+  const result = getTripSummary(tripLogRecords);
+  assert.equal(result.tripCount, 3);
+  assert.deepEqual(result.years, [{ year: 2026, count: 3, countries: ['SG', 'TH', 'NL', 'IS', 'NO'] }]);
+  assert.deepEqual(result.favouriteSeasons.map(season => season.id), ['summer']);
+  assert.deepEqual(tripLogRecords.map(record => record.startsOn), ['2026-09-24', '2026-08-18', '2026-06-19']);
+});
+
 test('yearly dots represent distinct countries while every completed departure counts as a trip', () => {
   const result = getTripSummary([
     { status: 'completed', startsOn: '2026-04-01', countries: ['NL', 'NO', 'NL'] },
@@ -50,7 +58,7 @@ test('yearly dots represent distinct countries while every completed departure c
     { status: 'ongoing', startsOn: '2027-09-01', countries: ['NL'] },
   ]);
   assert.deepEqual(result.years, [
-    { year: 2027, count: 1, countries: ['IS', 'NO'] },
-    { year: 2026, count: 2, countries: ['IS', 'NL', 'NO'] },
+    { year: 2027, count: 1, countries: ['NO', 'IS'] },
+    { year: 2026, count: 2, countries: ['NL', 'NO', 'IS'] },
   ]);
 });
