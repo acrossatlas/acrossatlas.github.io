@@ -2,12 +2,19 @@ import { useId, useState } from 'react';
 import { archiveCountries, tripLogRecords } from '../data/archive';
 import { getJourneyDayCount } from '../lib/journey-dates';
 import { getTripSummary } from '../lib/trip-summary';
+import { readableDateRange } from '../lib/date-format';
 
 const summary = getTripSummary(tripLogRecords);
 const completed = tripLogRecords;
 const daysOnTheRoad = completed.reduce((total, journey) => total + getJourneyDayCount(journey), 0);
 const countryByCode = new Map(archiveCountries.map(country => [country.code, country]));
 const countriesVisited = new Set(completed.flatMap(journey => journey.countries ?? [])).size;
+// Dated stays per country and year, oldest first, for the Travel by year tooltip.
+const staysFor = (code, year) => completed.flatMap(journey => (journey.visits ?? [])
+  .filter(visit => visit.country === code && visit.startsOn?.startsWith(String(year)))
+  .map(visit => [visit.startsOn, visit.endsOn ?? visit.startsOn]))
+  .sort((a, b) => a[0].localeCompare(b[0]))
+  .map(([startsOn, endsOn]) => readableDateRange(startsOn, endsOn));
 
 const YEAR_ROWS = 4;
 const DOTS_PER_YEAR = 16;
@@ -20,7 +27,7 @@ const yearRows = Array.from({ length: lastYear - firstYear + 1 }, (_, index) => 
   return {
     year,
     trips: record?.count ?? 0,
-    destinations: (record?.countries ?? []).map(code => ({ year, code, name: countryByCode.get(code)?.name ?? code })),
+    destinations: (record?.countries ?? []).map(code => ({ year, code, name: countryByCode.get(code)?.name ?? code, dates: staysFor(code, year) })),
   };
 });
 
@@ -61,7 +68,7 @@ function TravelYearsCard() {
             if (!destination) return <span className="summary-years__cell" aria-hidden="true" key={`empty-${index}`}><span className="summary-years__dot" /></span>;
             const key = `${destination.year}-${destination.code}`;
             return <button className="summary-years__cell is-lit" type="button" key={key}
-              aria-label={`${destination.year} · ${destination.name}`}
+              aria-label={`${destination.name} · ${destination.dates.join(', ') || destination.year}`}
               aria-describedby={inspected?.key === key ? tooltipId : undefined}
               onMouseEnter={event => setHovered({ ...inspect(destination, event.currentTarget), key })}
               onMouseLeave={() => setHovered(null)}
@@ -76,7 +83,7 @@ function TravelYearsCard() {
       </div>)}
     </div>
     {inspected && <div className="summary-years__tooltip" id={tooltipId} role="tooltip" style={{ left: inspected.left, top: inspected.top }}>
-      <span>{inspected.year}</span><strong>{inspected.name}</strong>
+      <strong>{inspected.name}</strong>{inspected.dates.length ? inspected.dates.map(date => <span key={date}>{date}</span>) : <span>{inspected.year}</span>}
     </div>}
   </article>;
 }

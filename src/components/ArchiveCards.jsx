@@ -7,6 +7,7 @@ import countryDotsUrl from '../assets/travel-country-dots.svg';
 import countryDotBounds from '../data/country-dot-bounds.json';
 import { archiveCountries, archiveDateRange, countryOnlyVisits, countryVisits, journeys, tripLogRecords, tripUrl } from '../data/archive';
 import { getJourneyDayCount } from '../lib/journey-dates';
+import { readableDateRange } from '../lib/date-format';
 
 const countryByCode = new Map(archiveCountries.map(country => [country.code, country]));
 
@@ -30,18 +31,6 @@ function TripWorldCover({ countryCodes }) {
       {countryCodes.map(code => <use key={code} href={`${countryDotsUrl}#dots-country-${code}`} className="trip-card__visited" style={{ '--dot': countryByCode.get(code)?.color }} />)}
     </svg>
   </div>;
-}
-
-const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-
-function readableDateRange(startsOn, endsOn) {
-  const [sy, sm, sd] = startsOn.split('-').map(Number);
-  const [ey, em, ed] = endsOn.split('-').map(Number);
-  const start = `${MONTHS[sm - 1]} ${sd}`;
-  if (sy !== ey) return `${start}, ${sy} – ${MONTHS[em - 1]} ${ed}, ${ey}`;
-  if (sm !== em) return `${start} – ${MONTHS[em - 1]} ${ed}, ${ey}`;
-  if (sd !== ed) return `${start} – ${ed}, ${ey}`;
-  return `${start}, ${ey}`;
 }
 
 function CountryCard({ country }) {
