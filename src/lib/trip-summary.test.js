@@ -12,7 +12,7 @@ test('the current trip is an autumn departure with two overlapping travel styles
   assert.equal(result.untaggedTrips, 0);
 });
 
-test('a New Year journey counts once by departure, and duplicate style tags count once per trip', () => {
+test('a New Year journey counts once by departure year, seasons count travel days, and duplicate style tags count once per trip', () => {
   const result = getTripSummary([
     { status: 'completed', startsOn: '2025-12-30', endsOn: '2026-01-05', travelStyles: ['road-trip', 'road-trip', 'city-walk'] },
     { status: 'completed', startsOn: '2026-03-01', travelStyles: ['city-walk'] },
@@ -20,7 +20,13 @@ test('a New Year journey counts once by departure, and duplicate style tags coun
   ]);
   assert.equal(result.tripCount, 2);
   assert.deepEqual(result.years, [{ year: 2026, count: 1, countries: [] }, { year: 2025, count: 1, countries: [] }]);
-  assert.deepEqual(result.favouriteSeasons.map(season => season.id), ['spring', 'winter']);
+  // Dec 30 – Jan 5 is 7 winter days; an undated Mar 1 trip is 1 spring day.
+  assert.deepEqual(result.favouriteSeasons.map(season => season.id), ['winter']);
+
+  const tied = getTripSummary([
+    { status: 'completed', startsOn: '2026-05-31', endsOn: '2026-06-01' },
+  ]);
+  assert.deepEqual(tied.favouriteSeasons.map(season => season.id), ['spring', 'summer']);
   assert.deepEqual(result.styles.map(style => style.count), [1, 2, 0]);
 });
 
@@ -46,7 +52,9 @@ test('the Trip log counts Singapore and Thailand as trips and orders countries b
   const result = getTripSummary(tripLogRecords);
   assert.equal(result.tripCount, 3);
   assert.deepEqual(result.years, [{ year: 2026, count: 3, countries: ['SG', 'TH', 'NL', 'IS', 'NO'] }]);
-  assert.deepEqual(result.favouriteSeasons.map(season => season.id), ['summer']);
+  // 14 autumn days (Sep 24 – Oct 7) outweigh 9 summer days across two shorter trips.
+  assert.deepEqual(result.seasons.map(season => [season.id, season.days]), [['spring', 0], ['summer', 9], ['autumn', 14], ['winter', 0]]);
+  assert.deepEqual(result.favouriteSeasons.map(season => season.id), ['autumn']);
   assert.deepEqual(tripLogRecords.map(record => record.startsOn), ['2026-09-24', '2026-08-18', '2026-06-19']);
 });
 

@@ -99,7 +99,7 @@ function TravelSeasonCard() {
     </div>
     <ol className="summary-season__scale" aria-label="Trips by departure season">
       {summary.seasons.map(season => <li className={favourite.some(item => item.id === season.id) ? 'is-top' : ''} data-season={season.id} key={season.id}
-        aria-label={`${season.label}: ${season.count} ${season.count === 1 ? 'trip' : 'trips'}`}>
+        aria-label={`${season.label}: ${season.days} ${season.days === 1 ? 'day' : 'days'} traveled`}>
         <span aria-hidden="true">{season.label.slice(0, 3)}</span>
       </li>)}
     </ol>

@@ -4,7 +4,7 @@ export const travelStyles = [
   { id: 'hiking', label: 'Hiking' },
 ];
 
-// Departure-month seasons keep the annual travel pattern consistent across destinations.
+// Calendar seasons; Top travel season weighs them by the days spent travelling in each.
 export const travelSeasons = [
   { id: 'spring', label: 'Spring', months: [3, 4, 5], range: 'Mar — May' },
   { id: 'summer', label: 'Summer', months: [6, 7, 8], range: 'Jun — Aug' },

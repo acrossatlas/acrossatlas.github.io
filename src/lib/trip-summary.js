@@ -1,16 +1,24 @@
 import { travelSeasons, travelStyles } from '../data/travel-styles.js';
 
+// Every calendar day of a trip, inclusive; a trip without an end date counts its departure day.
+function tripDays(journey) {
+  const start = new Date(`${journey.startsOn}T00:00:00Z`);
+  const end = new Date(`${journey.endsOn ?? journey.startsOn}T00:00:00Z`);
+  const days = [];
+  for (let day = start; day <= end; day = new Date(day.getTime() + 86400000)) days.push(day);
+  return days;
+}
+
 export function getTripSummary(records) {
   const completed = records.filter(journey => journey.status === 'completed');
   const years = new Map();
-  const seasons = travelSeasons.map(season => ({ ...season, count: 0 }));
+  const seasons = travelSeasons.map(season => ({ ...season, days: 0 }));
   const styles = travelStyles.map(style => ({ ...style, count: 0 }));
   let untaggedTrips = 0;
 
   for (const journey of completed) {
-    // A journey crossing New Year is one departure, in its starting year and season.
+    // A journey crossing New Year is one departure, counted in its starting year.
     const year = Number(journey.startsOn.slice(0, 4));
-    const month = Number(journey.startsOn.slice(5, 7));
     const yearSummary = years.get(year) ?? { year, count: 0, countries: new Map() };
     yearSummary.count++;
     // Each country is placed at its first visit date (or the departure date when visits are undated).
@@ -22,15 +30,18 @@ export function getTripSummary(records) {
       if (seen === undefined || date < seen) yearSummary.countries.set(code, date);
     }
     years.set(year, yearSummary);
-    const season = seasons.find(item => item.months.includes(month));
-    if (season) season.count++;
+    // Seasons are weighed by days spent travelling, so a long trip outweighs several short ones.
+    for (const day of tripDays(journey)) {
+      const season = seasons.find(item => item.months.includes(day.getUTCMonth() + 1));
+      if (season) season.days++;
+    }
 
     const tagged = styles.filter(style => journey.travelStyles?.includes(style.id));
     if (!tagged.length) untaggedTrips++;
     for (const style of tagged) style.count++;
   }
 
-  const peakSeason = Math.max(0, ...seasons.map(season => season.count));
+  const peakSeason = Math.max(0, ...seasons.map(season => season.days));
   return {
     tripCount: completed.length,
     years: [...years.values()].map(({ year, count, countries }) => ({
@@ -39,7 +50,7 @@ export function getTripSummary(records) {
         .sort((a, b) => a[1].localeCompare(b[1]) || a[2] - b[2]).map(([code]) => code),
     })).sort((a, b) => b.year - a.year),
     seasons,
-    favouriteSeasons: seasons.filter(season => peakSeason > 0 && season.count === peakSeason),
+    favouriteSeasons: seasons.filter(season => peakSeason > 0 && season.days === peakSeason),
     styles,
     untaggedTrips,
   };
