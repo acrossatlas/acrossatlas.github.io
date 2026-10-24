@@ -2145,7 +2145,7 @@ body {
 .event-description { white-space: pre-line; }
 
 /* Template page follows the ongoing notebook layout. */
-.home-navigation { position: absolute; top: 40px; right: var(--page-x); display: flex; }
+.home-navigation { position: absolute; top: 32px; right: var(--page-x); display: flex; align-items: center; gap: 16px; }
 /* Copied from the reference console action: 16px glyph, 32px hover circle. */
 .home-template-link { position: relative; display: inline-flex; align-items: center; justify-content: center; flex: 0 0 16px; width: 16px; height: 16px; padding: 0; border: 0; background: transparent; color: var(--ink); cursor: pointer; border-radius: 0; }
 .home-template-link::before { content: ''; position: absolute; top: -8px; left: -8px; width: 32px; height: 32px; border-radius: 100%; background: var(--fill, #f7f8fb); opacity: 0; transition: all .3s ease-in-out; }

@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { templateBasemap, templateFallbackBasemap } from './template-basemap';
-import { Map, MapRoute, MapGeoJSON, MapMarker, MarkerContent, useMap } from './ui/map';
+import { Map, MapRoute, MapGeoJSON, useMap } from './ui/map';
 import DayMapStop from './DayMapStop';
 import MapControls from './MapControls';
 import routes from '../data/template-new-york-routes.json';
@@ -34,7 +34,6 @@ export default function TemplateRouteMap({ day, selected, onSelect }) {
       {transfer ? <>
         <MapGeoJSON id="template-countries" data={features} promoteId="country" fillPaint={{'fill-color':'#5499ff','fill-opacity':.4}} linePaint={{'line-color':'#5499ff','line-width':2}} />
         {flightLine && <MapRoute id="template-flight" {...flightLine} color="#5499ff" width={2.5}/>}
-        {preview.countries.map((country,i) => <MapMarker key={country} longitude={countryLabels[country].coordinates[0]} latitude={countryLabels[country].coordinates[1]}><MarkerContent><button className="template-country-label" type="button" onClick={()=>onSelect(day.events[i ? 2 : 1].id)}>{countryLabels[country].name}<small>{i ? '到达国家' : '出发国家'}</small></button></MarkerContent></MapMarker>)}
       </> : <>
         {preview.showConnections && day.map.legs.map((leg,i) => {
           const line = templateRouteLine({ mode: leg.mode, geometry: profile.legs[i]?.geometry, from: anchors[i], to: anchors[i+1] });

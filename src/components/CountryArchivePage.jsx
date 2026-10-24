@@ -5,12 +5,22 @@ import CountryMapCover from './CountryMapCover';
 import { ReservationModal } from './JourneyEvents';
 import DayTabs from './DayTabs';
 import DayItinerary from './DayItinerary';
+import { useNotebook } from '../lib/use-notebook.js';
+import { useNotebookCatalog } from '../lib/use-notebook-catalog.js';
+
+function SavedCountryDay({ entry, country, onOpenReservation }) {
+  const notebook = useNotebook(entry.journey);
+  const events = (notebook.record?.document ?? notebook.seed).days.find(day => day.date === entry.day.key)?.events ?? [];
+  return <DayItinerary day={entry.day} events={events.filter(event => event.country === undefined || event.country === country)} originalEvents={entry.events} country={country} onOpenReservation={onOpenReservation} />;
+}
 
 function CountryArchiveContent({ country }) {
+  const catalog = useNotebookCatalog();
+  const records = useMemo(() => journeys.filter(journey => !catalog.deletedIds.includes(journey.id)), [catalog.deletedIds.join(',')]);
   const [openReservation, setOpenReservation] = useState(null);
   const [searchParams, setSearchParams] = useSearchParams();
-  const visits = useMemo(() => countryVisits(country.code, journeys, countryOnlyVisits), [country.code]);
-  const days = useMemo(() => countryItineraryDays(country.code), [country.code]);
+  const visits = useMemo(() => countryVisits(country.code, records, countryOnlyVisits), [country.code, records]);
+  const days = useMemo(() => countryItineraryDays(country.code, records), [country.code, records]);
   const dates = useMemo(() => days.map(entry => ({ ...entry.day, id: entry.id })), [days]);
   const datedVisits = visits.filter(visit => visit.startsOn && visit.endsOn);
   const first = datedVisits.at(-1), last = datedVisits[0];
@@ -38,7 +48,7 @@ function CountryArchiveContent({ country }) {
       {days.length ? <section className="country-archive-itinerary" aria-label={`${country.label}每日行程`}>
         <DayTabs days={dates} activeIndex={activeIndex} onSelect={selectDay} idPrefix="country-day" label={`${country.label}行程日期`} />
         {days.map((entry, index) => <section className="day-panel" role="tabpanel" id={`country-day-${index + 1}-panel`} aria-labelledby={`country-day-${index + 1}-tab`} hidden={index !== activeIndex} key={entry.id}>
-          {index === activeIndex && <DayItinerary day={entry.day} events={entry.events} country={country.code} onOpenReservation={setOpenReservation} />}
+          {index === activeIndex && <SavedCountryDay entry={entry} country={country.code} onOpenReservation={setOpenReservation} />}
         </section>)}
       </section> : visits[0] && <div className="country-archive-memory"><CountryMapCover country={country} /></div>}
     </main>

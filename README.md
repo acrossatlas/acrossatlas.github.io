@@ -8,6 +8,8 @@ The home page archives completed journeys in two views: Map log groups them by c
 
 The Netherlands–Iceland–Norway journey (2026-09-24–10-07) is archived with its original itinerary, maps, transport, stays, checklist, and album section. Actual visits and skipped stops will be reviewed separately. See [the archive guide](docs/TRAVEL-ARCHIVE.md) for routes and the content structure.
 
+Trip notebooks now support direct card editing with automatic local saving. Add entries at the bottom, drag cards to reorder, and click checklist text to edit while keeping checkbox toggles separate. Type-first forms support transport segments and PDF/image booking attachments. Album accepts photos grouped by date. The More menu offers undo, complete backups, and version-checked JSON exchange with an external AI. Cloud accounts and cross-device synchronization are not configured. See [editing and control references](docs/NOTEBOOK-EDITING.md) for behavior and current limits.
+
 ## Local preview
 
 ```sh

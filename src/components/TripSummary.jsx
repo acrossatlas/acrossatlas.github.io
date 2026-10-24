@@ -4,13 +4,9 @@ import { getJourneyDayCount } from '../lib/journey-dates';
 import { getTripSummary } from '../lib/trip-summary';
 import { readableDateRange } from '../lib/date-format';
 
-const summary = getTripSummary(tripLogRecords);
-const completed = tripLogRecords;
-const daysOnTheRoad = completed.reduce((total, journey) => total + getJourneyDayCount(journey), 0);
 const countryByCode = new Map(archiveCountries.map(country => [country.code, country]));
-const countriesVisited = new Set(completed.flatMap(journey => journey.countries ?? [])).size;
 // Dated stays per country and year, oldest first, for the Travel by year tooltip.
-const staysFor = (code, year) => completed.flatMap(journey => (journey.visits ?? [])
+const staysFor = (completed, code, year) => completed.flatMap(journey => (journey.visits ?? [])
   .filter(visit => visit.country === code && visit.startsOn?.startsWith(String(year)))
   .map(visit => [visit.startsOn, visit.endsOn ?? visit.startsOn]))
   .sort((a, b) => a[0].localeCompare(b[0]))
@@ -18,20 +14,9 @@ const staysFor = (code, year) => completed.flatMap(journey => (journey.visits ??
 
 const YEAR_ROWS = 4;
 const DOTS_PER_YEAR = 16;
-// Start at the first year with a trip and run forward, so the card fills in as years pass.
-const firstYear = summary.years.at(-1)?.year ?? new Date().getFullYear();
-const lastYear = Math.max(firstYear + YEAR_ROWS - 1, summary.years[0]?.year ?? firstYear);
-const yearRows = Array.from({ length: lastYear - firstYear + 1 }, (_, index) => {
-  const year = firstYear + index;
-  const record = summary.years.find(item => item.year === year);
-  return {
-    year,
-    trips: record?.count ?? 0,
-    destinations: (record?.countries ?? []).map(code => ({ year, code, name: countryByCode.get(code)?.name ?? code, dates: staysFor(code, year) })),
-  };
-});
-
-function TripCountCard() {
+function TripCountCard({ summary, completed }) {
+  const daysOnTheRoad = completed.reduce((total, journey) => total + getJourneyDayCount(journey), 0);
+  const countriesVisited = new Set(completed.flatMap(journey => journey.countries ?? [])).size;
   return <article className="stat-card trip-summary-card summary-trip-count">
     <h3>Trips</h3>
     <strong>{summary.tripCount}</strong>
@@ -42,7 +27,13 @@ function TripCountCard() {
   </article>;
 }
 
-function TravelYearsCard() {
+function TravelYearsCard({ summary, completed }) {
+  const firstYear = summary.years.at(-1)?.year ?? new Date().getFullYear();
+  const lastYear = Math.max(firstYear + YEAR_ROWS - 1, summary.years[0]?.year ?? firstYear);
+  const yearRows = Array.from({ length: lastYear - firstYear + 1 }, (_, index) => {
+    const year = firstYear + index, record = summary.years.find(item => item.year === year);
+    return { year, trips: record?.count ?? 0, destinations: (record?.countries ?? []).map(code => ({ year, code, name: countryByCode.get(code)?.name ?? code, dates: staysFor(completed, code, year) })) };
+  });
   const tooltipId = useId();
   const [hovered, setHovered] = useState(null);
   const [focused, setFocused] = useState(null);
@@ -88,7 +79,7 @@ function TravelYearsCard() {
   </article>;
 }
 
-function TravelSeasonCard() {
+function TravelSeasonCard({ summary }) {
   const favourite = summary.favouriteSeasons;
   const single = favourite.length === 1 ? favourite[0] : null;
   return <article className={`stat-card trip-summary-card summary-season${single ? ` summary-season--${single.id}` : ''}`}>
@@ -106,10 +97,12 @@ function TravelSeasonCard() {
   </article>;
 }
 
-export default function TripSummary() {
+export default function TripSummary({ records = tripLogRecords }) {
+  const completed = records.filter(journey => journey.status === 'completed');
+  const summary = getTripSummary(completed);
   return <div className="trip-summary">
-    <TripCountCard />
-    <TravelYearsCard />
-    <TravelSeasonCard />
+    <TripCountCard summary={summary} completed={completed} />
+    <TravelYearsCard summary={summary} completed={completed} />
+    <TravelSeasonCard summary={summary} />
   </div>;
 }

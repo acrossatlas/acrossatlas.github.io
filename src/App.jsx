@@ -3,13 +3,22 @@ import ThemeToggle from './components/ThemeToggle';
 import { ArrowIcon, CloseIcon, CopyableAddress, CopyableEventTitle, EventFlightDetails, FlightLegCaption, getReservationHeading, ReservationDetails, ReservationModal, useModalBehavior } from './components/JourneyEvents';
 import TemplatesPage from './components/TemplatesPage';
 import { useEffect, useState } from 'react';
+import { SeparatorVertical } from 'lucide-react';
 import DayItinerary from './components/DayItinerary';
 import DayTabs from './components/DayTabs';
-import { Link, Navigate, Route, Routes, useLocation, useParams, useSearchParams } from 'react-router-dom';
+import { Link, Navigate, Route, Routes, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { journeys, archiveDateRange, tripUrl, findJourney } from './data/archive';
 import { dateFromKey, getJourneyDayCount, resolveJourneyDayIndex } from './lib/journey-dates';
 import { ArchivePanel } from './components/ArchiveCards';
 import CountryArchivePage from './components/CountryArchivePage';
+import { createLocalNotebook, useNotebook } from './lib/use-notebook.js';
+import { useNotebookCatalog } from './lib/use-notebook-catalog.js';
+import { NewTripDialog, SectionDialog, TripDatesDialog } from './components/TripSettings';
+import { deleteEvent, journeyFromNotebook, reorderEvent, resizeNotebookDates, saveEvent } from './lib/notebook.js';
+import ItineraryEditor from './components/ItineraryEditor';
+import ChecklistEditor from './components/ChecklistEditor';
+import NotebookAlbum from './components/NotebookAlbum';
+import NotebookOptions from './components/NotebookOptions';
 
 const infoPanels = {
   transport: {
@@ -103,6 +112,7 @@ function getCurrentEventFocus(events, now = new Date(), dayKey) {
 
 function formatEventTime(event) {
   const displayEnd = event.displayEndsAt ?? event.endsAt;
+  if (!event.startsAt) return event.timeNote || '时间待定';
   if (!displayEnd) return event.startsAt;
   return `${event.startsAt} — ${displayEnd}`;
 }
@@ -203,7 +213,7 @@ function CurrentJourneyCard({ journey }) {
   return (
     <Link className="current-journey" to={tripUrl(journey)} aria-label="Open the ongoing journey">
       <div className="current-journey__copy">
-        <h2>{journey.destinations.join(' ')}</h2>
+        <h2>{journey.title ?? journey.destinations.join(' ')}</h2>
         <p className="current-journey__dates">
           <span>{formatDateRange(journey)}</span>
           <span>Day {currentDay} of {dayCount}</span>
@@ -215,14 +225,18 @@ function CurrentJourneyCard({ journey }) {
 }
 
 function HomePage() {
+  const catalog = useNotebookCatalog();
+  const [creating, setCreating] = useState(false);
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab = searchParams.get('log') === 'trip' ? 'trip' : 'map';
-  const ongoingJourney = journeys.find(journey => isJourneyOngoing(journey));
+  const ongoingJourney = catalog.journeys.find(journey => isJourneyOngoing(journey));
   const setActiveTab = tab => setSearchParams({ log: tab }, { preventScrollReset: true });
 
   return (
     <div className={`page home-page${ongoingJourney ? '' : ' home-page--archive'}`}>
       <nav className="home-navigation" aria-label="主导航">
+        <button className="theme-toggle" type="button" aria-label="新建旅行" title="新建旅行" onClick={() => setCreating(true)}><PlusIcon /></button>
         <Link className="home-template-link" to="/templates" aria-label="打开旅行模板" title="模板">
           <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M10.6663 4C11.4027 4 12.0003 4.5976 12.0003 5.33398V11.334H10.6663V6.27734L4.47198 12.4717L3.52863 11.5283L9.72296 5.33398H4.66632V4H10.6663Z" fill="currentColor" /></svg>
         </Link>
@@ -262,9 +276,10 @@ function HomePage() {
             </button>
           </div>
 
-          <ArchivePanel type={activeTab} />
+          <ArchivePanel type={activeTab} records={catalog.journeys} />
         </section>
       </main>
+      {creating && <NewTripDialog onClose={() => setCreating(false)} onCreate={async seed => { await createLocalNotebook(seed); navigate(`/trips/${seed.id}`); }} />}
     </div>
   );
 }
@@ -478,9 +493,62 @@ function TodayFocusCard({ dayIndex, focus }) {
   );
 }
 
-function JourneyPage({ journey }) {
+function JourneyPage({ journey: originalJourney }) {
+  const notebook = useNotebook(originalJourney);
+  const book = notebook.record?.document ?? notebook.seed;
+  const journey = journeyFromNotebook(book, originalJourney);
+  const [editor, setEditor] = useState(null), [checklistEditor, setChecklistEditor] = useState(null);
+  const [editingName, setEditingName] = useState(false), [nameDraft, setNameDraft] = useState(book.title), [datesOpen, setDatesOpen] = useState(false), [sectionEditor, setSectionEditor] = useState(null);
+  async function saveName() {
+    const title = nameDraft.trim();
+    if (!title) { setNameDraft(book.title); setEditingName(false); return; }
+    if (title !== book.title) await notebook.commit(book => ({ ...book, title }), '修改旅行名称');
+    setEditingName(false);
+  }
+  async function saveSection(name, remove = false) {
+    await notebook.commit(book => {
+      const next = structuredClone(book); next.sectionLabels ??= { ...journey.sectionLabels };
+      if (remove) delete next.sectionLabels[sectionEditor.key]; else next.sectionLabels[sectionEditor.key] = name;
+      return next;
+    }, remove ? '删除日期分隔' : '修改日期分隔');
+  }
+  function openEditor(dayId, event) {
+    const country = book.days.find(day => day.id === dayId)?.events.find(event => event.country)?.country;
+    setEditor({ dayId, event, country, id: event?.id ?? crypto.randomUUID(), groupId: crypto.randomUUID(), revision: notebook.current.current.localRevision });
+  }
+  function requireUnchanged(revision) {
+    if (notebook.current.current.localRevision !== revision) throw new Error('内容已在另一页面发生变化。本次修改尚未保存，请保留输入并重新核对。');
+  }
+  async function saveItinerary(dayId, fields, revision, files) {
+    requireUnchanged(revision);
+    const record = await notebook.commit(book => saveEvent(book, dayId, fields, editor.id, !editor.event), editor.event ? `修改 ${editor.event.title}` : `添加 ${fields.title}`, files, { groupId: editor.groupId });
+    setActiveDay(journey.dates.findIndex(day => day.key === dayId));
+    return record.localRevision;
+  }
+  async function removeItinerary(revision) {
+    requireUnchanged(revision);
+    if (!notebook.current.current.document.days.some(day => day.events.some(event => event.id === editor.id))) return;
+    await notebook.commit(book => deleteEvent(book, editor.id), '删除行程');
+  }
+  function openChecklist(variant, groupId, item) {
+    setChecklistEditor({ variant, groupId, item, id: item?.id ?? crypto.randomUUID(), sessionId: crypto.randomUUID(), revision: notebook.current.current.localRevision });
+  }
+  async function saveChecklist(fields, revision, remove = false) {
+    requireUnchanged(revision);
+    const record = await notebook.commit(book => {
+      const next = structuredClone(book), { variant, groupId, id } = checklistEditor;
+      const section = next.checklist.find(group => group.variant === variant);
+      const container = groupId ? section.groups.find(group => group.id === groupId) : section;
+      if (remove) container.items = container.items.filter(entry => entry.id !== id);
+      else if (container.items.some(entry => entry.id === id)) Object.assign(container.items.find(entry => entry.id === id), fields);
+      else container.items.push({ id, checked: false, ...fields });
+      return next;
+    }, remove ? '删除清单条目' : '修改清单条目', [], remove ? {} : { groupId: checklistEditor.sessionId });
+    return record.localRevision;
+  }
+
   const archived = journey.status === 'completed';
-  const { dates: journeyDates, dayEvents: journeyDayEvents, sectionLabels: journeySectionLabels, documentChecklist, packingChecklistGroups } = journey;
+  const { dates: journeyDates, dayEvents: journeyDayEvents, sectionLabels: journeySectionLabels } = journey;
   const [searchParams, setSearchParams] = useSearchParams();
   const [openPanel, setOpenPanel] = useState(null);
   const [openMapStop, setOpenMapStop] = useState(null);
@@ -513,9 +581,9 @@ function JourneyPage({ journey }) {
           <div className="journey-overview">
             <div className="journey-heading">
               <div className="journey-heading__title">
-                <h1>{journey.title ?? journey.destinations.join(' ')}</h1>
+                <h1>{editingName ? <input className="notebook-title-input" aria-label="旅行名称" autoFocus required maxLength={500} value={nameDraft} onChange={e => setNameDraft(e.target.value)} onBlur={() => saveName().catch(() => {})} onKeyDown={e => { if (e.key === 'Enter') { e.preventDefault(); e.currentTarget.blur(); } if (e.key === 'Escape') setEditingName(false); }} /> : <button className="notebook-title-button" type="button" aria-label="修改旅行名称" disabled={!notebook.record || notebook.busy} onClick={() => { setNameDraft(book.title); setEditingName(true); }}>{journey.title ?? journey.destinations.join(' ')}</button>}</h1>
               </div>
-              {archived && <p className="journey-archive-meta">{archiveDateRange(journey.startsOn, journey.endsOn)}</p>}
+              <p className="journey-archive-meta"><button className="notebook-date-button" type="button" aria-label="修改旅行日期" disabled={!notebook.record || notebook.busy} onClick={() => setDatesOpen(true)}>{archiveDateRange(book.startsOn, book.endsOn)}</button></p>
             </div>
             <div className="journey-tools" aria-label="行程工具">
               <button
@@ -542,6 +610,7 @@ function JourneyPage({ journey }) {
                 <StayIcon />
                 <span>住宿</span>
               </button>
+              <NotebookOptions notebook={notebook} />
               <div className="journey-search">
                 <SearchIcon />
                 <input
@@ -570,6 +639,8 @@ function JourneyPage({ journey }) {
           </div>
         </header>
 
+        {notebook.error && <p className="notebook-editor__error" role="alert">{notebook.error}</p>}
+        <span className="sr-only" role="status">{notebook.busy ? '正在保存修改' : notebook.record?.updatedAt ? '修改已保存在本机' : ''}</span>
         <div className="notebook-content">
           {!archived && <section className="notebook-section" aria-label="当日行程">
             <TodayFocusCard
@@ -579,7 +650,7 @@ function JourneyPage({ journey }) {
           </section>}
 
           <section className="notebook-section" aria-label="所有行程">
-            <DayTabs days={journeyDates} activeIndex={activeDay} onSelect={setActiveDay} sectionLabels={journeySectionLabels} dividers={journey.sectionDividers} />
+            <div className="notebook-day-nav"><DayTabs days={journeyDates} activeIndex={activeDay} onSelect={setActiveDay} sectionLabels={journeySectionLabels} dividers={journey.sectionDividers} onEditSection={setSectionEditor} /><button className="theme-toggle" type="button" aria-label="添加日期分隔" title="在当前日期前添加分隔" disabled={!notebook.record || notebook.busy} onClick={() => setSectionEditor(journeyDates[activeDay])}><SeparatorVertical size={16} strokeWidth={1.8} aria-hidden="true" /></button></div>
             {journeyDates.map((day, index) => (
               <section
                 aria-labelledby={`day-${index + 1}-tab`}
@@ -592,6 +663,12 @@ function JourneyPage({ journey }) {
                 {activeDay === index && <DayItinerary
                   day={day}
                   events={journeyDayEvents[day.key] ?? []}
+                  originalEvents={notebook.seed.days.find(original => original.date === day.key)?.events ?? []}
+                  busy={!notebook.record || notebook.busy}
+                  bookId={book.id}
+                  genericMap={Boolean(originalJourney.localOnly) || book.startsOn !== originalJourney.startsOn || !originalJourney.dates.some(original => original.key === day.key)}
+                  onEdit={event => openEditor(day.key, event)}
+                  onReorder={(id, target, position) => notebook.commit(book => reorderEvent(book, day.key, id, target, position), '拖动调整行程顺序')}
                   searchQuery={searchQuery}
                   onOpenReservation={setOpenReservation}
                   onOpenStop={setOpenMapStop}
@@ -603,25 +680,24 @@ function JourneyPage({ journey }) {
           <section className="notebook-section">
             <SectionHeading>Checklist</SectionHeading>
             <div className="checklist-surface">
-              <ChecklistGroup storageId={journey.startsOn} items={documentChecklist} title="证件" variant="documents" />
-              <ChecklistGroup storageId={journey.startsOn} groups={packingChecklistGroups} title="行李" variant="packing" />
+              {book.checklist.map(section => <ChecklistGroup key={section.variant} {...section} persist={false} controlled disabled={!notebook.record || notebook.busy}
+                onToggle={(id, checked) => notebook.commit(book => {
+                  const next = structuredClone(book), group = next.checklist.find(group => group.variant === section.variant);
+                  (group.groups?.flatMap(group => group.items) ?? group.items).find(item => item.id === id).checked = checked;
+                  return next;
+                }, checked ? '勾选清单' : '取消勾选清单').catch(() => {})}
+                onEdit={(item, groupId) => openChecklist(section.variant, groupId, item)}
+                onAdd={groupId => openChecklist(section.variant, groupId)} />)}
             </div>
           </section>
 
-          <section className="notebook-section" aria-labelledby="album-title">
-            <header className="notebook-section__heading">
-              <h2 id="album-title">Album</h2>
-            </header>
-            <div className="album-empty">
-              <span className="album-empty__icon"><LinkIcon /></span>
-              <div>
-                <h3>尚未添加相册链接</h3>
-                <p>之后可以在这里关联网盘或其他存储地址。</p>
-              </div>
-            </div>
-          </section>
+          <NotebookAlbum book={book} activeDate={journeyDates[activeDay].key} busy={!notebook.record || notebook.busy} onCommit={notebook.commit} />
         </div>
       </main>
+      {datesOpen && <TripDatesDialog startsOn={book.startsOn} endsOn={book.endsOn} onClose={() => setDatesOpen(false)} onSave={async (start, end) => { await notebook.commit(book => resizeNotebookDates({ ...book, sectionLabels: book.sectionLabels ?? journey.sectionLabels, sectionDividers: book.sectionDividers ?? journey.sectionDividers }, start, end), '修改旅行日期'); }} />}
+      {sectionEditor && <SectionDialog day={sectionEditor} name={journey.sectionLabels[sectionEditor.key] ?? ''} onClose={() => setSectionEditor(null)} onSave={name => saveSection(name)} onDelete={() => saveSection('', true)} />}
+      {editor && <ItineraryEditor key={editor.id} selection={editor} book={book} onClose={() => setEditor(null)} onSave={saveItinerary} onDelete={removeItinerary} />}
+      {checklistEditor && <ChecklistEditor key={checklistEditor.id} selection={checklistEditor} onClose={() => setChecklistEditor(null)} onSave={(fields, revision) => saveChecklist(fields, revision)} onDelete={revision => saveChecklist(null, revision, true)} />}
       {openPanel && <InfoModal panel={openPanel} records={openPanel === 'transport' ? journey.transportRecords : journey.stayRecords} archived={archived} onClose={() => setOpenPanel(null)} />}
       {openReservation && (
         <ReservationModal event={openReservation} onClose={() => setOpenReservation(null)} />
@@ -633,7 +709,10 @@ function JourneyPage({ journey }) {
 
 function TripPage() {
   const { tripId } = useParams();
-  const journey = findJourney(tripId);
+  const catalog = useNotebookCatalog();
+  if (catalog.deletedIds.includes(tripId)) return <Navigate replace to="/?log=trip" />;
+  const journey = findJourney(tripId) ?? catalog.journeys.find(journey => journey.id === tripId);
+  if (!journey && catalog.loading) return <div className="page"><main className="ongoing-shell"><SiteTitle linked /></main></div>;
   if (!journey) return <div className="page"><main className="ongoing-shell"><SiteTitle linked /><h1>尚未收录这次旅行</h1></main></div>;
   return <JourneyPage key={journey.id} journey={journey} />;
 }

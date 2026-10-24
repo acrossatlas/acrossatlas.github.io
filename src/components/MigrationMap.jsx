@@ -6,13 +6,15 @@ import MapControls from './MapControls';
 import { countryThemes, volcanicPaint } from './map-themes';
 import countryBase from '../data/migration-countries.json';
 import longHaulCountries from '../data/long-haul-countries.json';
-const countries = { type: 'FeatureCollection', features: [...countryBase.features, ...longHaulCountries.features] };
+import unitedStates from '../data/template-united-states.json';
+import { templateRouteLine } from '../lib/template-route-line';
+const countries = { type: 'FeatureCollection', features: [...countryBase.features, ...longHaulCountries.features, unitedStates] };
 const countryNames = { CN: '中国', NL: '荷兰', NO: '挪威', TH: '泰国' };
 import icelandDays from '../data/iceland-day-routes.json';
 import { amsterdamPlaces } from '../data/amsterdam-map';
 import oct01Drive from '../data/oct01-driving-route.json';
 
-const airports = {
+export const airports = {
   HKG: { name: 'HKG 香港国际机场', country: 'HK', coordinates: [113.9173, 22.3126], offset: 480 },
   TPE: { name: 'TPE 台北桃园机场', country: 'TW', coordinates: [121.2346, 25.0793], offset: 480 },
   BKK: { name: 'BKK 曼谷素万那普机场', country: 'TH', coordinates: [100.75, 13.69], offset: 420 },
@@ -63,6 +65,21 @@ export const migrationDays = {
 };
 const overviewPadding = { top: 85, bottom: 50, left: 42, right: 62 };
 const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const countryCode = code => ['HK', 'TW'].includes(code) ? 'CN' : code;
+export function transferOverview(codes) {
+  const centers = {};
+  const points = [];
+  for (const code of codes) {
+    const rings = countries.features.filter(feature => feature.properties.country === code).flatMap(feature => feature.geometry.type === 'MultiPolygon' ? feature.geometry.coordinates.map(polygon => polygon[0]) : [feature.geometry.coordinates[0]]);
+    const ring = rings.sort((a, b) => b.length - a.length)[0];
+    if (!ring?.length) continue;
+    const xs = ring.map(point => point[0]), ys = ring.map(point => point[1]);
+    centers[code] = [(Math.min(...xs) + Math.max(...xs)) / 2, (Math.min(...ys) + Math.max(...ys)) / 2];
+    points.push(...ring);
+  }
+  const xs = points.map(point => point[0]), ys = points.map(point => point[1]);
+  return { centers, bounds: points.length ? [[Math.min(...xs), Math.min(...ys)], [Math.max(...xs), Math.max(...ys)]] : [[-160, -50], [160, 75]] };
+}
 function duration(leg) {
   const minute = time => { const [h, m] = time.split(':').map(Number); return h * 60 + m; };
   const total = (minute(leg.arrive) - airports[leg.to].offset - minute(leg.depart) + airports[leg.from].offset + 1440) % 1440;
@@ -76,7 +93,7 @@ function flightLine(from, to) {
   });
 }
 
-function MigrationScene({ config, events, focus, setFocus }) {
+function MigrationScene({ config, events, focus, setFocus, linkedLegs, onSelectEvent }) {
   const { map, isLoaded } = useMap();
   const [selection, setSelection] = useState(null);
   const [previewLine, setPreviewLine] = useState(null);
@@ -87,8 +104,14 @@ function MigrationScene({ config, events, focus, setFocus }) {
   const focusRef = useRef(focus);
   focusRef.current = focus;
   const flight = events.find(event => event.id === config.flightId);
-  const legs = (config.countriesOnly ? [] : flight?.flightLegs || []).filter(leg => airports[leg.from] && airports[leg.to]);
+  const legs = (config.countriesOnly || linkedLegs ? [] : flight?.flightLegs || []).filter(leg => airports[leg.from] && airports[leg.to]);
   const features = useMemo(() => ({ type: 'FeatureCollection', features: countries.features.filter(feature => config.countries.includes(feature.properties.country)) }), [config]);
+  const { centers } = useMemo(() => transferOverview(config.countries), [config]);
+  const countryLinks = config.countriesOnly ? config.countries.slice(1).flatMap((to, index) => {
+    const from = config.countries[index];
+    const line = templateRouteLine({ mode: '航班', from: centers[from], to: centers[to] });
+    return line ? [{ ...line, from, to }] : [];
+  }) : [];
   const reset = () => {
     if (!map) return;
     setSelection(null);
@@ -122,6 +145,9 @@ function MigrationScene({ config, events, focus, setFocus }) {
       padding: { top: 65, bottom: 45, left: 40, right: 40 }, maxZoom: Math.max(map.getZoom(), 8.5), duration: reducedMotion() ? 0 : 400,
     });
   }
+  useEffect(() => {
+    if (config.linked) { setSelection(null); setPreviewLine(null); setFocus(null); if (map && isLoaded) map.fitBounds(config.bounds, { padding: overviewPadding, duration: 0 }); }
+  }, [map, isLoaded, config]);
   useEffect(() => {
     if (!map || !isLoaded) return;
     const onBlankClick = event => {
@@ -196,15 +222,20 @@ function MigrationScene({ config, events, focus, setFocus }) {
   const relevant = new Set(config.airportsOnly && selection ? [selectedIndex - 1, selectedIndex, selectedIndex + 1] : config.stops.map((_, index) => index));
   const highlightedLine = (line) => !previewLine || line.every((point, i) => point[0] === previewLine.coordinates[i]?.[0] && point[1] === previewLine.coordinates[i]?.[1]);
   return <>
-    {focus === 'IS' && config.flightId === 'sep27-ams-kef' && <>
+    {!config.linked && focus === 'IS' && config.flightId === 'sep27-ams-kef' && <>
       <MapRoute coordinates={icelandDays['2026-09-27'].routes.direct.coordinates} color="#ef9155" width={4} opacity={.95} onClick={() => selectRoute(icelandDays['2026-09-27'].routes.direct.coordinates, '#ef9155')} />
       {icelandDays['2026-09-27'].legs.map(leg => <MapMarker key={leg.to} longitude={leg.coordinates[0]} latitude={leg.coordinates[1]}><MarkerContent><span className="daily-map__duration">驾车 {Math.round(leg.seconds / 60)} 分钟</span></MarkerContent></MapMarker>)}
     </>}
-    {config.flightId === 'oct01-kef-svj' && focus === 'NO' && <>
+    {!config.linked && config.flightId === 'oct01-kef-svj' && focus === 'NO' && <>
       <MapRoute id="migration-oct01-driving" coordinates={oct01Drive.coordinates} color={countryThemes.NO.route} width={4} opacity={.95} onClick={() => selectRoute(oct01Drive.coordinates, countryThemes.NO.route)} />
       {focus === 'NO' && <MapMarker longitude={oct01Drive.labelCoordinates[0]} latitude={oct01Drive.labelCoordinates[1]}><MarkerContent><span className="daily-map__duration">驾车 {Math.round(oct01Drive.seconds / 60)} 分钟</span></MarkerContent></MapMarker>}
     </>}
     {(config.countriesOnly || (!focus && !config.airportsOnly)) && <MapGeoJSON id="migration-countries" data={features} promoteId="country" interactive fillPaint={{ 'fill-color': '#5499ff', 'fill-opacity': .4 }} fillHoverPaint={{ 'fill-opacity': .6 }} linePaint={{ 'line-color': '#5499ff', 'line-width': 2 }} onClick={event => enterCountry(event.feature.properties.country)} />}
+    {config.countriesOnly && !focus && countryLinks.map(line => <MapRoute key={`${line.from}-${line.to}`} id={`country-${line.from}-${line.to}`} coordinates={line.coordinates} dashArray={line.dashArray} color="#5499ff" width={2.5} onClick={() => { onSelectEvent?.(config.stops.find(stop => countryCode(stop.country) === line.to)?.eventId || config.flightId); }} />)}
+    {!config.countriesOnly && linkedLegs?.filter(leg => !focus ? leg.isFlight || ['渡轮', 'ferry'].includes(leg.mode) : countryCode(leg.from.country) === focus && countryCode(leg.to.country) === focus).map(leg => {
+      const line = templateRouteLine({ mode: leg.mode, geometry: leg.schematic ? null : { type: 'LineString', coordinates: leg.coordinates }, from: leg.from.coordinates, to: leg.to.coordinates });
+      return line && <MapRoute key={leg.id} id={`linked-transfer-${leg.id}`} {...line} color={focus ? countryThemes[focus]?.route || '#ef9155' : '#657789'} width={4} onClick={() => onSelectEvent?.(leg.to.eventId)} />;
+    })}
     {legs.map((leg, index) => {
       const from = airports[leg.from], to = airports[leg.to];
       if (focus && !(from.country === focus && to.country === focus)) return null;
@@ -223,6 +254,7 @@ function MigrationScene({ config, events, focus, setFocus }) {
         event.stopPropagation();
         setSelection(expanded ? null : stop.name);
         setPreviewLine(null);
+        onSelectEvent?.(expanded ? null : (stop.eventIds || [stop.eventId]).find(id => events.some(event => event.id === id)));
       };
       const address = [...stopEvents].reverse().find(event => event.navigation)?.navigation;
       return <DayMapStop key={stop.name} stop={{ ...stop, id: stop.name, number: stop.number ?? (config.airportsOnly || stop.country === 'NL' ? index : index + 1) }} dimmed={config.airportsOnly && (!relevant.has(index) || Boolean(previewLine && ![previewLine.coordinates[0], previewLine.coordinates.at(-1)].some(p => Math.abs(p[0] - stop.coordinates[0]) < .001 && Math.abs(p[1] - stop.coordinates[1]) < .001)))} expanded={expanded} previewed={expanded || Boolean(previewLine)} onToggle={toggle} address={stop.address || address} />;
@@ -232,14 +264,15 @@ function MigrationScene({ config, events, focus, setFocus }) {
   </>;
 }
 
-export default function MigrationMap({ day, events }) {
-  const config = migrationDays[day.key];
+export default function MigrationMap({ day, events, config: suppliedConfig, linkedLegs, onSelectEvent }) {
+  const configKey = JSON.stringify(suppliedConfig);
+  const config = useMemo(() => suppliedConfig || migrationDays[day.key], [configKey, day.key]);
   const [focus, setFocus] = useState(null);
   const themeClass = focus === 'IS' ? 'volcanic' : countryThemes[focus]?.name;
-  return <figure className={`day-map daily-map migration-map${themeClass ? ` daily-map--${themeClass}` : ''}`} aria-label={`${day.label} 跨国行程地图`}>
+  return <figure className={`day-map daily-map migration-map${themeClass ? ` daily-map--${themeClass}` : ''}`} aria-label={`${day.label} 跨国行程地图`} data-map-kind="transfer" data-map-countries={config.countries.join(',')}>
     <div className="daily-map__surface">
       <Map theme="light" bounds={config.bounds} fitBoundsOptions={{ padding: overviewPadding, duration: 0 }} scrollZoom touchZoomRotate dragPan>
-        <MigrationScene config={config} events={events} focus={focus} setFocus={setFocus} />
+        <MigrationScene config={config} events={events} focus={focus} setFocus={setFocus} linkedLegs={linkedLegs} onSelectEvent={onSelectEvent} />
       </Map>
       <figcaption className="day-map__caption daily-map__caption"><div className="daily-map__countries">{config.airportsOnly && <span>航线示意</span>}{(focus ? [focus] : config.countries).map((country, index) => <span className="daily-map__country-step" key={country}>{index > 0 && <span>→</span>}{config.countriesOnly ? <span>{countryNames[country] || country}</span> : <CountryFlag country={country} />}</span>)}</div><span className="daily-map__date">{day.label}</span></figcaption>
     </div>
