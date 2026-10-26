@@ -84,7 +84,7 @@ function createCover(country, palette) {
 <g fill="url(#cover-land)" stroke="${palette.border}" stroke-width=".7" fill-rule="evenodd">${paths.map(({ path }) => `<path d="${path}"/>`).join('')}</g>
 <path d="${selected.path}" fill="${palette.selected}" fill-rule="evenodd"/>
 <path d="${water}" fill="${palette.lakes}" fill-rule="evenodd"/>
-<g font-family="Arial,sans-serif" font-size="8.5" text-anchor="middle" fill="${palette.label}" opacity=".7">${labels.join('')}</g>
+<g font-family="'PingFang SC','PingFang TC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" text-anchor="middle" fill="${palette.label}" opacity=".7">${labels.join('')}</g>
 </g>`;
 }
 

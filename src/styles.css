@@ -6,7 +6,7 @@
 :root {
   color: #202020;
   background: #ffffff;
-  font-family: "PingFang SC", "PingFang TC", "Noto Sans SC", "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--font-sans);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   --ink: #202020;
@@ -21,7 +21,8 @@
   --journey-surface: #94bfff;
   --page-x: clamp(22px, 6vw, 96px);
   --content: 1120px;
-  --brand-font: "FZLTHProGBK", "方正兰亭黑Pro GBK", "PingFang SC", sans-serif;
+  --font-sans: "PingFang SC", "PingFang TC", "PingFang HK", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+  --brand-font: var(--font-sans);
 }
 
 * {
@@ -50,7 +51,9 @@ a {
 }
 
 button,
-input {
+input,
+select,
+textarea {
   color: inherit;
   font: inherit;
 }
@@ -2082,7 +2085,7 @@ body {
 .daily-map .daily-map__marker strong { left: 30px; }
 .daily-map .daily-map__marker--geysir strong { left: auto; }
 .daily-map .daily-map__caption { padding: 0; }
-.daily-map__duration { color: #303c48; font: 500 12px/1.4 'PingFang SC', sans-serif; text-shadow: 0 0 2px #fff, 0 0 4px #fff, 1px 1px 1px #fff, -1px -1px 1px #fff; white-space: nowrap; pointer-events: none; display: block; transform: translateY(-10px); }
+.daily-map__duration { color: #303c48; font: 500 12px/1.4 var(--font-sans); text-shadow: 0 0 2px #fff, 0 0 4px #fff, 1px 1px 1px #fff, -1px -1px 1px #fff; white-space: nowrap; pointer-events: none; display: block; transform: translateY(-10px); }
 .daily-map__duration-trigger { pointer-events: auto; cursor: pointer; border: 0; background: transparent; padding: 8px; margin: -8px; }
 .daily-map__duration-trigger:disabled { cursor: default; }
 .daily-map__marker[data-dimmed="true"]:not(.is-selected) { opacity: .25; }
@@ -2197,7 +2200,7 @@ body {
   background: var(--surface, #fff);
   box-shadow: 0 0 0 1px rgb(31 42 44 / .05), 0 4px 14px -10px rgb(31 42 44 / .14);
   color: var(--stat-ink);
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: var(--font-sans);
   text-decoration: none;
 }
 
@@ -2339,7 +2342,7 @@ a.summary-latitude:focus-visible { outline: 2px solid var(--accent); outline-off
   background: var(--surface, #fff);
   box-shadow: 0 0 0 1px rgb(31 42 44 / .05), 0 4px 14px -10px rgb(31 42 44 / .14);
   color: var(--country-card-ink);
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: var(--font-sans);
   text-decoration: none;
   transition: transform .25s cubic-bezier(.2, .8, .2, 1), box-shadow .25s ease;
 }
@@ -2361,7 +2364,7 @@ a.summary-latitude:focus-visible { outline: 2px solid var(--accent); outline-off
 .country-ticket__paper { fill: rgb(var(--archive-surface-rgb)); }
 .country-ticket__date { font-variant-numeric: tabular-nums; }
 
-.ticket-printer-dialog { width: min(480px, calc(100vw - 32px)); max-height: calc(100dvh - 40px); margin: auto; padding: 0; overflow: auto; border: 0; border-radius: 28px; color: var(--ink); background: var(--surface, #fff); box-shadow: 0 0 0 1px rgb(31 42 44 / .05), 0 24px 60px -24px rgb(28 40 49 / .28); font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+.ticket-printer-dialog { width: min(480px, calc(100vw - 32px)); max-height: calc(100dvh - 40px); margin: auto; padding: 0; overflow: auto; border: 0; border-radius: 28px; color: var(--ink); background: var(--surface, #fff); box-shadow: 0 0 0 1px rgb(31 42 44 / .05), 0 24px 60px -24px rgb(28 40 49 / .28); font-family: var(--font-sans); }
 .ticket-printer-dialog::backdrop { background: rgb(27 36 46 / .32); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
 .ticket-printer-dialog__content { padding: 22px 22px 18px; }
 .ticket-printer-dialog__header { display: flex; align-items: center; gap: 12px; }
@@ -2412,7 +2415,7 @@ a.summary-latitude:focus-visible { outline: 2px solid var(--accent); outline-off
   background: var(--surface, #fff);
   box-shadow: 0 0 0 1px rgb(31 42 44 / .05), 0 4px 14px -10px rgb(31 42 44 / .14);
   color: var(--trip-card-ink);
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: var(--font-sans);
   text-decoration: none;
   transition: transform .25s cubic-bezier(.2, .8, .2, 1), box-shadow .25s ease;
 }
