@@ -50,6 +50,11 @@ a {
   text-decoration: none;
 }
 
+/* MapLibre's stylesheet sets Helvetica on the map container (markers, controls, attribution). */
+:root .maplibregl-map {
+  font-family: var(--font-sans);
+}
+
 button,
 input,
 select,
