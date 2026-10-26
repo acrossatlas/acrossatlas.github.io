@@ -96,6 +96,7 @@
 @media (max-width: 640px) {
   .notebook-editor__header h2 { font-size: 18px; }
   .notebook-event-states { margin-left: 0; }
+  .form-segmented > button { padding: 0 11px; }
   .notebook-editor { inset: auto 0 0; margin: 0; min-width: min(320px, 100vw); max-width: 100%; min-height: min(220px, calc(100dvh - 18px)); max-height: min(720px, calc(100dvh - 18px)); }
   .notebook-album__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
   .notebook-album { padding: 8px; border-radius: 24px; }

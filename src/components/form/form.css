@@ -40,8 +40,8 @@
 .form-tag-select > select:disabled { cursor: default; }
 
 /* Segmented: compact day-tabs */
-.form-segmented { width: fit-content; max-width: 100%; gap: 4px; margin: 0; padding: 3px; border-radius: 999px; background: var(--fill, #f5f5f7); }
-.form-segmented > button { height: 30px; padding: 0 14px; font-size: 12px; background: transparent; }
+.form-segmented { flex: none; width: fit-content; max-width: 100%; gap: 4px; margin: 0; padding: 3px; border-radius: 999px; background: var(--fill, #f5f5f7); }
+.form-segmented > button { flex: none; white-space: nowrap; height: 30px; padding: 0 14px; font-size: 12px; background: transparent; }
 .form-segmented > button:not(.is-active):hover { background: var(--fill-hover, #e6e9ea); }
 
 /* Section: a filled card holding its own fields; nested controls lift to the surface colour */
@@ -73,7 +73,7 @@
 button:disabled.form-text-button, button:disabled.form-icon-button { opacity: .38; cursor: default; }
 
 @media (max-width: 640px) {
-  .form-row { grid-template-columns: minmax(0, 1fr); }
+  .form-row { gap: 8px; }
   .form-control > input, .form-control > select, .form-control > textarea { font-size: 16px; }
   .form-control--picker { padding: 0 12px; }
   .form-footer { margin-right: 10px; }
