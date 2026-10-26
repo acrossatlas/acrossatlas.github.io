@@ -1,8 +1,7 @@
 import { useRef, useState } from 'react';
-import { Plus, Trash2 } from 'lucide-react';
-import { CloseIcon, ReservationDetails } from './JourneyEvents';
-import NotebookDialog, { EditorField, EditorFooter } from './NotebookDialog';
-import TimeRangeField from './TimeRangeField';
+import { Paperclip, Plus, Trash2 } from 'lucide-react';
+import NotebookDialog from './NotebookDialog';
+import { Button, Field, FieldRow, FormError, FormFooter, FormHint, FormSection, Segmented, TagSelect, TimeRange } from './form/Form';
 import BookingAttachments from './BookingAttachments';
 import { EVENT_TYPES, PAYMENT_STATES, RESERVATION_STATES, TRANSPORT_MODES, compactEventDetail, eventSchedule } from '../lib/notebook.js';
 import { useDraftAutosave } from '../lib/use-draft-autosave.js';
@@ -70,44 +69,64 @@ export default function ItineraryEditor({ selection, book, onSave, onDelete, onC
     finally { if (input.current) input.current.value = ''; }
   }
   function changeSegment(id, fields) { setDraft(draft => ({ ...draft, segments: draft.segments.map(segment => segment.id === id ? { ...segment, ...fields } : segment) })); }
-  const toolbar = <div className="ticket-printer-dialog__header notebook-event-toolbar">
-    <div className="day-tabs notebook-type-tabs" role="tablist" aria-label="行程类型">{EVENT_TYPES.map(type => <button key={type} type="button" role="tab" disabled={deleting || working} aria-selected={fields.type === type} className={fields.type === type ? 'is-active' : ''} onClick={() => setDraft(draft => ({ ...draft, fields: { ...draft.fields, type } }))}>{type}</button>)}</div>
-    <div className="day-event-card__signals notebook-event-states">
-      <select className="reservation-info-trigger" aria-label="预订状态" disabled={deleting || working} {...field('reservationStatus')}>{RESERVATION_STATES.map(state => <option key={state} value={state}>{state || '预订'}</option>)}</select>
-      <select className="reservation-info-trigger" aria-label="付款状态" disabled={deleting || working} {...field('paymentStatus')}>{PAYMENT_STATES.map(state => <option key={state} value={state}>{state || '付款'}</option>)}</select>
+  const removeSegment = id => setDraft(draft => ({ ...draft, segments: draft.segments.filter(item => item.id !== id) }));
+  const addSegment = () => setDraft(draft => {
+    const last = draft.segments.at(-1), on = last.arrivesOn || draft.schedule.startsOn;
+    return { ...draft, segments: [...draft.segments, { id: crypto.randomUUID(), mode: last.mode, from: last.to, to: '', code: '', depart: '', arrive: '', departsOn: on, arrivesOn: on }] };
+  });
+  const multiLeg = draft.segments.length > 1;
+  const header = <div className="notebook-event-toolbar">
+    <Segmented label="行程类型" options={EVENT_TYPES} value={fields.type} disabled={deleting || working} onChange={type => setDraft(draft => ({ ...draft, fields: { ...draft.fields, type } }))} />
+    <div className="notebook-event-states">
+      <TagSelect aria-label="预订状态" placeholder="预订" options={RESERVATION_STATES} disabled={deleting || working} {...field('reservationStatus')} />
+      <TagSelect aria-label="付款状态" placeholder="付款" options={PAYMENT_STATES} disabled={deleting || working} {...field('paymentStatus')} />
     </div>
-    <button className="ticket-printer-dialog__close" type="button" aria-label="关闭编辑窗口" disabled={working} onClick={close}><CloseIcon /></button>
   </div>;
-  return <NotebookDialog className="notebook-editor--compact" title={deleting ? '删除行程' : '编辑行程'} header={toolbar} onClose={close} busy={working}>
+  return <NotebookDialog className="notebook-editor--compact" title={deleting ? '删除行程' : '编辑行程'} header={header} onClose={close} busy={working}>
     <form className="notebook-editor__form" onSubmit={e => { e.preventDefault(); close(); }}><div className="journey-modal__body">
       {deleting ? <div className="reservation-state"><strong>{title || '这项行程'}</strong><p>删除后可以撤销恢复。</p></div> : <>
-        {fields.type && <fieldset className="notebook-fields" disabled={working}>
+        {!fields.type && <FormHint>先选择一个类型。</FormHint>}
+        {fields.type && <fieldset className="form-fields" disabled={working}>
           {fields.type === '交通' ? <div className="notebook-segments">
-            {draft.segments.map((segment, index) => <section className={draft.segments.length > 1 ? 'info-card notebook-segment' : 'notebook-single-leg'} key={segment.id} aria-label={`第 ${index + 1} 段行程`}>
-              <div className="notebook-segment-tools">{draft.segments.length > 1 && <h4>第 {index + 1} 段</h4>}<select className="reservation-info-trigger notebook-status-select" aria-label={draft.segments.length > 1 ? `第${index + 1}段交通方式` : '交通方式'} value={segment.mode} onChange={e => changeSegment(segment.id, { mode: e.target.value })}><option value="">交通方式</option>{TRANSPORT_MODES.map(mode => <option key={mode}>{mode}</option>)}</select>{draft.segments.length > 1 && <button type="button" className="theme-toggle" aria-label={`删除第 ${index + 1} 段`} onClick={() => setDraft(draft => ({ ...draft, segments: draft.segments.filter(item => item.id !== segment.id) }))}><Trash2 size={13} /></button>}</div>
-              <EditorField label="出发地"><input autoFocus={!event && index === 0} value={segment.from} onChange={e => changeSegment(segment.id, { from: e.target.value })} /></EditorField>
-              <EditorField label="目的地"><input value={segment.to} onChange={e => changeSegment(segment.id, { to: e.target.value })} /></EditorField>
-              <TimeRangeField prefix={draft.segments.length > 1 ? `第${index + 1}段` : ''} startsAt={segment.depart} endsAt={segment.arrive} onChange={value => changeSegment(segment.id, { depart: value.startsAt, arrive: value.endsAt })} />
-              <EditorField label="班次"><input value={segment.code ?? ''} onChange={e => changeSegment(segment.id, { code: e.target.value })} /></EditorField>
-            </section>)}
-            <button type="button" className="notebook-text-action notebook-add-segment" aria-label="添加一段行程" onClick={() => setDraft(draft => ({ ...draft, segments: [...draft.segments, { id: crypto.randomUUID(), mode: draft.segments.at(-1).mode, from: draft.segments.at(-1).to, to: '', code: '', depart: '', arrive: '', departsOn: draft.segments.at(-1).arrivesOn || draft.schedule.startsOn, arrivesOn: draft.segments.at(-1).arrivesOn || draft.schedule.startsOn }] }))}><Plus size={14} />添加一段</button>
+            {draft.segments.map((segment, index) => {
+              const prefix = multiLeg ? `第${index + 1}段` : '';
+              const body = <>
+                <FieldRow>
+                  <Field label="出发地"><input autoFocus={!event && index === 0} value={segment.from} onChange={e => changeSegment(segment.id, { from: e.target.value })} /></Field>
+                  <Field label="目的地"><input value={segment.to} onChange={e => changeSegment(segment.id, { to: e.target.value })} /></Field>
+                </FieldRow>
+                <TimeRange prefix={prefix} startsAt={segment.depart} endsAt={segment.arrive} onChange={value => changeSegment(segment.id, { depart: value.startsAt, arrive: value.endsAt })} />
+                <Field label="班次"><input placeholder="航班号、车次等" value={segment.code ?? ''} onChange={e => changeSegment(segment.id, { code: e.target.value })} /></Field>
+              </>;
+              const mode = <TagSelect aria-label={`${prefix}交通方式`} placeholder="交通方式" options={TRANSPORT_MODES} value={segment.mode} onChange={e => changeSegment(segment.id, { mode: e.target.value })} />;
+              return <FormSection key={segment.id} className={multiLeg ? '' : 'is-plain'} aria-label={`第 ${index + 1} 段行程`}
+                title={multiLeg ? `第 ${index + 1} 段` : '交通方式'}
+                actions={<div className="form-section__tools">{mode}{multiLeg && <button type="button" className="form-icon-button" aria-label={`删除第 ${index + 1} 段`} onClick={() => removeSegment(segment.id)}><Trash2 /></button>}</div>}>
+                {body}
+              </FormSection>;
+            })}
+            <Button variant="text" className="notebook-add-segment" aria-label="添加一段行程" onClick={addSegment}><Plus />添加一段</Button>
           </div> : <>
-            <EditorField label="名称"><input autoFocus required maxLength={500} {...field('title')} /></EditorField>
-            <TimeRangeField startsAt={draft.schedule.startsAt} endsAt={draft.schedule.endsAt} onChange={time => setDraft(draft => ({ ...draft, schedule: { ...draft.schedule, ...time } }))} />
-            <EditorField label="地址"><input maxLength={2000} {...field('navigation')} /></EditorField>
+            <Field label="名称"><input autoFocus required maxLength={500} {...field('title')} /></Field>
+            <TimeRange startsAt={draft.schedule.startsAt} endsAt={draft.schedule.endsAt} onChange={time => setDraft(draft => ({ ...draft, schedule: { ...draft.schedule, ...time } }))} />
+            <Field label="地址"><input maxLength={2000} placeholder="用于导航和地图定位" {...field('navigation')} /></Field>
           </>}
-          <EditorField label="说明"><textarea rows={3} maxLength={10000} {...field('detail')} /></EditorField>
-          <ReservationDetails event={event ?? {}}>
-            <header className="info-card__meta"><span>预订信息</span><button className="reservation-info-trigger" type="button" onClick={() => input.current.click()}>上传凭证</button></header>
-            <dl className="info-card__details"><div><dt>链接</dt><dd><input className="notebook-reservation-link" type="url" aria-label="预订链接" placeholder="https://…" maxLength={2000} {...field('bookingUrl')} /></dd></div></dl>
+          <Field label="说明"><textarea rows={3} maxLength={10000} {...field('detail')} /></Field>
+          <FormSection title="预订信息" className="notebook-booking" actions={<Button variant="text" onClick={() => input.current.click()}><Paperclip />上传凭证</Button>}>
+            <Field label="链接" className="notebook-booking__link"><input type="url" aria-label="预订链接" placeholder="https://…" maxLength={2000} {...field('bookingUrl')} /></Field>
             <BookingAttachments bookId={book.id} attachments={fields.attachments} pending={pending.current} onRemove={id => setDraft(draft => ({ ...draft, fields: { ...draft.fields, attachments: draft.fields.attachments.filter(file => file.id !== id) } }))} />
             <input ref={input} type="file" multiple className="sr-only" accept="application/pdf,image/jpeg,image/png,image/webp" aria-label="上传预订凭证" onChange={e => attach([...e.target.files])} />
-          </ReservationDetails>
+          </FormSection>
         </fieldset>}
       </>}
-      {(autosave.error || localError) && <p className="notebook-editor__error" role="alert">{localError || autosave.error}</p>}
-    </div><EditorFooter>
-      {deleting ? <><button className="journey-tool-button" type="button" disabled={working} onClick={() => setDeleting(false)}>保留</button><button className="journey-tool-button is-primary" type="button" disabled={working} onClick={remove}>确认删除</button></> : <>{autosave.error && <button className="journey-tool-button" type="button" onClick={onClose}>放弃修改</button>}{(event || autosave.revision.current !== selection.revision) && <button className="journey-tool-button" type="button" onClick={async () => { await autosave.wait().catch(() => {}); setDeleting(true); }}>删除</button>}<button className="journey-tool-button is-primary" type="submit" disabled={working}>完成</button></>}
-    </EditorFooter></form>
+      <FormError>{localError || autosave.error}</FormError>
+    </div>
+    {deleting
+      ? <FormFooter><Button disabled={working} onClick={() => setDeleting(false)}>保留</Button><Button variant="primary" disabled={working} onClick={remove}>确认删除</Button></FormFooter>
+      : <FormFooter danger={(event || autosave.revision.current !== selection.revision) && <Button variant="danger" onClick={async () => { await autosave.wait().catch(() => {}); setDeleting(true); }}><Trash2 />删除</Button>}>
+        {autosave.error && <Button onClick={onClose}>放弃修改</Button>}
+        <Button variant="primary" type="submit" disabled={working}>完成</Button>
+      </FormFooter>}
+    </form>
   </NotebookDialog>;
 }

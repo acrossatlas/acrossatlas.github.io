@@ -1,5 +1,7 @@
 import { useState } from 'react';
-import NotebookDialog, { EditorField, EditorFooter } from './NotebookDialog';
+import { Trash2 } from 'lucide-react';
+import NotebookDialog from './NotebookDialog';
+import { Button, Field, FormError, FormFooter } from './form/Form';
 import { useDraftAutosave } from '../lib/use-draft-autosave.js';
 
 export default function ChecklistEditor({ selection, onSave, onDelete, onClose }) {
@@ -17,10 +19,18 @@ export default function ChecklistEditor({ selection, onSave, onDelete, onClose }
   }
   return <NotebookDialog className="reservation-modal" title={deleting ? '删除清单条目？' : selection.item ? '编辑清单条目' : '添加清单条目'} eyebrow="Checklist" onClose={close} busy={busy}>
     <form className="notebook-editor__form" onSubmit={e => { e.preventDefault(); close(); }}><div className="journey-modal__body">
-      {deleting ? <div className="reservation-state"><strong>{draft.label}</strong><p>删除后可在更多菜单中撤销恢复。</p></div> : <fieldset className="notebook-fields"><EditorField label="名称"><input autoFocus required maxLength={300} value={draft.label} onChange={e => setDraft(draft => ({ ...draft, label: e.target.value }))} /></EditorField><EditorField label="说明"><textarea rows={3} maxLength={2000} value={draft.detail} onChange={e => setDraft(draft => ({ ...draft, detail: e.target.value }))} /></EditorField></fieldset>}
-      {(error || autosave.error) && <p className="notebook-editor__error" role="alert">{error || autosave.error}</p>}
-    </div><EditorFooter>
-      {deleting ? <><button className="journey-tool-button" type="button" disabled={busy} onClick={() => setDeleting(false)}>保留条目</button><button className="journey-tool-button is-primary" type="button" disabled={busy} onClick={remove}>确认删除</button></> : <>{(selection.item || autosave.revision.current !== selection.revision) && <button className="journey-tool-button" type="button" onClick={async () => { await autosave.wait().catch(() => {}); setDeleting(true); }}>删除</button>}{autosave.error && <button className="journey-tool-button" type="button" onClick={onClose}>放弃未保存内容</button>}<button className="journey-tool-button is-primary" type="submit">完成</button></>}
-    </EditorFooter></form>
+      {deleting ? <div className="reservation-state"><strong>{draft.label}</strong><p>删除后可在更多菜单中撤销恢复。</p></div> : <fieldset className="form-fields">
+        <Field label="名称"><input autoFocus required maxLength={300} value={draft.label} onChange={e => setDraft(draft => ({ ...draft, label: e.target.value }))} /></Field>
+        <Field label="说明"><textarea rows={3} maxLength={2000} value={draft.detail} onChange={e => setDraft(draft => ({ ...draft, detail: e.target.value }))} /></Field>
+      </fieldset>}
+      <FormError>{error || autosave.error}</FormError>
+    </div>
+    {deleting
+      ? <FormFooter><Button disabled={busy} onClick={() => setDeleting(false)}>保留条目</Button><Button variant="primary" disabled={busy} onClick={remove}>确认删除</Button></FormFooter>
+      : <FormFooter danger={(selection.item || autosave.revision.current !== selection.revision) && <Button variant="danger" onClick={async () => { await autosave.wait().catch(() => {}); setDeleting(true); }}><Trash2 />删除</Button>}>
+        {autosave.error && <Button onClick={onClose}>放弃未保存内容</Button>}
+        <Button variant="primary" type="submit">完成</Button>
+      </FormFooter>}
+    </form>
   </NotebookDialog>;
 }

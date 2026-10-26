@@ -52,7 +52,7 @@ try {
   assert.equal(await page.getByRole('dialog').getByText('已自动保存到本机', { exact: true }).count(), 0);
   const removeBox = await page.getByRole('button', { name: '删除', exact: true }).boundingBox();
   const doneBox = await page.getByRole('button', { name: '完成', exact: true }).boundingBox();
-  assert.ok(Math.abs(removeBox.y - doneBox.y) < 3 && doneBox.x - removeBox.x < 140);
+  assert.ok(Math.abs(removeBox.y + removeBox.height / 2 - doneBox.y - doneBox.height / 2) < 3 && removeBox.x < doneBox.x);
   await page.getByRole('region', { name: '第 1 段行程', exact: true }).getByLabel('出发地', { exact: true }).fill('HKG TEST');
   await saved(page, record => record.document.days[0].events[0].title === 'HKG TEST - AMS');
   assert.equal(await page.getByRole('dialog').isVisible(), true);
@@ -70,7 +70,7 @@ try {
   await page.getByLabel('名称', { exact: true }).fill('自动保存 · 住宿测试');
 
   await page.getByLabel('说明', { exact: true }).fill('入住相关信息统一写在这里。');
-  assert.equal(await page.locator('.notebook-field').count(), 4);
+  assert.equal(await page.locator('.form-fields > .form-field').count(), 4);
   for (const label of ['房型', '入住方式', '菜系', '人均预算', '时间说明', '所属国家']) assert.equal(await page.getByLabel(label, { exact: true }).count(), 0);
   assert.ok((await page.getByLabel('预订状态', { exact: true }).boundingBox()).width < 120);
   assert.ok((await page.getByRole('tablist', { name: '行程类型' }).boundingBox()).width < 300);

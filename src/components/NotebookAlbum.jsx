@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { ImagePlus, Plus, Trash2 } from 'lucide-react';
-import NotebookDialog, { EditorField, EditorFooter } from './NotebookDialog';
+import NotebookDialog from './NotebookDialog';
+import { Button, Field, FormError, FormFooter, FormHint, PickerInput } from './form/Form';
 import { preparePhoto } from '../lib/photos.js';
 import { readPhoto } from '../lib/notebook-store.js';
 
@@ -60,20 +61,22 @@ export default function NotebookAlbum({ book, activeDate, busy, onCommit }) {
       : <div className="notebook-album">{photoDays.map(day => <section key={day.id} className="notebook-album__day" aria-label={`${day.date} 的照片`}><h3 className="info-card__date">{day.date.replaceAll('-', '.')}<span>{day.photos.length} 张</span></h3><div className="notebook-album__grid">{day.photos.map(photo => <AlbumPhoto key={photo.id} bookId={book.id} photo={photo} onOpen={value => { setOpened(value); setDeleting(false); setError(''); }} />)}</div></section>)}</div>}
     {upload && <NotebookDialog className="reservation-modal" title="添加照片" eyebrow="Album" busy={working} onClose={() => setUpload(false)}>
       <form className="notebook-editor__form" onSubmit={addPhotos}>
-        <div className="journey-modal__body">
-          <EditorField label="日期"><input type="date" value={date} min={book.days[0].date} max={book.days.at(-1).date} disabled={working} onChange={e => setDate(e.target.value)} /></EditorField>
+        <div className="journey-modal__body"><div className="form-fields">
+          <Field label="日期"><PickerInput type="date" value={date} min={book.days[0].date} max={book.days.at(-1).date} disabled={working} onChange={e => setDate(e.target.value)} /></Field>
           <button className="album-empty notebook-upload-picker" type="button" disabled={working} onClick={() => input.current.click()}><span className="album-empty__icon"><ImagePlus /></span><span><strong>{files.length ? `已选择 ${files.length} 张照片` : '选择照片'}</strong><small>JPEG、PNG、WebP · 每次最多 20 张</small></span></button>
           <input className="sr-only" ref={input} type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" multiple aria-label="选择照片" disabled={working} onChange={e => { setFiles([...e.target.files]); setError(''); }} />
           {files.length > 0 && <ul className="notebook-upload-files">{files.map((file, index) => <li key={index}>{file.name}</li>)}</ul>}
-          <p className="notebook-editor__hint">保存适合网页查看的照片副本，原片仍保留在你的设备里。</p>
-          {error && <p className="notebook-editor__error" role="alert">{error}</p>}
-        </div>
-        <EditorFooter><button className="journey-tool-button" type="button" disabled={working} onClick={() => setUpload(false)}>取消</button><button className="journey-tool-button is-primary" type="submit" disabled={working || !files.length}>{working ? '正在添加' : '添加照片'}</button></EditorFooter>
+          <FormHint>保存适合网页查看的照片副本，原片仍保留在你的设备里。</FormHint>
+          <FormError>{error}</FormError>
+        </div></div>
+        <FormFooter><Button disabled={working} onClick={() => setUpload(false)}>取消</Button><Button variant="primary" type="submit" disabled={working || !files.length}>{working ? '正在添加' : '添加照片'}</Button></FormFooter>
       </form>
     </NotebookDialog>}
     {opened && <NotebookDialog title={deleting ? '删除照片？' : '照片'} eyebrow={opened.photo.name} className="notebook-photo-viewer" busy={working} onClose={() => setOpened(null)}>
-      <div className="journey-modal__body"><img className="notebook-album__full" src={opened.src} alt={opened.photo.name} />{deleting && <p className="notebook-editor__hint">删除后可在编辑菜单中撤销恢复。</p>}{error && <p className="notebook-editor__error" role="alert">{error}</p>}</div>
-      {<EditorFooter>{deleting ? <><button type="button" className="journey-tool-button" disabled={working} onClick={() => setDeleting(false)}>保留照片</button><button type="button" className="journey-tool-button is-primary" disabled={working} onClick={removePhoto}>确认删除照片</button></> : <button className="notebook-text-action" type="button" disabled={working} onClick={() => setDeleting(true)}><Trash2 size={13} />删除照片</button>}</EditorFooter>}
+      <div className="journey-modal__body"><img className="notebook-album__full" src={opened.src} alt={opened.photo.name} />{deleting && <FormHint>删除后可在更多菜单中撤销恢复。</FormHint>}<FormError>{error}</FormError></div>
+      {deleting
+        ? <FormFooter><Button disabled={working} onClick={() => setDeleting(false)}>保留照片</Button><Button variant="primary" disabled={working} onClick={removePhoto}>确认删除照片</Button></FormFooter>
+        : <FormFooter danger={<Button variant="danger" disabled={working} onClick={() => setDeleting(true)}><Trash2 />删除照片</Button>} />}
     </NotebookDialog>}
   </section>;
 }

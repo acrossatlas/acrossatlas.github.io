@@ -1,7 +1,8 @@
 import { useRef, useState } from 'react';
 import { Download, MoreHorizontal, Trash2, Undo2, Upload } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import NotebookDialog, { EditorFooter } from './NotebookDialog';
+import NotebookDialog from './NotebookDialog';
+import { Button, FormError, FormFooter, FormHint } from './form/Form';
 import { downloadBackup, readBackup } from '../lib/notebook-backup.js';
 import { applyEditablePacket, downloadEditablePacket, summarizeEditableChanges } from '../lib/notebook-exchange.js';
 
@@ -32,15 +33,14 @@ export default function NotebookOptions({ notebook }) {
           <input ref={dataInput} className="sr-only" type="file" accept=".json,application/json" aria-label="选择 AI 修改的行程" onChange={e => { const file = e.target.files[0]; e.target.value = ''; if (file) action(async () => { if (file.size > 5 * 1024 * 1024) throw new Error('行程 JSON 超过 5 MB。'); const packet = JSON.parse(await file.text()); const current = notebook.current.current; const document = applyEditablePacket(current.document, packet, current.localRevision); setRestore({ document, files: [], revision: packet.baseRevision, isData: true, changes: summarizeEditableChanges(current.document, document) }); }); }} />
           <input className="sr-only" type="file" accept=".across,application/json" ref={input} aria-label="选择备份" onChange={e => { const file = e.target.files[0]; e.target.value = ''; if (file) action(async () => { const backup = await readBackup(file, record.id); setRestore({ ...backup, revision: notebook.current.current.localRevision }); }); }} />
         </>}
-        {working && <p className="notebook-editor__hint" role="status">正在处理…</p>}
-        {message && <p className="notebook-editor__hint" role="status">{message}</p>}
-        {error && <p className="notebook-editor__error" role="alert">{error}</p>}
+        <FormHint status>{working ? '正在处理…' : message}</FormHint>
+        <FormError>{error}</FormError>
       </div>
-      {deleting && <EditorFooter><button className="journey-tool-button" type="button" disabled={working} onClick={() => { setDeleting(null); setError(''); }}>取消</button><button className="journey-tool-button is-primary" type="button" disabled={busy || working} onClick={() => action(async () => { await notebook.remove(deleting.revision); navigate('/?log=trip', { replace: true }); })}>确认删除</button></EditorFooter>}
-      {restore && <EditorFooter><button className="journey-tool-button" type="button" disabled={working} onClick={() => setRestore(null)}>取消</button><button className="journey-tool-button is-primary" type="button" disabled={busy || working} onClick={() => action(async () => {
+      {deleting && <FormFooter><Button disabled={working} onClick={() => { setDeleting(null); setError(''); }}>取消</Button><Button variant="primary" disabled={busy || working} onClick={() => action(async () => { await notebook.remove(deleting.revision); navigate('/?log=trip', { replace: true }); })}>确认删除</Button></FormFooter>}
+      {restore && <FormFooter><Button disabled={working} onClick={() => setRestore(null)}>取消</Button><Button variant="primary" disabled={busy || working} onClick={() => action(async () => {
         if (notebook.current.current.localRevision !== restore.revision) throw new Error('旅行本已变化，请重新打开备份后恢复。');
         await notebook.commit(() => restore.document, restore.isData ? '应用 AI 修改' : '从备份恢复', restore.files); setRestore(null);
-      }, restore.isData ? '已应用行程修改' : '已从备份恢复')}>{restore.isData ? '确认应用' : '确认恢复'}</button></EditorFooter>}
+      }, restore.isData ? '已应用行程修改' : '已从备份恢复')}>{restore.isData ? '确认应用' : '确认恢复'}</Button></FormFooter>}
     </NotebookDialog>}
   </>;
 }
