@@ -94,11 +94,11 @@ export default function ItineraryEditor({ selection, book, onSave, onDelete, onC
   const leg = (segment, index) => {
     const prefix = multiLeg ? `第${index + 1}段` : '';
     return <>
-      <FieldGroup label="路线" error={errors[segment.id]}><Split icon={MapPin} separator="→"
+      <FieldGroup label="路线" error={errors[segment.id]}><Split icon={MapPin}
         left={<input aria-label="出发地" placeholder="出发地" data-autofocus={isNew && index === 0 ? '' : undefined} aria-invalid={errors[segment.id] && index === 0 && !segment.from.trim() ? true : undefined} value={segment.from} onChange={e => changeSegment(segment.id, { from: e.target.value })} />}
         right={<input aria-label="目的地" placeholder="目的地" aria-invalid={errors[segment.id] && index === draft.segments.length - 1 && !segment.to.trim() ? true : undefined} value={segment.to} onChange={e => changeSegment(segment.id, { to: e.target.value })} />} /></FieldGroup>
       <TimeRange prefix={prefix} startsAt={segment.depart} endsAt={segment.arrive} onChange={value => changeSegment(segment.id, { depart: value.startsAt, arrive: value.endsAt })} />
-      <FieldGroup label="班次"><Split icon={Ticket} separator="·"
+      <FieldGroup label="班次"><Split icon={Ticket}
         left={<SplitSelect aria-label="交通方式" placeholder="交通方式" options={TRANSPORT_MODES} value={segment.mode} onChange={e => changeSegment(segment.id, { mode: e.target.value })} />}
         right={<input aria-label="班次" placeholder="航班号、车次" value={segment.code ?? ''} onChange={e => changeSegment(segment.id, { code: e.target.value })} />} /></FieldGroup>
     </>;
@@ -114,11 +114,12 @@ export default function ItineraryEditor({ selection, book, onSave, onDelete, onC
     <form className="notebook-editor__form" noValidate onSubmit={e => { e.preventDefault(); save(); }}><div className="journey-modal__body">
       <fieldset className="form-fields" disabled={working}>
         {isTransport ? <div className="notebook-segments">
-          {multiLeg
-            ? draft.segments.map((segment, index) => <FormSection key={segment.id} aria-label={`第 ${index + 1} 段行程`} title={`第 ${index + 1} 段`}
-                actions={<button type="button" className="form-icon-button" aria-label={`删除第 ${index + 1} 段`} onClick={() => removeSegment(segment.id)}><Trash2 /></button>}>{leg(segment, index)}</FormSection>)
-            : <section className="form-fields" aria-label="第 1 段行程">{leg(draft.segments[0], 0)}</section>}
-          <Button variant="text" className="notebook-add-segment" aria-label="添加一段行程" onClick={addSegment}><Plus />添加一段</Button>
+          {draft.segments.map((segment, index) => <section key={segment.id} className="form-fields notebook-leg" aria-label={`第 ${index + 1} 段行程`}>
+            {multiLeg && <header className="notebook-leg__header"><h4>第 {index + 1} 段</h4>
+              <button type="button" className="form-icon-button" aria-label={`删除第 ${index + 1} 段`} onClick={() => removeSegment(segment.id)}><Trash2 /></button></header>}
+            {leg(segment, index)}
+          </section>)}
+          <AddBar aria-label="添加一段行程" onClick={addSegment}><Plus />添加一段</AddBar>
         </div> : <>
           <Field label="名称" error={errors.title}><input data-autofocus={isNew ? '' : undefined} maxLength={500} {...field('title')} /></Field>
           <TimeRange startsAt={draft.schedule.startsAt} endsAt={draft.schedule.endsAt} onChange={time => setDraft(draft => ({ ...draft, schedule: { ...draft.schedule, ...time } }))} />

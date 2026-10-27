@@ -92,7 +92,10 @@
 .notebook-editor:focus { outline: 0; }
 .notebook-editor .journey-modal__body { padding-top: 2px; }
 .notebook-segments { display: grid; gap: 12px; }
-.notebook-add-segment { justify-self: start; margin-left: 70px; }
+/* Legs are separated by hairlines, and one more sits above 添加一段 */
+.notebook-leg + .notebook-leg, .notebook-segments > .form-add-row { padding-top: 12px; border-top: 1px solid var(--line, #e6eaf0); }
+.notebook-leg__header { display: flex; align-items: center; justify-content: space-between; min-height: 28px; }
+.notebook-leg__header h4 { margin: 0; color: var(--ink); font-size: 12px; font-weight: 650; }
 .notebook-booking__files { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; min-width: 0; padding-left: 16px; }
 .notebook-booking .booking-attachments { margin: 0; }
 .notebook-section-add { flex: none; height: 38px; padding: 0 14px; font-size: 12px; }
@@ -105,7 +108,6 @@
   .notebook-editor__header > .form-segmented:first-child { order: 1; }
   .notebook-editor__header > .notebook-editor__close { order: 2; margin-left: auto; }
   .notebook-editor__actions { order: 3; flex-basis: 100%; }
-  .notebook-add-segment { margin-left: 58px; }
   .notebook-editor { padding-bottom: max(20px, env(safe-area-inset-bottom)); }
   .notebook-editor { inset: auto 0 0; margin: 0; min-width: min(320px, 100vw); max-width: 100%; min-height: min(220px, calc(100dvh - 18px)); max-height: min(720px, calc(100dvh - 18px)); }
   .notebook-album__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }

@@ -32,12 +32,12 @@ export function FieldGroup({ label, error, children, className = '' }) {
   </div>;
 }
 
-/** One capsule, two equal halves: icon · left — right. */
-export function Split({ icon: Icon, left, right, separator = '—' }) {
+/** One capsule, two equal halves joined by the same connector everywhere: icon · left — right. */
+export function Split({ icon: Icon, left, right }) {
   return <span className="form-control form-split">
     <Icon aria-hidden="true" className="form-split__icon" />
     <span className="form-split__half">{left}</span>
-    <span className="form-split__separator" aria-hidden="true">{separator}</span>
+    <span className="form-split__separator" aria-hidden="true">—</span>
     <span className="form-split__half">{right}</span>
   </span>;
 }
@@ -144,9 +144,12 @@ export function FormSection({ title, actions, children, className = '', ...props
   </section>;
 }
 
-/** Empty state for an optional section: a grey bar with one centred action. */
+/** A grey capsule with one centred action, placed in the control column so it lines up with the fields. */
 export function AddBar({ children, ...props }) {
-  return <button type="button" className="form-add-bar" {...props}>{children}</button>;
+  return <div className="form-field form-add-row">
+    <span className="form-field__label" aria-hidden="true" />
+    <button type="button" className="form-add-bar" {...props}>{children}</button>
+  </div>;
 }
 
 export function FormError({ children }) {
