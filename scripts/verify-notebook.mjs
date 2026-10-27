@@ -144,11 +144,17 @@ try {
   const packet = JSON.parse(await readFile(`${output}/itinerary.json`, 'utf8'));
   packet.days[1].events[0].title = 'AI 修改后的行程';
   await page.getByLabel('选择 AI 修改的行程', { exact: true }).setInputFiles({ name: 'edited.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(packet)) });
-  await page.getByRole('button', { name: '确认应用', exact: true }).click();
-  await page.getByText('已应用行程修改', { exact: true }).waitFor();
+  await page.getByText(/^已应用 AI 修改/).waitFor();
+  // The AI change is a version tagged AI; the previous one can be shown and then left again.
+  const versions = page.getByRole('list', { name: '版本', exact: true }).getByRole('button');
+  assert.equal(await versions.first().locator('.notebook-version__source').textContent(), 'AI');
+  await versions.nth(1).click();
+  await page.getByText(/^正在查看 .* 的版本$/).first().waitFor();
+  await versions.first().click();
+  await page.getByText('已回到最新版本', { exact: true }).waitFor();
   await page.getByRole('button', { name: '关闭编辑窗口', exact: true }).click();
   await titleButton(page, 'AI 修改后的行程').waitFor();
-  console.log('PASS: editable JSON round trip applies AI changes');
+  console.log('PASS: editable JSON round trip applies AI changes as a version that can be switched away from and back');
   await page.getByRole('button', { name: '更多', exact: true }).click();
   downloadEvent = page.waitForEvent('download');
   await page.getByRole('button', { name: '下载备份', exact: false }).click();
@@ -160,8 +166,7 @@ try {
   await restored.goto(`${trip}?date=2026-09-25`, { waitUntil: 'domcontentloaded' });
   await restored.getByRole('button', { name: '更多', exact: true }).click();
   await restored.getByLabel('选择备份', { exact: true }).setInputFiles(`${output}/roundtrip.across`);
-  await restored.getByRole('button', { name: '确认恢复', exact: true }).click();
-  await restored.getByText('已从备份恢复', { exact: true }).waitFor();
+  await restored.getByText(/^已从备份恢复/).waitFor();
   await restored.getByRole('button', { name: '关闭编辑窗口', exact: true }).click();
   await restored.getByRole('button', { name: '查看照片 photo-test.png', exact: true }).waitFor();
   await restored.goto(`${trip}?date=2026-09-24`, { waitUntil: 'domcontentloaded' });

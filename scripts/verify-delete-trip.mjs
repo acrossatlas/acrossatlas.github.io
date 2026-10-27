@@ -9,7 +9,7 @@ const base = process.env.PREVIEW_URL || 'http://127.0.0.1:5173';
 async function options() { await page.getByRole('button', { name: '更多', exact: true }).click(); }
 async function confirmDelete() {
   await page.getByRole('button', { name: '删除行程', exact: true }).click();
-  await page.getByRole('button', { name: '确认删除', exact: true }).click();
+  await page.getByRole('button', { name: '确认删除整趟行程', exact: true }).click();
   await page.waitForURL(`${base}/?log=trip`);
 }
 try {
@@ -18,7 +18,8 @@ try {
   await page.getByLabel('名称', { exact: true }).fill('待删除的验证行程');
   await page.getByRole('button', { name: '创建', exact: true }).click();
   await options(); await page.getByRole('button', { name: '删除行程', exact: true }).click();
-  await page.getByRole('button', { name: '取消', exact: true }).click();
+  await page.keyboard.press('Escape');
+  await page.getByRole('button', { name: '删除行程', exact: true }).waitFor();
   await page.getByRole('button', { name: '关闭编辑窗口', exact: true }).click();
   const tripUrl = page.url();
   const fixture = await page.evaluate(async () => {

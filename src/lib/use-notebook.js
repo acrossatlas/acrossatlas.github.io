@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { notebookFromJourney } from './notebook.js';
-import { deleteNotebook, openNotebook, writeNotebook, undoNotebook } from './notebook-store.js';
+import { deleteNotebook, openNotebook, switchNotebookVersion, writeNotebook } from './notebook-store.js';
 
 // One notification stream for trip and country views, plus other browser tabs.
 const updates = new EventTarget();
@@ -48,7 +48,7 @@ export function useNotebook(journey) {
   }
   return { record, seed, current, error, busy,
     commit: (transform, label, files, options) => run(record => writeNotebook(record.id, record.localRevision, transform(record.document), label, files, options)),
-    undo: () => run(record => undoNotebook(record.id, record.localRevision)),
+    switchVersion: versionId => run(record => switchNotebookVersion(record.id, record.localRevision, versionId)),
     remove: expected => run(record => deleteNotebook(record.id, expected)),
   };
 }

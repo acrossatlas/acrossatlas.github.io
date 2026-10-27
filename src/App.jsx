@@ -18,7 +18,7 @@ import { deleteEvent, journeyFromNotebook, reorderEvent, resizeNotebookDates, sa
 import ItineraryEditor from './components/ItineraryEditor';
 import ChecklistEditor from './components/ChecklistEditor';
 import NotebookAlbum from './components/NotebookAlbum';
-import NotebookOptions from './components/NotebookOptions';
+import NotebookOptions, { versionTime } from './components/NotebookOptions';
 
 const infoPanels = {
   transport: {
@@ -640,6 +640,10 @@ function JourneyPage({ journey: originalJourney }) {
         </header>
 
         {notebook.error && <p className="notebook-editor__error" role="alert">{notebook.error}</p>}
+        {notebook.record?.checkout && <div className="notebook-version-notice notebook-version-notice--page" role="status">
+          <span>正在查看 {versionTime(notebook.record.current.at)} 的版本</span>
+          <button className="journey-tool-button" type="button" disabled={notebook.busy} onClick={() => notebook.switchVersion(notebook.record.checkout.latest.id).catch(() => {})}>回到最新</button>
+        </div>}
         <span className="sr-only" role="status">{notebook.busy ? '正在保存修改' : notebook.record?.updatedAt ? '修改已保存在本机' : ''}</span>
         <div className="notebook-content">
           {!archived && <section className="notebook-section" aria-label="当日行程">

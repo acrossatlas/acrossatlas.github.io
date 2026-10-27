@@ -1,4 +1,5 @@
-import { HISTORY_LIMIT, notebookAssets, validateNotebook } from './notebook.js';
+import { notebookAssets, validateNotebook } from './notebook.js';
+import { recordChange, retainedDocuments, switchVersion } from './notebook-versions.js';
 
 let connection;
 function database() {
@@ -49,7 +50,7 @@ function requireRevision(stored, expected) {
 }
 
 function retainedPhotoIds(record) {
-  return new Set([record.document, ...record.history.map(item => item.document)].flatMap(book => notebookAssets(book).map(asset => asset.id)));
+  return new Set(retainedDocuments(record).flatMap(book => notebookAssets(book).map(asset => asset.id)));
 }
 
 function collectPhotos(record, store) {
@@ -69,12 +70,7 @@ export function writeNotebook(id, expected, document, label, files = [], options
   if (document.id !== id) throw new Error('旅行本编号不一致。');
   return change(id, (stored, books, photos) => {
     requireRevision(stored, expected);
-    const next = {
-      ...stored, document,
-      history: options.groupId && stored.historyGroup === options.groupId ? stored.history : [...stored.history, { document: stored.document, label, at: new Date().toISOString() }].slice(-HISTORY_LIMIT),
-      historyGroup: options.groupId ?? null,
-      localRevision: stored.localRevision + 1, updatedAt: new Date().toISOString(),
-    };
+    const next = { ...recordChange(stored, document, { label, source: options.source, groupId: options.groupId ?? null }), localRevision: stored.localRevision + 1, updatedAt: new Date().toISOString() };
     files.forEach(({ id: photoId, blob }) => photos.put(blob, `${id}/${photoId}`));
     books.put(next);
     collectPhotos(next, photos);
@@ -82,13 +78,13 @@ export function writeNotebook(id, expected, document, label, files = [], options
   });
 }
 
-export function undoNotebook(id, expected) {
-  return change(id, (stored, books, photos) => {
+/** Switch the visible document to another saved version (see notebook-versions.js). */
+export function switchNotebookVersion(id, expected, versionId) {
+  return change(id, (stored, books) => {
     requireRevision(stored, expected);
-    if (!stored.history.length) return stored;
-    const next = { ...stored, document: stored.history.at(-1).document, history: stored.history.slice(0, -1), historyGroup: null, localRevision: stored.localRevision + 1, updatedAt: new Date().toISOString() };
+    const next = { ...switchVersion(stored, versionId), localRevision: stored.localRevision + 1, updatedAt: new Date().toISOString() };
+    validateNotebook(next.document);
     books.put(next);
-    collectPhotos(next, photos);
     return next;
   });
 }
