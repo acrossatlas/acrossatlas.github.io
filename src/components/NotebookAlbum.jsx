@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { ImagePlus, Plus, Trash2 } from 'lucide-react';
 import NotebookDialog from './NotebookDialog';
-import { Button, Field, FormError, FormFooter, FormHint, PickerInput } from './form/Form';
+import { Button, FieldGroup, FormError, FormFooter, FormHint, PickerInput } from './form/Form';
 import { preparePhoto } from '../lib/photos.js';
 import { readPhoto } from '../lib/notebook-store.js';
 
@@ -59,10 +59,10 @@ export default function NotebookAlbum({ book, activeDate, busy, onCommit }) {
     </header>
     {!photoDays.length ? <div className="album-empty"><span className="album-empty__icon"><ImagePlus /></span><div><h3>尚未添加照片</h3><p>添加照片，按旅行日期保存在这里。</p></div></div>
       : <div className="notebook-album">{photoDays.map(day => <section key={day.id} className="notebook-album__day" aria-label={`${day.date} 的照片`}><h3 className="info-card__date">{day.date.replaceAll('-', '.')}<span>{day.photos.length} 张</span></h3><div className="notebook-album__grid">{day.photos.map(photo => <AlbumPhoto key={photo.id} bookId={book.id} photo={photo} onOpen={value => { setOpened(value); setDeleting(false); setError(''); }} />)}</div></section>)}</div>}
-    {upload && <NotebookDialog className="reservation-modal" title="添加照片" eyebrow="Album" busy={working} onClose={() => setUpload(false)}>
+    {upload && <NotebookDialog className="reservation-modal" title="添加照片" eyebrow="Album" busy={working} onClose={() => setUpload(false)} canClose={() => !files.length}>
       <form className="notebook-editor__form" onSubmit={addPhotos}>
         <div className="journey-modal__body"><div className="form-fields">
-          <Field label="日期"><PickerInput type="date" value={date} min={book.days[0].date} max={book.days.at(-1).date} disabled={working} onChange={e => setDate(e.target.value)} /></Field>
+          <FieldGroup label="日期"><PickerInput type="date" aria-label="日期" value={date} min={book.days[0].date} max={book.days.at(-1).date} disabled={working} onChange={e => setDate(e.target.value)} /></FieldGroup>
           <button className="album-empty notebook-upload-picker" type="button" disabled={working} onClick={() => input.current.click()}><span className="album-empty__icon"><ImagePlus /></span><span><strong>{files.length ? `已选择 ${files.length} 张照片` : '选择照片'}</strong><small>JPEG、PNG、WebP · 每次最多 20 张</small></span></button>
           <input className="sr-only" ref={input} type="file" accept="image/jpeg,image/png,image/webp,image/heic,image/heif" multiple aria-label="选择照片" disabled={working} onChange={e => { setFiles([...e.target.files]); setError(''); }} />
           {files.length > 0 && <ul className="notebook-upload-files">{files.map((file, index) => <li key={index}>{file.name}</li>)}</ul>}

@@ -3,7 +3,7 @@ import ThemeToggle from './components/ThemeToggle';
 import { ArrowIcon, CloseIcon, CopyableAddress, CopyableEventTitle, EventFlightDetails, FlightLegCaption, getReservationHeading, ReservationDetails, ReservationModal, useModalBehavior } from './components/JourneyEvents';
 import TemplatesPage from './components/TemplatesPage';
 import { useEffect, useState } from 'react';
-import { SeparatorVertical } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import DayItinerary from './components/DayItinerary';
 import DayTabs from './components/DayTabs';
 import { Link, Navigate, Route, Routes, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
@@ -650,7 +650,7 @@ function JourneyPage({ journey: originalJourney }) {
           </section>}
 
           <section className="notebook-section" aria-label="所有行程">
-            <div className="notebook-day-nav"><DayTabs days={journeyDates} activeIndex={activeDay} onSelect={setActiveDay} sectionLabels={journeySectionLabels} dividers={journey.sectionDividers} onEditSection={setSectionEditor} /><button className="theme-toggle" type="button" aria-label="添加日期分隔" title="在当前日期前添加分隔" disabled={!notebook.record || notebook.busy} onClick={() => setSectionEditor(journeyDates[activeDay])}><SeparatorVertical size={16} strokeWidth={1.8} aria-hidden="true" /></button></div>
+            <div className="notebook-day-nav"><DayTabs days={journeyDates} activeIndex={activeDay} onSelect={setActiveDay} sectionLabels={journeySectionLabels} dividers={journey.sectionDividers} onEditSection={setSectionEditor} /><button className="journey-tool-button notebook-section-add" type="button" aria-label="添加日期分隔" title="在当前日期前添加分隔" disabled={!notebook.record || notebook.busy} onClick={() => setSectionEditor(journeyDates[activeDay])}><Plus size={15} aria-hidden="true" /><span>分隔</span></button></div>
             {journeyDates.map((day, index) => (
               <section
                 aria-labelledby={`day-${index + 1}-tab`}

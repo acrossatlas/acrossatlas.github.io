@@ -48,7 +48,7 @@ try {
   assert.equal(await page.getByRole('dialog').locator('input[type="date"]').count(), 0);
   assert.equal(await page.getByRole('dialog').locator('h2').count(), 0);
   assert.equal(await page.getByLabel('第2段结束时间', { exact: true }).inputValue(), '07:40');
-  assert.equal(await page.getByLabel('第1段开始时间', { exact: true }).getAttribute('type'), 'time');
+  assert.equal(await page.getByLabel('第1段开始时间', { exact: true }).getAttribute('inputmode'), 'numeric');
   assert.equal(await page.getByRole('dialog').getByText('已自动保存到本机', { exact: true }).count(), 0);
   const removeBox = await page.getByRole('button', { name: '删除', exact: true }).boundingBox();
   const doneBox = await page.getByRole('button', { name: '完成', exact: true }).boundingBox();
@@ -169,7 +169,10 @@ try {
   await other.getByLabel('说明', { exact: true }).fill('来自另一页面的修改'); await done(other);
   await page.getByLabel('说明', { exact: true }).fill('不能覆盖更新的版本');
   await page.getByRole('dialog').getByRole('alert').waitFor();
-  await page.getByRole('button', { name: '放弃修改', exact: true }).click();
+  // Closing with changes that can't be saved turns the × into an in-place discard confirmation.
+  await page.getByRole('button', { name: '关闭编辑窗口', exact: true }).click();
+  await page.getByRole('button', { name: '放弃修改并关闭', exact: true }).click();
+  await page.getByRole('dialog').waitFor({ state: 'hidden' });
   await saved(page, record => record.document.days.find(day => day.date === '2026-09-25').events[0].detail === '来自另一页面的修改');
   await other.close(); console.log('PASS: autosave preserves conflicts and does not overwrite');
   await page.goto(`${base}/?log=trip`, { waitUntil: 'domcontentloaded' });

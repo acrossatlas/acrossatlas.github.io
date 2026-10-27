@@ -82,20 +82,20 @@
 .notebook-editor__header > :first-child { flex: 1 1 auto; min-width: 0; }
 .notebook-editor__header h2 { font-size: 20px; line-height: 1.3; }
 .notebook-editor__header p { margin-bottom: 4px; }
-.notebook-editor__header > button { flex: none; width: 34px; height: 34px; }
+.notebook-editor__header > .notebook-editor__close { flex: none; width: 34px; height: 34px; transition: width 180ms ease, color 160ms ease, background 160ms ease; }
+.notebook-editor__header > .notebook-editor__close:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.notebook-editor__header > .notebook-editor__close.is-confirming { width: auto; padding: 0 14px; border-radius: 999px; color: var(--white); background: var(--ink); font-size: 12px; font-weight: 600; white-space: nowrap; }
+.notebook-editor:focus { outline: 0; }
 .notebook-editor .journey-modal__body { padding-top: 2px; padding-left: 2px; margin-left: -2px; }
-.notebook-event-toolbar { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 12px; }
-.notebook-event-states { display: flex; align-items: center; gap: 6px; margin-left: auto; }
 .notebook-segments { display: grid; gap: 12px; }
-.notebook-segments > .form-section.is-plain { padding: 0; background: transparent; border-radius: 0; }
-.notebook-segments > .form-section.is-plain .form-control, .notebook-segments > .form-section.is-plain .form-tag-select:not(.has-value) { background: var(--fill, #f5f5f7); }
-.notebook-segments > .form-section.is-plain > .form-section__header h4 { color: var(--text-muted, #737b85); font-weight: 600; }
 .notebook-add-segment { justify-self: start; }
 .notebook-booking .booking-attachments { margin: 0; }
+.notebook-booking__upload { justify-self: start; }
+.notebook-section-add { flex: none; height: 38px; padding: 0 14px; font-size: 12px; }
+.notebook-section-add svg { width: 15px; height: 15px; }
 
 @media (max-width: 640px) {
   .notebook-editor__header h2 { font-size: 18px; }
-  .notebook-event-states { margin-left: 0; }
   .form-segmented > button { padding: 0 11px; }
   .notebook-editor { inset: auto 0 0; margin: 0; min-width: min(320px, 100vw); max-width: 100%; min-height: min(220px, calc(100dvh - 18px)); max-height: min(720px, calc(100dvh - 18px)); }
   .notebook-album__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }

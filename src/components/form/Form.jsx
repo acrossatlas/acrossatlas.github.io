@@ -1,4 +1,4 @@
-import { cloneElement, useId } from 'react';
+import { cloneElement, useEffect, useId, useState } from 'react';
 import { Calendar, ChevronDown, Clock } from 'lucide-react';
 
 // Shared form primitives for every notebook editor. Surfaces reuse the
@@ -7,10 +7,10 @@ import { Calendar, ChevronDown, Clock } from 'lucide-react';
 /** Label stacked above one control. The child input/select/textarea is wired to the label. */
 export function Field({ label, hint, children, className = '' }) {
   const id = useId();
-  const multiline = children.type === 'textarea';
+  const multiline = children.type === 'textarea', select = children.type === 'select';
   return <label className={`form-field ${className}`} htmlFor={id}>
     <span className="form-field__label" id={`${id}-label`}>{label}</span>
-    <span className={`form-control${multiline ? ' form-control--multiline' : ''}`}>{cloneElement(children, { id, 'aria-labelledby': `${id}-label` })}</span>
+    <span className={`form-control${multiline ? ' form-control--multiline' : ''}${select ? ' form-control--select' : ''}`}>{cloneElement(children, { id, 'aria-labelledby': `${id}-label` })}{select && <ChevronDown aria-hidden="true" />}</span>
     {hint && <small className="form-field__hint">{hint}</small>}
   </label>;
 }
@@ -31,20 +31,68 @@ export function FieldRow({ children }) {
 
 function openPicker(event) { try { event.currentTarget.showPicker?.(); } catch { /* Typing still works. */ } }
 
-/** Native date / time input on the pill surface, opening the OS picker on click. */
-export function PickerInput({ type = 'time', ...props }) {
-  const Icon = type === 'date' ? Calendar : Clock;
+/** Native date input on the pill surface, opening the OS picker on click. */
+export function PickerInput({ type = 'date', ...props }) {
   return <span className="form-control form-control--picker">
-    <Icon aria-hidden="true" />
-    <input type={type} step={type === 'time' ? 60 : undefined} onClick={openPicker} {...props} />
+    <Calendar aria-hidden="true" />
+    <input type={type} onClick={openPicker} {...props} />
+  </span>;
+}
+
+const pad = number => String(number).padStart(2, '0');
+
+/** Reads "930", "9:30", "21.5" or "2130" as a 24-hour HH:MM time. '' = empty, null = not a time. */
+export function parseTime(text) {
+  const raw = text.trim();
+  if (!raw) return '';
+  const parts = raw.split(/[:：.]/);
+  let hours, minutes;
+  if (parts.length === 2 && /^\d{1,2}$/.test(parts[0]) && /^\d{0,2}$/.test(parts[1])) [hours, minutes] = [Number(parts[0]), Number(parts[1] || 0)];
+  else if (/^\d{1,4}$/.test(raw)) [hours, minutes] = raw.length <= 2 ? [Number(raw), 0] : [Number(raw.slice(0, -2)), Number(raw.slice(-2))];
+  else return null;
+  return hours < 24 && minutes < 60 ? `${pad(hours)}:${pad(minutes)}` : null;
+}
+
+function stepTime(value, delta) {
+  const [hours, minutes] = (value || '00:00').split(':').map(Number);
+  const total = (((hours * 60 + minutes + delta) % 1440) + 1440) % 1440;
+  return `${pad(Math.floor(total / 60))}:${pad(total % 60)}`;
+}
+
+/**
+ * 24-hour time field. Accepts typed digits, commits a complete time while typing
+ * and normalises on blur / Enter. Arrow keys step 5 minutes (Shift: 1 hour).
+ */
+export function TimeInput({ value = '', onChange, ...props }) {
+  const [text, setText] = useState(value), [invalid, setInvalid] = useState(false);
+  useEffect(() => { setText(current => parseTime(current) === value ? current : value); setInvalid(false); }, [value]);
+  const commit = next => { if (next !== value) onChange(next); };
+  function settle() {
+    const parsed = parseTime(text);
+    if (parsed === null) { setInvalid(true); return; }
+    setInvalid(false); setText(parsed); commit(parsed);
+  }
+  return <span className={`form-control form-control--picker${invalid ? ' is-invalid' : ''}`}>
+    <Clock aria-hidden="true" />
+    <input type="text" inputMode="numeric" autoComplete="off" placeholder="--:--" maxLength={5} aria-invalid={invalid || undefined} value={text}
+      onChange={e => { const next = e.target.value; setText(next); setInvalid(false); if (/^\d{1,2}[:：.]\d{2}$/.test(next.trim()) || next.trim() === '') { const parsed = parseTime(next); if (parsed !== null) commit(parsed); } }}
+      onBlur={settle}
+      onKeyDown={e => {
+        if (e.key === 'Enter') { e.preventDefault(); settle(); }
+        if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+          e.preventDefault();
+          const next = stepTime(parseTime(text) || value, (e.key === 'ArrowUp' ? 1 : -1) * (e.shiftKey ? 60 : 5));
+          setText(next); setInvalid(false); commit(next);
+        }
+      }} {...props} />
   </span>;
 }
 
 export function TimeRange({ label = '时间', prefix = '', startsAt, endsAt, onChange }) {
   return <FieldGroup label={label}><div className="form-range">
-    <PickerInput aria-label={`${prefix}开始时间`} value={startsAt || ''} onChange={e => onChange({ startsAt: e.target.value, endsAt })} />
+    <TimeInput aria-label={`${prefix}开始时间`} value={startsAt || ''} onChange={next => onChange({ startsAt: next, endsAt })} />
     <span className="form-range__separator" aria-hidden="true">—</span>
-    <PickerInput aria-label={`${prefix}结束时间`} value={endsAt || ''} onChange={e => onChange({ startsAt, endsAt: e.target.value })} />
+    <TimeInput aria-label={`${prefix}结束时间`} value={endsAt || ''} onChange={next => onChange({ startsAt, endsAt: next })} />
   </div></FieldGroup>;
 }
 

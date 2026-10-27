@@ -48,11 +48,13 @@ export default function ItineraryEditor({ selection, book, onSave, onDelete, onC
       files.forEach(file => pending.current.delete(file.id)); return savedRevision;
     },
   });
-  async function close() {
-    const hasContent = fields.title.trim() || fields.detail.trim() || fields.attachments.length || draft.segments.some(segment => segment.from || segment.to || segment.code);
-    if (!event && !hasContent && autosave.revision.current === selection.revision) { onClose(); return; }
-    try { await autosave.flush(); onClose(); } catch { /* Keep the unsaved input available. */ }
+  // True when everything is saved (or there is nothing worth keeping); false means closing would lose input.
+  async function canClose() {
+    const hasContent = fields.title.trim() || fields.detail.trim() || fields.bookingUrl.trim() || fields.attachments.length || draft.segments.some(segment => segment.from || segment.to || segment.code);
+    if (!event && !hasContent && autosave.revision.current === selection.revision) return true;
+    try { await autosave.flush(); return true; } catch { return false; }
   }
+  async function done() { if (await canClose()) onClose(); }
   async function remove() {
     setWorking(true); setLocalError('');
     try { await autosave.wait(); await onDelete(autosave.revision.current); onClose(); }
@@ -74,47 +76,46 @@ export default function ItineraryEditor({ selection, book, onSave, onDelete, onC
     const last = draft.segments.at(-1), on = last.arrivesOn || draft.schedule.startsOn;
     return { ...draft, segments: [...draft.segments, { id: crypto.randomUUID(), mode: last.mode, from: last.to, to: '', code: '', depart: '', arrive: '', departsOn: on, arrivesOn: on }] };
   });
-  const multiLeg = draft.segments.length > 1;
-  const header = <div className="notebook-event-toolbar">
-    <Segmented label="行程类型" options={EVENT_TYPES} value={fields.type} disabled={deleting || working} onChange={type => setDraft(draft => ({ ...draft, fields: { ...draft.fields, type } }))} />
-    <div className="notebook-event-states">
-      <TagSelect aria-label="预订状态" placeholder="预订" options={RESERVATION_STATES} disabled={deleting || working} {...field('reservationStatus')} />
-      <TagSelect aria-label="付款状态" placeholder="付款" options={PAYMENT_STATES} disabled={deleting || working} {...field('paymentStatus')} />
-    </div>
-  </div>;
-  return <NotebookDialog className="notebook-editor--compact" title={deleting ? '删除行程' : '编辑行程'} header={header} onClose={close} busy={working}>
-    <form className="notebook-editor__form" onSubmit={e => { e.preventDefault(); close(); }}><div className="journey-modal__body">
+  const multiLeg = draft.segments.length > 1, isNew = !event;
+  const header = <Segmented label="行程类型" options={EVENT_TYPES} value={fields.type} disabled={deleting || working} onChange={type => setDraft(draft => ({ ...draft, fields: { ...draft.fields, type } }))} />;
+  const leg = (segment, index) => {
+    const prefix = multiLeg ? `第${index + 1}段` : '';
+    return <>
+      <FieldRow>
+        <Field label="出发地"><input data-autofocus={isNew && index === 0 ? '' : undefined} value={segment.from} onChange={e => changeSegment(segment.id, { from: e.target.value })} /></Field>
+        <Field label="目的地"><input value={segment.to} onChange={e => changeSegment(segment.id, { to: e.target.value })} /></Field>
+      </FieldRow>
+      <TimeRange prefix={prefix} startsAt={segment.depart} endsAt={segment.arrive} onChange={value => changeSegment(segment.id, { depart: value.startsAt, arrive: value.endsAt })} />
+      <FieldRow>
+        <Field label="交通方式"><select value={segment.mode} onChange={e => changeSegment(segment.id, { mode: e.target.value })}><option value="">未选择</option>{TRANSPORT_MODES.map(mode => <option key={mode} value={mode}>{mode}</option>)}</select></Field>
+        <Field label="班次"><input placeholder="航班号、车次等" value={segment.code ?? ''} onChange={e => changeSegment(segment.id, { code: e.target.value })} /></Field>
+      </FieldRow>
+    </>;
+  };
+  return <NotebookDialog className="notebook-editor--compact" title={deleting ? '删除行程' : '编辑行程'} header={header} onClose={onClose} canClose={canClose} busy={working}>
+    <form className="notebook-editor__form" onSubmit={e => { e.preventDefault(); done(); }}><div className="journey-modal__body">
       {deleting ? <div className="reservation-state"><strong>{title || '这项行程'}</strong><p>删除后可以撤销恢复。</p></div> : <>
         {!fields.type && <FormHint>先选择一个类型。</FormHint>}
         {fields.type && <fieldset className="form-fields" disabled={working}>
           {fields.type === '交通' ? <div className="notebook-segments">
-            {draft.segments.map((segment, index) => {
-              const prefix = multiLeg ? `第${index + 1}段` : '';
-              const body = <>
-                <FieldRow>
-                  <Field label="出发地"><input autoFocus={!event && index === 0} value={segment.from} onChange={e => changeSegment(segment.id, { from: e.target.value })} /></Field>
-                  <Field label="目的地"><input value={segment.to} onChange={e => changeSegment(segment.id, { to: e.target.value })} /></Field>
-                </FieldRow>
-                <TimeRange prefix={prefix} startsAt={segment.depart} endsAt={segment.arrive} onChange={value => changeSegment(segment.id, { depart: value.startsAt, arrive: value.endsAt })} />
-                <Field label="班次"><input placeholder="航班号、车次等" value={segment.code ?? ''} onChange={e => changeSegment(segment.id, { code: e.target.value })} /></Field>
-              </>;
-              const mode = <TagSelect aria-label={`${prefix}交通方式`} placeholder="交通方式" options={TRANSPORT_MODES} value={segment.mode} onChange={e => changeSegment(segment.id, { mode: e.target.value })} />;
-              return <FormSection key={segment.id} className={multiLeg ? '' : 'is-plain'} aria-label={`第 ${index + 1} 段行程`}
-                title={multiLeg ? `第 ${index + 1} 段` : '交通方式'}
-                actions={<div className="form-section__tools">{mode}{multiLeg && <button type="button" className="form-icon-button" aria-label={`删除第 ${index + 1} 段`} onClick={() => removeSegment(segment.id)}><Trash2 /></button>}</div>}>
-                {body}
-              </FormSection>;
-            })}
+            {multiLeg
+              ? draft.segments.map((segment, index) => <FormSection key={segment.id} aria-label={`第 ${index + 1} 段行程`} title={`第 ${index + 1} 段`}
+                  actions={<button type="button" className="form-icon-button" aria-label={`删除第 ${index + 1} 段`} onClick={() => removeSegment(segment.id)}><Trash2 /></button>}>{leg(segment, index)}</FormSection>)
+              : <section className="form-fields" aria-label="第 1 段行程">{leg(draft.segments[0], 0)}</section>}
             <Button variant="text" className="notebook-add-segment" aria-label="添加一段行程" onClick={addSegment}><Plus />添加一段</Button>
           </div> : <>
-            <Field label="名称"><input autoFocus required maxLength={500} {...field('title')} /></Field>
+            <Field label="名称"><input data-autofocus={isNew ? '' : undefined} required maxLength={500} {...field('title')} /></Field>
             <TimeRange startsAt={draft.schedule.startsAt} endsAt={draft.schedule.endsAt} onChange={time => setDraft(draft => ({ ...draft, schedule: { ...draft.schedule, ...time } }))} />
             <Field label="地址"><input maxLength={2000} placeholder="用于导航和地图定位" {...field('navigation')} /></Field>
           </>}
           <Field label="说明"><textarea rows={3} maxLength={10000} {...field('detail')} /></Field>
-          <FormSection title="预订信息" className="notebook-booking" actions={<Button variant="text" onClick={() => input.current.click()}><Paperclip />上传凭证</Button>}>
-            <Field label="链接" className="notebook-booking__link"><input type="url" aria-label="预订链接" placeholder="https://…" maxLength={2000} {...field('bookingUrl')} /></Field>
+          <FormSection title="预订信息" className="notebook-booking" actions={<div className="form-section__tools">
+            <TagSelect aria-label="预订状态" placeholder="预订" options={RESERVATION_STATES} {...field('reservationStatus')} />
+            <TagSelect aria-label="付款状态" placeholder="付款" options={PAYMENT_STATES} {...field('paymentStatus')} />
+          </div>}>
+            <Field label="链接"><input type="url" aria-label="预订链接" placeholder="https://…" maxLength={2000} {...field('bookingUrl')} /></Field>
             <BookingAttachments bookId={book.id} attachments={fields.attachments} pending={pending.current} onRemove={id => setDraft(draft => ({ ...draft, fields: { ...draft.fields, attachments: draft.fields.attachments.filter(file => file.id !== id) } }))} />
+            <Button variant="text" className="notebook-booking__upload" onClick={() => input.current.click()}><Paperclip />上传凭证</Button>
             <input ref={input} type="file" multiple className="sr-only" accept="application/pdf,image/jpeg,image/png,image/webp" aria-label="上传预订凭证" onChange={e => attach([...e.target.files])} />
           </FormSection>
         </fieldset>}
@@ -124,7 +125,6 @@ export default function ItineraryEditor({ selection, book, onSave, onDelete, onC
     {deleting
       ? <FormFooter><Button disabled={working} onClick={() => setDeleting(false)}>保留</Button><Button variant="primary" disabled={working} onClick={remove}>确认删除</Button></FormFooter>
       : <FormFooter danger={(event || autosave.revision.current !== selection.revision) && <Button variant="danger" onClick={async () => { await autosave.wait().catch(() => {}); setDeleting(true); }}><Trash2 />删除</Button>}>
-        {autosave.error && <Button onClick={onClose}>放弃修改</Button>}
         <Button variant="primary" type="submit" disabled={working}>完成</Button>
       </FormFooter>}
     </form>
