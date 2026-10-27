@@ -8,7 +8,9 @@ The home page archives completed journeys in two views: Map log groups them by c
 
 The Netherlands–Iceland–Norway journey (2026-09-24–10-07) is archived with its original itinerary, maps, transport, stays, checklist, and album section. Actual visits and skipped stops will be reviewed separately. See [the archive guide](docs/TRAVEL-ARCHIVE.md) for routes and the content structure.
 
-Trip notebooks now support direct card editing with automatic local saving. Add entries at the bottom, drag cards to reorder, and click checklist text to edit while keeping checkbox toggles separate. Type-first forms support transport segments and PDF/image booking attachments. Album accepts photos grouped by date. The More menu offers undo, complete backups, and version-checked JSON exchange with an external AI. Cloud accounts and cross-device synchronization are not configured. See [editing and control references](docs/NOTEBOOK-EDITING.md) for behavior and current limits.
+Trip notebooks support direct card editing saved locally when you press 完成. Add entries at the bottom, drag cards to reorder, and click checklist text to edit while keeping checkbox toggles separate. Forms support transport segments and PDF/image booking attachments. Album accepts photos grouped by date. The More menu offers undo and a version history you can switch between. Cloud accounts and cross-device synchronization are not configured. See [editing and control references](docs/NOTEBOOK-EDITING.md) for behavior and current limits.
+
+The editor forms share one component set in `src/components/form/`. Open `/components` from the component icon at the top right of the home page for live examples, or read [the component reference](docs/COMPONENTS.md).
 
 ## Local preview
 

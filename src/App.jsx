@@ -1,9 +1,10 @@
 import ChecklistGroup from './components/ChecklistGroup';
 import ThemeToggle from './components/ThemeToggle';
 import { ArrowIcon, CloseIcon, CopyableAddress, CopyableEventTitle, EventFlightDetails, FlightLegCaption, getReservationHeading, ReservationDetails, ReservationModal, useModalBehavior } from './components/JourneyEvents';
+import ComponentsPage from './components/ComponentsPage';
 import TemplatesPage from './components/TemplatesPage';
 import { useEffect, useState } from 'react';
-import { Plus } from 'lucide-react';
+import { Component, Plus } from 'lucide-react';
 import DayItinerary from './components/DayItinerary';
 import DayTabs from './components/DayTabs';
 import { Link, Navigate, Route, Routes, useLocation, useNavigate, useParams, useSearchParams } from 'react-router-dom';
@@ -239,6 +240,9 @@ function HomePage() {
         <button className="theme-toggle" type="button" aria-label="新建旅行" title="新建旅行" onClick={() => setCreating(true)}><PlusIcon /></button>
         <Link className="home-template-link" to="/templates" aria-label="打开旅行模板" title="模板">
           <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M10.6663 4C11.4027 4 12.0003 4.5976 12.0003 5.33398V11.334H10.6663V6.27734L4.47198 12.4717L3.52863 11.5283L9.72296 5.33398H4.66632V4H10.6663Z" fill="currentColor" /></svg>
+        </Link>
+        <Link className="home-template-link" to="/components" aria-label="查看组件文档" title="组件">
+          <Component size={16} strokeWidth={1.8} aria-hidden="true" />
         </Link>
       </nav>
       <main>
@@ -748,6 +752,7 @@ function App() {
         <Route path="/trips/:tripId" element={<TripPage />} />
         <Route path="/countries/:countrySlug" element={<CountryArchivePage />} />
         <Route path="/templates" element={<TemplatesPage />} />
+        <Route path="/components" element={<ComponentsPage />} />
         <Route path="*" element={<HomePage />} />
       </Routes>
     </>
