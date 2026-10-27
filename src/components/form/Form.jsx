@@ -160,9 +160,9 @@ export function FormHint({ children, status }) {
   return children ? <p className="form-message" role={status ? 'status' : undefined}>{children}</p> : null;
 }
 
-/** Dialog footer: actions on the right, secondary first, primary last. */
-export function FormFooter({ children }) {
-  return <footer className="form-footer">{children}</footer>;
+/** Dialog footer: an optional `leading` action on the left; actions on the right, secondary first, primary last. */
+export function FormFooter({ leading, children }) {
+  return <footer className="form-footer">{leading && <div className="form-footer__leading">{leading}</div>}{children}</footer>;
 }
 
 export function Button({ variant = 'secondary', className = '', type = 'button', children, ...props }) {

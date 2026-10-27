@@ -119,7 +119,6 @@ export default function ItineraryEditor({ selection, book, onSave, onDelete, onC
               <button type="button" className="form-icon-button" aria-label={`删除第 ${index + 1} 段`} onClick={() => removeSegment(segment.id)}><Trash2 /></button></header>}
             {leg(segment, index)}
           </section>)}
-          <AddBar aria-label="添加一段行程" onClick={addSegment}><Plus />添加一段</AddBar>
         </div> : <>
           <Field label="名称" error={errors.title}><input data-autofocus={isNew ? '' : undefined} maxLength={500} {...field('title')} /></Field>
           <TimeRange startsAt={draft.schedule.startsAt} endsAt={draft.schedule.endsAt} onChange={time => setDraft(draft => ({ ...draft, schedule: { ...draft.schedule, ...time } }))} />
@@ -139,7 +138,10 @@ export default function ItineraryEditor({ selection, book, onSave, onDelete, onC
       </fieldset>
       <FormError>{error}</FormError>
     </div>
-    <FormFooter>
+    <FormFooter leading={isTransport && <Button variant="text" aria-label="添加一段行程" disabled={working} onClick={() => {
+      addSegment();
+      requestAnimationFrame(() => { const legs = document.querySelectorAll('.notebook-leg'); const last = legs[legs.length - 1]; last?.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); last?.querySelector('input[aria-label="目的地"]')?.focus({ preventScroll: true }); });
+    }}><Plus />添加一段</Button>}>
       {!isNew && <ConfirmButton confirmLabel="确认删除" disabled={working} onConfirm={remove}>删除</ConfirmButton>}
       <Button variant="primary" type="submit" disabled={working}>{working ? '正在保存' : '完成'}</Button>
     </FormFooter>
