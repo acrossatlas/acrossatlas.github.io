@@ -14,6 +14,8 @@ export function versionTime(at) {
   const date = new Date(at);
   return `${pad(date.getMonth() + 1)}.${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
 }
+/** How a version is named in sentences: its time, or its label when it has none (the initial version). */
+export function versionName(version) { return version.at ? ` ${versionTime(version.at)} 的版本` : `「${version.label}」`; }
 
 // 更多 → version history. Every change is a version labelled with its time and whether a
 // person, an AI file or a backup made it. Choosing a version shows it; choosing the latest
@@ -35,13 +37,13 @@ export default function NotebookOptions({ notebook }) {
     {open && <NotebookDialog className="reservation-modal notebook-versions-dialog" title="版本记录" busy={working} onClose={() => { setOpen(false); setError(''); setMessage(''); }}>
       <div className="journey-modal__body">
         {viewing && !viewing.isLatest && <div className="notebook-version-notice">
-          <span>正在查看 {versionTime(viewing.at)} 的版本。继续编辑会从这里开始，最新版本仍会保留。</span>
+          <span>正在查看{versionName(viewing)}。继续编辑会从这里开始，最新版本仍会保留。</span>
           <Button disabled={disabled} onClick={() => action(async () => { await notebook.switchVersion(latest.id); return '已回到最新版本'; })}>回到最新</Button>
         </div>}
         <ol className="notebook-versions" aria-label="版本">
           {versions.map(version => <li key={version.id}>
             <button type="button" className={`notebook-version${version.isViewing ? ' is-viewing' : ''}`} aria-current={version.isViewing ? 'true' : undefined} disabled={disabled || version.isViewing}
-              onClick={() => action(async () => { await notebook.switchVersion(version.id); return version.isLatest ? '已回到最新版本' : `正在查看 ${versionTime(version.at)} 的版本`; })}>
+              onClick={() => action(async () => { await notebook.switchVersion(version.id); return version.isLatest ? '已回到最新版本' : ''; })}>
               <time dateTime={version.at ?? undefined}>{versionTime(version.at)}</time>
               <span className="notebook-version__label">{version.label}</span>
               <span className={`notebook-version__source is-${version.source}`}>{SOURCE_LABELS[version.source] ?? '手动'}</span>

@@ -149,7 +149,7 @@ try {
   const versions = page.getByRole('list', { name: '版本', exact: true }).getByRole('button');
   assert.equal(await versions.first().locator('.notebook-version__source').textContent(), 'AI');
   await versions.nth(1).click();
-  await page.getByText(/^正在查看 .* 的版本$/).first().waitFor();
+  await page.getByText(/^正在查看.*的版本$/).first().waitFor();
   await versions.first().click();
   await page.getByText('已回到最新版本', { exact: true }).waitFor();
   await page.getByRole('button', { name: '关闭编辑窗口', exact: true }).click();
