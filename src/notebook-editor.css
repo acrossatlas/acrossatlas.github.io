@@ -96,7 +96,27 @@
 .notebook-section-add { flex: none; height: 38px; padding: 0 14px; font-size: 12px; }
 .notebook-section-add svg { width: 15px; height: 15px; }
 
-/* 更多 → 版本记录 */
+/* 更多: menu entries (info-card rows) */
+.notebook-options__hint { margin-bottom: 14px; }
+.notebook-option { display: flex; align-items: center; gap: 16px; width: 100%; border: 0; font: inherit; text-align: left; cursor: pointer; color: var(--ink); }
+.notebook-option > svg { flex: none; width: 17px; height: 17px; }
+.notebook-option > span { flex: 1 1 auto; min-width: 0; }
+.notebook-option strong { display: block; font-size: 14px; font-weight: 600; }
+.notebook-option small { display: block; margin-top: 5px; color: var(--muted); font-size: 11px; line-height: 1.6; }
+button.info-card.notebook-option:hover:not(:disabled) { background: var(--fill-hover, #efeff2); }
+.notebook-option.is-armed { box-shadow: inset 0 0 0 1.5px var(--ink); }
+/* 版本记录: one expandable card holding versions, backup and AI exchange */
+.notebook-history { padding: 0; }
+.notebook-history__toggle { padding: 22px; background: transparent; border-radius: 22px; }
+.notebook-history__toggle:hover { background: var(--fill-hover, #efeff2); }
+.notebook-history__chevron { transition: transform 180ms ease; color: var(--text-muted, #737b85); }
+.notebook-history.is-expanded .notebook-history__chevron { transform: rotate(180deg); }
+.notebook-history__panel { padding: 0 12px 14px; }
+.notebook-history .notebook-version:hover:not(:disabled), .notebook-history .notebook-version.is-viewing { background: var(--surface, #ffffff); }
+.notebook-history .notebook-version__source { background: var(--surface, #ffffff); }
+.notebook-history .notebook-version-notice { margin: 0 0 8px; }
+.notebook-history .notebook-transfer { margin: 10px 10px 0; }
+/* 版本记录 rows */
 .notebook-versions { display: grid; gap: 2px; margin: 0; padding: 0; list-style: none; }
 .notebook-version { display: grid; grid-template-columns: 82px minmax(0, 1fr) auto auto; align-items: center; gap: 12px; width: 100%; min-height: 44px; padding: 0 14px; border: 0; border-radius: 14px; color: var(--ink); background: transparent; font: inherit; font-size: 13px; text-align: left; cursor: pointer; transition: background 160ms ease; }
 .notebook-version:hover:not(:disabled) { background: var(--fill, #f5f5f7); }
@@ -106,7 +126,6 @@
 .notebook-version time { color: var(--text-muted, #737b85); font-size: 12px; font-variant-numeric: tabular-nums; }
 .notebook-version__label { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .notebook-version__source { display: inline-flex; align-items: center; height: 22px; padding: 0 8px; border-radius: 999px; color: var(--text-muted, #737b85); background: var(--fill, #f5f5f7); font-size: 10px; font-weight: 600; }
-.notebook-version.is-viewing .notebook-version__source { background: var(--surface, #ffffff); }
 .notebook-version__source.is-ai { color: var(--accent-ink); background: var(--accent-soft); }
 .notebook-version__mark { color: var(--ink); font-size: 11px; font-weight: 650; }
 .notebook-version-notice { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 14px; padding: 10px 10px 10px 16px; border-radius: 18px; color: var(--accent-ink); background: var(--accent-soft); font-size: 12px; line-height: 1.6; }

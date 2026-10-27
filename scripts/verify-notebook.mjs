@@ -138,6 +138,7 @@ try {
   await done(page);
   console.log('PASS: mobile editor, light/dark and always-available photos');
   await page.getByRole('button', { name: '更多', exact: true }).click();
+  await page.getByRole('button', { name: /^版本记录/ }).click();
   let downloadEvent = page.waitForEvent('download');
   await page.getByRole('button', { name: '导出给 AI 修改', exact: false }).click();
   let download = await downloadEvent; await download.saveAs(`${output}/itinerary.json`);
@@ -156,6 +157,7 @@ try {
   await titleButton(page, 'AI 修改后的行程').waitFor();
   console.log('PASS: editable JSON round trip applies AI changes as a version that can be switched away from and back');
   await page.getByRole('button', { name: '更多', exact: true }).click();
+  await page.getByRole('button', { name: /^版本记录/ }).click();
   downloadEvent = page.waitForEvent('download');
   await page.getByRole('button', { name: '下载备份', exact: false }).click();
   download = await downloadEvent; await download.saveAs(`${output}/roundtrip.across`);
@@ -165,6 +167,7 @@ try {
   const restored = await fresh.newPage(); restored.setDefaultTimeout(12000);
   await restored.goto(`${trip}?date=2026-09-25`, { waitUntil: 'domcontentloaded' });
   await restored.getByRole('button', { name: '更多', exact: true }).click();
+  await restored.getByRole('button', { name: /^版本记录/ }).click();
   await restored.getByLabel('选择备份', { exact: true }).setInputFiles(`${output}/roundtrip.across`);
   await restored.getByText(/^已从备份恢复/).waitFor();
   await restored.getByRole('button', { name: '关闭编辑窗口', exact: true }).click();
