@@ -30,6 +30,13 @@
 .form-control--select { position: relative; padding-right: 36px; }
 .form-control--select > select { appearance: none; -webkit-appearance: none; height: 100%; cursor: pointer; }
 .form-control--select > svg { position: absolute; right: 14px; width: 15px; height: 15px; color: var(--text-muted, #737b85); pointer-events: none; }
+.form-control--range { gap: 10px; }
+.form-control--range > svg { flex: none; width: 15px; height: 15px; color: var(--text-muted, #737b85); }
+.form-control > input.form-range__input { flex: 0 0 auto; width: auto; cursor: pointer; font-variant-numeric: tabular-nums; }
+.form-control > input.form-range__input--time { width: 5.5ch; cursor: text; }
+.form-control > input.form-range__input::-webkit-calendar-picker-indicator { display: none; }
+.form-control > input.form-range__input::-webkit-datetime-edit-fields-wrapper { padding: 0; }
+.form-control > input.form-range__input[aria-invalid="true"] { color: var(--accent-ink); text-decoration: underline wavy var(--accent-ink); text-underline-offset: 3px; }
 .form-range { display: flex; align-items: center; gap: 8px; min-width: 0; }
 .form-range__separator { flex: none; color: var(--text-muted, #737b85); font-size: 12px; }
 

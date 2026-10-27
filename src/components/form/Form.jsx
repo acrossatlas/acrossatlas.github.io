@@ -72,9 +72,7 @@ export function TimeInput({ value = '', onChange, ...props }) {
     if (parsed === null) { setInvalid(true); return; }
     setInvalid(false); setText(parsed); commit(parsed);
   }
-  return <span className={`form-control form-control--picker${invalid ? ' is-invalid' : ''}`}>
-    <Clock aria-hidden="true" />
-    <input type="text" inputMode="numeric" autoComplete="off" placeholder="--:--" maxLength={5} aria-invalid={invalid || undefined} value={text}
+  return <input type="text" className="form-range__input form-range__input--time" inputMode="numeric" autoComplete="off" placeholder="--:--" maxLength={5} aria-invalid={invalid || undefined} value={text}
       onChange={e => { const next = e.target.value; setText(next); setInvalid(false); if (/^\d{1,2}[:：.]\d{2}$/.test(next.trim()) || next.trim() === '') { const parsed = parseTime(next); if (parsed !== null) commit(parsed); } }}
       onBlur={settle}
       onKeyDown={e => {
@@ -84,24 +82,27 @@ export function TimeInput({ value = '', onChange, ...props }) {
           const next = stepTime(parseTime(text) || value, (e.key === 'ArrowUp' ? 1 : -1) * (e.shiftKey ? 60 : 5));
           setText(next); setInvalid(false); commit(next);
         }
-      }} {...props} />
-  </span>;
+      }} {...props} />;
 }
 
+/** One capsule holding start and end time. */
 export function TimeRange({ label = '时间', prefix = '', startsAt, endsAt, onChange }) {
-  return <FieldGroup label={label}><div className="form-range">
+  return <FieldGroup label={label}><span className="form-control form-control--range">
+    <Clock aria-hidden="true" />
     <TimeInput aria-label={`${prefix}开始时间`} value={startsAt || ''} onChange={next => onChange({ startsAt: next, endsAt })} />
     <span className="form-range__separator" aria-hidden="true">—</span>
     <TimeInput aria-label={`${prefix}结束时间`} value={endsAt || ''} onChange={next => onChange({ startsAt, endsAt: next })} />
-  </div></FieldGroup>;
+  </span></FieldGroup>;
 }
 
+/** One capsule holding start and end date (native pickers open on click). */
 export function DateRange({ label = '日期', startsOn, endsOn, min, max, onChange }) {
-  return <FieldGroup label={label}><div className="form-range">
-    <PickerInput type="date" required aria-label="开始日期" min={min} max={max} value={startsOn} onChange={e => onChange({ startsOn: e.target.value, endsOn: endsOn < e.target.value ? e.target.value : endsOn })} />
+  return <FieldGroup label={label}><span className="form-control form-control--range">
+    <Calendar aria-hidden="true" />
+    <input type="date" className="form-range__input" required aria-label="开始日期" min={min} max={max} value={startsOn} onClick={openPicker} onChange={e => onChange({ startsOn: e.target.value, endsOn: endsOn < e.target.value ? e.target.value : endsOn })} />
     <span className="form-range__separator" aria-hidden="true">—</span>
-    <PickerInput type="date" required aria-label="结束日期" min={startsOn} max={max} value={endsOn} onChange={e => onChange({ startsOn, endsOn: e.target.value })} />
-  </div></FieldGroup>;
+    <input type="date" className="form-range__input" required aria-label="结束日期" min={startsOn} max={max} value={endsOn} onClick={openPicker} onChange={e => onChange({ startsOn, endsOn: e.target.value })} />
+  </span></FieldGroup>;
 }
 
 /** Compact tag-sized select (booking / payment state, transport mode). */
