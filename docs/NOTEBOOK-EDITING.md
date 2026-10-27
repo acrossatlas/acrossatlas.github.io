@@ -54,13 +54,16 @@ also work when the browser can decode them. Images are resized to a maximum
 are not uploaded or committed. Images can be opened and deleted; deletion can
 be undone.
 
-More opens Save and restore. Undo retains the last 20 edits. A `.across` backup
-contains current itinerary data, checklists, and all current photo and booking attachment bytes; it
-does not contain undo history. Import checks the schema, trip ID and photo
-completeness before applying. Imported images get fresh IDs so undo can restore
-the prior photo bytes. The current backup size limit is 200 MB.
+More is a short menu: 撤销上次修改, 版本记录 and 删除行程. Every saved change
+is a version (the last 20 are kept) with its time, what changed and its source.
+版本记录 expands to that list: choosing a version switches the trip to it and
+choosing 最新 switches back; nothing is downloaded and nothing is discarded.
+While an older version is shown, the trip page says so and offers 回到最新.
+Editing from an older version starts from it and keeps the previous latest as a
+version. 撤销上次修改 steps back one version the same way. Version logic lives in
+`src/lib/notebook-versions.js`; older undo history is migrated when read.
 
-More also offers Delete trip, with the trip title shown before confirmation.
+删除行程 confirms in place: the row turns into 确认删除整趟行程.
 Deletion removes the complete local notebook, undo history and its photo and
 booking attachment blobs in one transaction, then returns to Trip log. A small
 deletion marker prevents source journeys and stale tabs from recreating it.
@@ -120,26 +123,29 @@ guaranteed. The providers can be replaced with VITE_GEOCODER_URL/VITE_ROUTER_URL
 The geographic lookup cache belongs to this browser and is not part of backups.
 
 
-## Editing with an external AI
+## Editing with an external AI (not in the interface)
 
-More → Export for AI downloads an ordinary JSON file with format
+The menu no longer offers AI exchange or backup files. The library code remains
+(`notebook-exchange.js`, `notebook-backup.js`, covered by unit tests) for a
+later entry point.
+
+The exchange format is an ordinary JSON file with format
 `across-itinerary`, version 1, bookId, baseRevision, ordered days/events and the
 checklist. It contains attachment references but no binary file data. Retain
 IDs for existing events; new events need unique IDs. Null means no booking or
 payment status. Common fields are title, schedule, navigation, description, statuses, link and
 attachments; transport contains its ordered segments. Native source journeys remain the initial public seed.
 
-More → Apply AI changes validates the JSON, rejects outdated revisions and
-unknown attachment references, and previews added, changed, removed or moved
-entries before applying. Current photos and attachment bytes are preserved.
-The import is undoable. Across does not call an AI service.
+Applying it validates the JSON, rejects outdated revisions and unknown
+attachment references, and preserves current photos and attachment bytes.
+Across does not call an AI service.
 
 ## Limits and next infrastructure step
 
 This version saves to one browser origin. It is not cross-device synchronization,
 an offline-installable app, or a cloud photo service. Clearing browser website
-data removes local content; use a backup before doing so. A backup can be moved
-to another device manually. Editing does not publish to the public site.
+data removes local content, including all versions. Editing does not publish to
+the public site.
 
 Trip names and date ranges are editable in the header; the home plus creates
 a new local notebook. Date changes retain content in day order and refuse to
@@ -162,7 +168,7 @@ migration, cross-day move, linked flight, validation and immutability checks.
 `scripts/verify-notebook.mjs` uses Playwright against a running preview. Supply
 Playwright normally or set `PLAYWRIGHT_MODULE` to its module path. It uses isolated
 browser contexts and does not alter a user's Safari/local preview data. Checks
-cover direct card editing and autosave, native picker values, type-specific
-forms, transport segments, uploads, pointer drag, checklist state, JSON exchange,
-full backup/restore and concurrent-edit protection.
+cover direct card editing, discard confirmation and save on 完成, 24-hour
+times, type-specific forms, transport segments, uploads, pointer drag,
+checklist state, version switching and undo, and concurrent-edit protection.
 It captures desktop/mobile/light/dark screenshots for visual review.
