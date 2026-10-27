@@ -63,9 +63,9 @@ textarea {
   font: inherit;
 }
 
-button:focus-visible,
-a:focus-visible,
-input:focus-visible {
+:root:not([data-input="pointer"]) button:focus-visible,
+:root:not([data-input="pointer"]) a:focus-visible,
+:root:not([data-input="pointer"]) input:focus-visible {
   outline: 2px solid var(--accent);
   outline-offset: 3px;
 }

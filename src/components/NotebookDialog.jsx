@@ -2,16 +2,16 @@ import { useEffect, useId, useRef, useState } from 'react';
 import { CloseIcon } from './JourneyEvents';
 
 // Same shell, header, close button and scrolling body as Transport / Stay.
-// `header` replaces the title row (the itinerary editor puts its type tabs there).
+// `header` replaces the title (the itinerary editor puts its type tabs there);
+// `actions` sit just left of the close button.
 //
-// Closing (×, Escape, backdrop) asks `canClose` first. If it answers false the
-// changes can't be kept, so the × turns into "放弃修改" in place; pressing it
-// discards and closes, while Escape or any further edit keeps editing.
-// Initial focus goes to the element marked data-autofocus, otherwise the dialog
-// itself, so no control shows a focus ring just because the dialog opened.
-export default function NotebookDialog({ title, eyebrow, header, onClose, canClose, busy, children, className = '' }) {
+// Closing never saves. While `dirty` is true, the first close (×, Escape or a
+// click on the backdrop) turns the × into "放弃修改" in place; pressing it
+// discards and closes. Escape or any further edit returns to the ×.
+// Initial focus goes to the element marked data-autofocus, otherwise the dialog itself.
+export default function NotebookDialog({ title, eyebrow, header, actions, onClose, dirty = false, busy, children, className = '' }) {
   const ref = useRef(null), closeRef = useRef(null), titleId = useId();
-  const [confirming, setConfirming] = useState(false), [checking, setChecking] = useState(false);
+  const [confirming, setConfirming] = useState(false);
   useEffect(() => {
     const element = ref.current, opener = document.activeElement;
     const overflow = document.body.style.overflow;
@@ -22,15 +22,11 @@ export default function NotebookDialog({ title, eyebrow, header, onClose, canClo
       if (opener instanceof HTMLElement && opener.isConnected) opener.focus({ preventScroll: true });
     };
   }, []);
-  useEffect(() => { if (confirming) closeRef.current?.focus(); }, [confirming]);
-  async function requestClose() {
-    if (busy || checking) return;
-    if (confirming) { onClose(); return; }
-    setChecking(true);
-    let ok = true;
-    try { ok = canClose ? await canClose() : true; } catch { ok = false; }
-    setChecking(false);
-    if (ok) onClose(); else setConfirming(true);
+  useEffect(() => { if (confirming) closeRef.current?.focus({ preventScroll: true }); }, [confirming]);
+  useEffect(() => { if (!dirty) setConfirming(false); }, [dirty]);
+  function requestClose() {
+    if (busy) return;
+    if (dirty && !confirming) setConfirming(true); else onClose();
   }
   return <dialog ref={ref} tabIndex={-1} className={`journey-modal notebook-editor ${className}`} aria-labelledby={header ? undefined : titleId} aria-label={header ? title : undefined}
     onCancel={event => { event.preventDefault(); if (confirming) setConfirming(false); else requestClose(); }}
@@ -42,8 +38,9 @@ export default function NotebookDialog({ title, eyebrow, header, onClose, canClo
     }}>
     <header className="journey-modal__header notebook-editor__header">
       {header || <div>{eyebrow && <p>{eyebrow}</p>}<h2 id={titleId}>{title}</h2></div>}
-      <button ref={closeRef} type="button" className={`notebook-editor__close${confirming ? ' is-confirming' : ''}`} disabled={busy || checking}
-        aria-label={confirming ? '放弃修改并关闭' : '关闭编辑窗口'} onClick={requestClose}>
+      {actions && <div className="notebook-editor__actions">{actions}</div>}
+      <button ref={closeRef} type="button" className={`notebook-editor__close${confirming ? ' is-confirming' : ''}`} disabled={busy}
+        aria-label={confirming ? '放弃修改并关闭' : '关闭编辑窗口'} onClick={requestClose} onBlur={() => setConfirming(false)}>
         {confirming ? <span>放弃修改</span> : <CloseIcon />}
       </button>
     </header>

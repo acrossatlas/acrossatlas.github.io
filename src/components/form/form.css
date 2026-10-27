@@ -1,71 +1,81 @@
 /* Notebook form components. Tokens and fallbacks follow styles.css:
-   light mode leaves --fill/--surface/--line undefined, dark mode defines them. */
+   light mode leaves --fill/--surface/--line undefined, dark mode defines them.
+   Focus: text fields show where the caret is with a quiet surface change; the
+   accent ring appears only for keyboard navigation (html[data-input="keyboard"]). */
 
-.form-fields { display: grid; gap: 16px; min-width: 0; margin: 0; padding: 0; border: 0; }
+.form-fields { display: grid; gap: 12px; min-width: 0; margin: 0; padding: 0; border: 0; }
 
-/* Field: label stacked above the control */
-.form-field { display: grid; gap: 7px; min-width: 0; }
+/* Field: label on the left, control on the right */
+.form-field { display: grid; grid-template-columns: 56px minmax(0, 1fr); align-items: center; column-gap: 14px; row-gap: 6px; min-width: 0; }
 .form-field__label { color: var(--text-muted, #737b85); font-size: 12px; font-weight: 600; line-height: 1.4; }
-.form-field__hint { color: var(--text-muted, #737b85); font-size: 11px; line-height: 1.6; }
-.form-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; min-width: 0; }
+.form-field.is-multiline { align-items: start; }
+.form-field.is-multiline > .form-field__label { padding-top: 13px; }
+.form-field > :not(.form-field__label) { grid-column: 2; }
+.form-field__error { margin: 0; padding-left: 16px; color: var(--accent-ink); font-size: 11px; line-height: 1.5; }
 
 /* Control surface: the journey-search pill */
 .form-control { display: flex; align-items: center; gap: 8px; min-width: 0; height: 42px; padding: 0 16px; color: var(--ink); background: var(--fill, #f5f5f7); border-radius: 999px; transition: background 160ms ease, box-shadow 160ms ease; }
 .form-control:hover { background: var(--fill-hover, #eeeef1); }
-.form-control:focus-within { background: var(--fill, #f5f5f7); box-shadow: 0 0 0 2px var(--accent); }
-.form-control > input, .form-control > select, .form-control > textarea { flex: 1 1 auto; width: 100%; min-width: 0; padding: 0; margin: 0; border: 0; outline: 0; color: inherit; background: transparent; font: inherit; font-size: 13px; }
-.form-control > input::placeholder, .form-control > textarea::placeholder { color: var(--text-faint, #b0b0b0); }
+.form-control:focus-within { background: var(--fill-hover, #eeeef1); }
+:root[data-input="keyboard"] .form-control:focus-within { box-shadow: inset 0 0 0 2px var(--accent); }
+.form-field.is-invalid .form-control { box-shadow: inset 0 0 0 1px var(--accent-ink); }
+.form-control input, .form-control select, .form-control textarea { flex: 1 1 auto; width: 100%; min-width: 0; padding: 0; margin: 0; border: 0; outline: 0; color: inherit; background: transparent; font: inherit; font-size: 13px; }
+.form-control input::placeholder, .form-control textarea::placeholder { color: var(--text-faint, #b0b0b0); }
 .form-control--multiline { height: auto; align-items: stretch; padding: 12px 16px; border-radius: 20px; }
 .form-control > textarea { min-height: calc(1.7em * 3); line-height: 1.7; resize: none; field-sizing: content; max-height: 40vh; }
-
-/* Date / time pills: icon + native input, native indicator hidden (click opens the picker) */
-.form-control--picker { flex: 1 1 0; gap: 7px; padding: 0 14px; cursor: pointer; }
-.form-control--picker > svg { flex: none; width: 15px; height: 15px; color: var(--text-muted, #737b85); }
-.form-control--picker > input { cursor: pointer; font-variant-numeric: tabular-nums; }
-.form-control--picker > input[type="text"] { cursor: text; }
-.form-control--picker.is-invalid { box-shadow: 0 0 0 2px var(--accent-ink); }
-.form-control--picker > input::-webkit-calendar-picker-indicator { display: none; }
-.form-control--picker > input::-webkit-datetime-edit-fields-wrapper { padding: 0; }
-.form-control--picker > input::-webkit-datetime-edit-text { color: var(--text-muted, #737b85); }
 .form-control--select { position: relative; padding-right: 36px; }
 .form-control--select > select { appearance: none; -webkit-appearance: none; height: 100%; cursor: pointer; }
 .form-control--select > svg { position: absolute; right: 14px; width: 15px; height: 15px; color: var(--text-muted, #737b85); pointer-events: none; }
-.form-control--range { gap: 10px; }
-.form-control--range > svg { flex: none; width: 15px; height: 15px; color: var(--text-muted, #737b85); }
-.form-control > input.form-range__input { flex: 0 0 auto; width: auto; cursor: pointer; font-variant-numeric: tabular-nums; }
-.form-control > input.form-range__input--time { width: 5.5ch; cursor: text; }
-.form-control > input.form-range__input::-webkit-calendar-picker-indicator { display: none; }
-.form-control > input.form-range__input::-webkit-datetime-edit-fields-wrapper { padding: 0; }
-.form-control > input.form-range__input[aria-invalid="true"] { color: var(--accent-ink); text-decoration: underline wavy var(--accent-ink); text-underline-offset: 3px; }
-.form-range { display: flex; align-items: center; gap: 8px; min-width: 0; }
-.form-range__separator { flex: none; color: var(--text-muted, #737b85); font-size: 12px; }
+
+/* Split: one capsule, icon + two equal halves, so halves line up from row to row */
+.form-split { display: grid; grid-template-columns: 15px minmax(0, 1fr) 16px minmax(0, 1fr); column-gap: 10px; padding: 0 16px; }
+.form-split--single { grid-template-columns: 15px minmax(0, 1fr); }
+.form-split__icon { width: 15px; height: 15px; color: var(--text-muted, #737b85); }
+.form-split__half { display: flex; align-items: center; min-width: 0; height: 100%; }
+.form-split__separator { color: var(--text-muted, #737b85); font-size: 12px; text-align: center; }
+.form-split input { font-variant-numeric: tabular-nums; }
+.form-split input[aria-invalid="true"] { color: var(--accent-ink); }
+.form-split input[aria-invalid="true"]::placeholder { color: var(--accent-ink); opacity: .7; }
+.form-split__select { position: relative; display: flex; align-items: center; width: 100%; height: 100%; }
+.form-split__select > select { appearance: none; -webkit-appearance: none; height: 100%; padding-right: 22px; cursor: pointer; }
+.form-split__select > select:invalid, .form-split__select > select:has(option[value=""]:checked) { color: var(--text-faint, #b0b0b0); }
+.form-split__select > svg { position: absolute; right: 2px; width: 14px; height: 14px; color: var(--text-muted, #737b85); pointer-events: none; }
+.form-date { cursor: pointer; }
+.form-date::-webkit-calendar-picker-indicator { display: none; }
+.form-date::-webkit-datetime-edit-fields-wrapper { padding: 0; }
 
 /* Tag select: same shape as reservation-info-trigger, with a real chevron */
-.form-tag-select { position: relative; display: inline-flex; align-items: center; flex: none; height: 26px; border-radius: 999px; color: var(--text-muted, #737b85); background: var(--fill, #f5f5f7); transition: background 160ms ease; }
+.form-tag-select { position: relative; display: inline-flex; align-items: center; flex: none; height: 28px; border-radius: 999px; color: var(--text-muted, #737b85); background: var(--fill, #f5f5f7); transition: background 160ms ease; }
 .form-tag-select.has-value { color: var(--accent-ink); background: var(--accent-soft); }
 .form-tag-select:hover { background: var(--fill-hover, #eeeef1); }
 .form-tag-select.has-value:hover { background: var(--accent-tag); }
-.form-tag-select:focus-within { box-shadow: 0 0 0 2px var(--accent); }
-.form-tag-select > select { appearance: none; -webkit-appearance: none; height: 100%; padding: 0 24px 0 10px; border: 0; outline: 0; color: inherit; background: transparent; font: inherit; font-size: 11px; font-weight: 600; cursor: pointer; }
-.form-tag-select > svg { position: absolute; right: 8px; width: 12px; height: 12px; pointer-events: none; }
+:root[data-input="keyboard"] .form-tag-select:focus-within { box-shadow: inset 0 0 0 2px var(--accent); }
+.form-tag-select > select { appearance: none; -webkit-appearance: none; height: 100%; padding: 0 26px 0 11px; border: 0; outline: 0; color: inherit; background: transparent; font: inherit; font-size: 11px; font-weight: 600; cursor: pointer; }
+.form-tag-select > svg { position: absolute; right: 9px; width: 12px; height: 12px; pointer-events: none; }
 .form-tag-select > select:disabled { cursor: default; }
 
 /* Segmented: compact day-tabs */
 .form-segmented { flex: none; width: fit-content; max-width: 100%; gap: 4px; margin: 0; padding: 3px; border-radius: 999px; background: var(--fill, #f5f5f7); }
 .form-segmented > button { display: inline-flex; align-items: center; flex: none; width: auto; white-space: nowrap; height: 30px; border-radius: 999px; padding: 0 14px; font-size: 12px; background: transparent; }
 .form-segmented > button:not(.is-active):hover { background: var(--fill-hover, #e6e9ea); }
-/* The tab strip scrolls, so an outside ring would be clipped: draw it inside. */
-.form-segmented > button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.form-segmented > button:focus-visible { outline: 0; }
+:root[data-input="keyboard"] .form-segmented > button:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
 
-/* Section: a filled card holding its own fields; nested controls lift to the surface colour */
-.form-section { display: grid; gap: 14px; min-width: 0; padding: 16px; border-radius: 22px; background: var(--fill, #f5f5f7); }
-.form-section .form-control, .form-section .form-tag-select:not(.has-value) { background: var(--surface, #ffffff); }
+/* Section: a filled card holding its own rows; nested controls lift to the surface colour */
+.form-section { display: grid; gap: 12px; min-width: 0; padding: 16px; border-radius: 22px; background: var(--fill, #f5f5f7); }
+.form-section .form-control { background: var(--surface, #ffffff); }
+.form-section .form-control:hover, .form-section .form-control:focus-within { background: var(--surface, #ffffff); }
+.form-section .form-field { grid-template-columns: 40px minmax(0, 1fr); }
 .form-section__header { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; min-height: 28px; }
 .form-section__header h4 { margin: 0; color: var(--ink); font-size: 12px; font-weight: 650; }
 .form-section__header > :last-child:not(h4) { margin-left: auto; }
-.form-section__tools { display: flex; align-items: center; gap: 6px; margin-left: auto; }
 
-/* Text buttons: quiet secondary and destructive actions */
+/* Empty optional section: a grey bar with one centred action */
+.form-add-bar { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; height: 48px; border: 0; border-radius: 22px; color: var(--text-muted, #737b85); background: var(--fill, #f5f5f7); font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; transition: color 160ms ease, background 160ms ease; }
+.form-add-bar:hover { color: var(--ink); background: var(--fill-hover, #eeeef1); }
+.form-add-bar svg { width: 14px; height: 14px; }
+
+/* Text and icon buttons */
 .form-text-button { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 0 2px; border: 0; color: var(--text-muted, #737b85); background: transparent; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; transition: color 160ms ease; }
 .form-text-button:hover { color: var(--ink); }
 .form-text-button svg { flex: none; width: 14px; height: 14px; }
@@ -73,22 +83,24 @@
 .form-icon-button:hover { color: var(--ink); background: var(--fill-hover, #e6e9ea); }
 .form-icon-button svg { width: 14px; height: 14px; }
 
+/* In-place confirmation: secondary until armed, then inverted */
+.form-confirm-button.is-armed, .form-confirm-button.is-armed:hover { color: var(--white); background: var(--ink); }
+
 /* Messages */
 .form-message { margin: 0; color: var(--text-muted, #737b85); font-size: 12px; line-height: 1.8; }
 .form-message.is-error { padding: 10px 14px; border-radius: 14px; color: var(--accent-ink); background: var(--accent-soft); }
 
-/* Footer: danger on the left, actions on the right */
-.form-footer { display: flex; flex: none; align-items: center; gap: 12px; margin: 20px 18px 0 0; }
-.form-footer__danger { display: flex; align-items: center; gap: 8px; min-width: 0; }
-.form-footer__actions { display: flex; align-items: center; flex-wrap: wrap; justify-content: flex-end; gap: 8px; margin-left: auto; }
-.form-footer .journey-tool-button { height: 38px; padding: 0 18px; }
+/* Footer: actions on the right, secondary then primary */
+.form-footer { display: flex; flex: none; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px; margin: 20px 18px 0 0; }
+.form-footer .journey-tool-button { height: 38px; min-width: 76px; padding: 0 18px; }
 
-button:disabled.form-text-button, button:disabled.form-icon-button { opacity: .38; cursor: default; }
+button:disabled.form-text-button, button:disabled.form-icon-button, button:disabled.form-add-bar { opacity: .38; cursor: default; }
 
 @media (max-width: 640px) {
-  .form-row { gap: 8px; }
-  .form-control > input, .form-control > select, .form-control > textarea { font-size: 16px; }
-  .form-control--picker { padding: 0 12px; }
+  .form-field { grid-template-columns: 48px minmax(0, 1fr); column-gap: 10px; }
+  .form-section .form-field { grid-template-columns: 36px minmax(0, 1fr); }
+  .form-control input, .form-control select, .form-control textarea { font-size: 16px; }
+  .form-split { column-gap: 8px; padding: 0 14px; }
   .form-footer { margin-right: 10px; }
   .form-section { padding: 12px; border-radius: 18px; }
 }
