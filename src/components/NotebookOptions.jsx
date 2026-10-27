@@ -5,7 +5,8 @@ import NotebookDialog from './NotebookDialog';
 import { Button, FormError, FormHint } from './form/Form';
 import { listVersions } from '../lib/notebook-versions.js';
 
-const SOURCE_LABELS = { human: '手动', ai: 'AI', backup: '备份', seed: '初始' };
+// Only sources other than a person's own edit are marked; the initial version is named by its label.
+const SOURCE_TAGS = { ai: 'AI', backup: '备份' };
 const pad = number => String(number).padStart(2, '0');
 export function versionTime(at) {
   if (!at) return '—';
@@ -46,7 +47,7 @@ export default function NotebookOptions({ notebook }) {
 
           <section className={`info-card notebook-history${expanded ? ' is-expanded' : ''}`}>
             <button className="notebook-option notebook-history__toggle" type="button" aria-expanded={expanded} aria-controls="notebook-history-panel" onClick={() => setExpanded(value => !value)}>
-              <History /><span><strong>版本记录</strong><small>{viewing && !viewing.isLatest ? `正在查看${versionName(viewing)}` : `最新：${versionTime(latest?.at)} · ${SOURCE_LABELS[latest?.source] ?? '手动'}`}</small></span>
+              <History /><span><strong>版本记录</strong><small>{viewing && !viewing.isLatest ? `正在查看${versionName(viewing)}` : `最新：${versionTime(latest?.at)}`}</small></span>
               <ChevronDown className="notebook-history__chevron" />
             </button>
             {expanded && <div className="notebook-history__panel" id="notebook-history-panel">
@@ -60,8 +61,10 @@ export default function NotebookOptions({ notebook }) {
                     onClick={() => show(version, version.isLatest ? '已回到最新版本' : '')}>
                     <time dateTime={version.at ?? undefined}>{versionTime(version.at)}</time>
                     <span className="notebook-version__label">{version.label}</span>
-                    <span className={`notebook-version__source is-${version.source}`}>{SOURCE_LABELS[version.source] ?? '手动'}</span>
-                    {version.isLatest && <span className="notebook-version__mark">最新</span>}
+                    <span className="notebook-version__tags">
+                      {SOURCE_TAGS[version.source] && <span className={`notebook-version__tag is-${version.source}`}>{SOURCE_TAGS[version.source]}</span>}
+                      {version.isLatest && <span className="notebook-version__tag is-latest">最新</span>}
+                    </span>
                   </button>
                 </li>)}
               </ol>

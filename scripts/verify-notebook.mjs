@@ -142,7 +142,8 @@ try {
   await page.getByRole('button', { name: /^版本记录/ }).click();
   const versions = page.getByRole('list', { name: '版本', exact: true }).getByRole('button');
   assert.ok(await versions.count() > 2);
-  assert.match(await versions.first().textContent(), /添加 1 张照片.*最新/);
+  assert.match(await versions.first().textContent(), /添加 1 张照片最新$/);
+  assert.equal(await page.getByRole('list', { name: '版本', exact: true }).getByText('手动', { exact: true }).count(), 0);
   await versions.nth(1).click();
   await page.getByRole('button', { name: '关闭编辑窗口', exact: true }).click();
   await page.getByText(/^正在查看.*的版本$/).waitFor();

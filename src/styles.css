@@ -63,6 +63,10 @@ textarea {
   font: inherit;
 }
 
+:root[data-input="pointer"] :focus-visible {
+  outline: none;
+}
+
 :root:not([data-input="pointer"]) button:focus-visible,
 :root:not([data-input="pointer"]) a:focus-visible,
 :root:not([data-input="pointer"]) input:focus-visible {
