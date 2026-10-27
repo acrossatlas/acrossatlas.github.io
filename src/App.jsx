@@ -521,7 +521,7 @@ function JourneyPage({ journey: originalJourney }) {
   }
   async function saveItinerary(dayId, fields, revision, files) {
     requireUnchanged(revision);
-    const record = await notebook.commit(book => saveEvent(book, dayId, fields, editor.id, !editor.event), editor.event ? `修改 ${editor.event.title}` : `添加 ${fields.title}`, files, { groupId: editor.groupId });
+    const record = await notebook.commit(book => saveEvent(book, dayId, fields, editor.id, !editor.event), editor.event ? `修改 ${fields.title}` : `添加 ${fields.title}`, files, { groupId: editor.groupId });
     setActiveDay(journey.dates.findIndex(day => day.key === dayId));
     return record.localRevision;
   }
