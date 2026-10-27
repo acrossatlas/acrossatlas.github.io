@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { mkdir, readFile } from 'node:fs/promises';
+import { mkdir } from 'node:fs/promises';
 if (process.argv.includes('--map')) { await import('./verify-map-link.mjs'); process.exit(0); }
 if (process.argv.includes('--delete-trip')) { await import('./verify-delete-trip.mjs'); process.exit(0); }
 const { chromium } = await import(process.env.PLAYWRIGHT_MODULE || 'playwright');
@@ -137,45 +137,28 @@ try {
   await page.screenshot({ path: `${output}/mobile-editor-dark.png` });
   await done(page);
   console.log('PASS: mobile editor, light/dark and always-available photos');
+  // 更多 → 版本记录: the previous version (before the photo) can be shown, then the latest again.
   await page.getByRole('button', { name: '更多', exact: true }).click();
   await page.getByRole('button', { name: /^版本记录/ }).click();
-  let downloadEvent = page.waitForEvent('download');
-  await page.getByRole('button', { name: '导出给 AI 修改', exact: false }).click();
-  let download = await downloadEvent; await download.saveAs(`${output}/itinerary.json`);
-  const packet = JSON.parse(await readFile(`${output}/itinerary.json`, 'utf8'));
-  packet.days[1].events[0].title = 'AI 修改后的行程';
-  await page.getByLabel('选择 AI 修改的行程', { exact: true }).setInputFiles({ name: 'edited.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(packet)) });
-  await page.getByText(/^已应用 AI 修改/).waitFor();
-  // The AI change is a version tagged AI; the previous one can be shown and then left again.
   const versions = page.getByRole('list', { name: '版本', exact: true }).getByRole('button');
-  assert.equal(await versions.first().locator('.notebook-version__source').textContent(), 'AI');
+  assert.ok(await versions.count() > 2);
+  assert.match(await versions.first().textContent(), /添加 1 张照片.*最新/);
   await versions.nth(1).click();
-  await page.getByText(/^正在查看.*的版本$/).first().waitFor();
-  await versions.first().click();
-  await page.getByText('已回到最新版本', { exact: true }).waitFor();
   await page.getByRole('button', { name: '关闭编辑窗口', exact: true }).click();
-  await titleButton(page, 'AI 修改后的行程').waitFor();
-  console.log('PASS: editable JSON round trip applies AI changes as a version that can be switched away from and back');
+  await page.getByText(/^正在查看.*的版本$/).waitFor();
+  assert.equal(await page.getByRole('button', { name: '查看照片 photo-test.png', exact: true }).count(), 0);
+  await page.locator('.notebook-version-notice--page').getByRole('button', { name: '回到最新', exact: true }).click();
+  await page.getByRole('button', { name: '查看照片 photo-test.png', exact: true }).waitFor();
+  assert.equal(await page.locator('.notebook-version-notice--page').count(), 0);
+  // 撤销上次修改 steps back one version without discarding the latest.
   await page.getByRole('button', { name: '更多', exact: true }).click();
-  await page.getByRole('button', { name: /^版本记录/ }).click();
-  downloadEvent = page.waitForEvent('download');
-  await page.getByRole('button', { name: '下载备份', exact: false }).click();
-  download = await downloadEvent; await download.saveAs(`${output}/roundtrip.across`);
-  const backup = JSON.parse(await readFile(`${output}/roundtrip.across`, 'utf8'));
-  assert.ok(backup.files.some(file => file.data.startsWith('data:application/pdf')));
-  const fresh = await browser.newContext({ viewport: { width: 390, height: 844 } });
-  const restored = await fresh.newPage(); restored.setDefaultTimeout(12000);
-  await restored.goto(`${trip}?date=2026-09-25`, { waitUntil: 'domcontentloaded' });
-  await restored.getByRole('button', { name: '更多', exact: true }).click();
-  await restored.getByRole('button', { name: /^版本记录/ }).click();
-  await restored.getByLabel('选择备份', { exact: true }).setInputFiles(`${output}/roundtrip.across`);
-  await restored.getByText(/^已从备份恢复/).waitFor();
-  await restored.getByRole('button', { name: '关闭编辑窗口', exact: true }).click();
-  await restored.getByRole('button', { name: '查看照片 photo-test.png', exact: true }).waitFor();
-  await restored.goto(`${trip}?date=2026-09-24`, { waitUntil: 'domcontentloaded' });
-  await restored.getByRole('link', { name: 'booking-test.pdf', exact: true }).waitFor();
-  await fresh.close(); console.log('PASS: complete backup restores photos and PDF attachments');
+  await page.getByRole('button', { name: /^撤销上次修改/ }).click();
+  await page.getByText(/^已撤销/).waitFor();
   await page.getByRole('button', { name: '关闭编辑窗口', exact: true }).click();
+  assert.equal(await page.getByRole('button', { name: '查看照片 photo-test.png', exact: true }).count(), 0);
+  await page.locator('.notebook-version-notice--page').getByRole('button', { name: '回到最新', exact: true }).click();
+  await page.getByRole('button', { name: '查看照片 photo-test.png', exact: true }).waitFor();
+  console.log('PASS: version history switches to an older version and back; undo keeps the latest');
   await page.locator('.itinerary-title-button').first().click();
   const other = await context.newPage(); other.setDefaultTimeout(12000);
   await other.goto(page.url(), { waitUntil: 'domcontentloaded' });

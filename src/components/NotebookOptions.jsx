@@ -1,10 +1,8 @@
-import { useRef, useState } from 'react';
-import { ChevronDown, Download, History, MoreHorizontal, Trash2, Undo2, Upload } from 'lucide-react';
+import { useState } from 'react';
+import { ChevronDown, History, MoreHorizontal, Trash2, Undo2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import NotebookDialog from './NotebookDialog';
 import { Button, FormError, FormHint } from './form/Form';
-import { downloadBackup, readBackup } from '../lib/notebook-backup.js';
-import { applyEditablePacket, downloadEditablePacket, summarizeEditableChanges } from '../lib/notebook-exchange.js';
 import { listVersions } from '../lib/notebook-versions.js';
 
 const SOURCE_LABELS = { human: '手动', ai: 'AI', backup: '备份', seed: '初始' };
@@ -18,13 +16,11 @@ export function versionTime(at) {
 export function versionName(version) { return version.at ? ` ${versionTime(version.at)} 的版本` : `「${version.label}」`; }
 
 // 更多: undo, version history and deleting the trip.
-// 版本记录 folds backup, restore and AI exchange into one expandable entry: every change is a
-// version labelled with its time and whether a person, an AI file or a backup made it.
-// Choosing a version shows it; choosing the latest again switches back.
+// 版本记录 expands to every saved version with its time and source. Choosing a version
+// switches the trip to it; choosing the latest again switches back. Nothing is downloaded.
 export default function NotebookOptions({ notebook }) {
   const [open, setOpen] = useState(false), [expanded, setExpanded] = useState(false), [armed, setArmed] = useState(false);
   const [working, setWorking] = useState(false), [error, setError] = useState(''), [message, setMessage] = useState('');
-  const input = useRef(null), dataInput = useRef(null);
   const navigate = useNavigate();
   const { record, busy } = notebook;
   async function action(operation) {
@@ -41,7 +37,7 @@ export default function NotebookOptions({ notebook }) {
     <button className="journey-tool-button notebook-more-button" type="button" aria-label="更多" title="更多" aria-haspopup="dialog" aria-expanded={open} disabled={!record} onClick={openDialog}><MoreHorizontal /></button>
     {open && <NotebookDialog className="reservation-modal" title="更多" busy={working} onClose={() => setOpen(false)}>
       <div className="journey-modal__body">
-        <p className="form-message notebook-options__hint">内容保存在当前浏览器，保留最近 20 个版本。跨设备同步尚未开通，清除网站数据前请下载备份。</p>
+        <p className="form-message notebook-options__hint">内容保存在当前浏览器，保留最近 20 个版本，点击版本即可切换。跨设备同步尚未开通，清除网站数据会删除这些内容。</p>
         <div className="journey-modal__list">
           <button className="info-card notebook-option" type="button" disabled={disabled || !previous}
             onClick={() => show(previous, `已撤销，正在查看${versionName(previous)}`)}>
@@ -50,7 +46,7 @@ export default function NotebookOptions({ notebook }) {
 
           <section className={`info-card notebook-history${expanded ? ' is-expanded' : ''}`}>
             <button className="notebook-option notebook-history__toggle" type="button" aria-expanded={expanded} aria-controls="notebook-history-panel" onClick={() => setExpanded(value => !value)}>
-              <History /><span><strong>版本记录</strong><small>{viewing && !viewing.isLatest ? `正在查看${versionName(viewing)}` : `最新：${versionTime(latest?.at)} · ${SOURCE_LABELS[latest?.source] ?? '手动'}`} · 备份与 AI 修改</small></span>
+              <History /><span><strong>版本记录</strong><small>{viewing && !viewing.isLatest ? `正在查看${versionName(viewing)}` : `最新：${versionTime(latest?.at)} · ${SOURCE_LABELS[latest?.source] ?? '手动'}`}</small></span>
               <ChevronDown className="notebook-history__chevron" />
             </button>
             {expanded && <div className="notebook-history__panel" id="notebook-history-panel">
@@ -69,12 +65,6 @@ export default function NotebookOptions({ notebook }) {
                   </button>
                 </li>)}
               </ol>
-              <div className="notebook-transfer" aria-label="备份与 AI 修改">
-                <Button variant="text" disabled={disabled} onClick={() => action(async () => { await downloadBackup(record.document); return '备份已下载，包含行程、清单、照片和预订附件'; })}><Download />下载备份</Button>
-                <Button variant="text" disabled={disabled} onClick={() => input.current.click()}><Upload />从备份恢复</Button>
-                <Button variant="text" disabled={disabled} onClick={() => action(async () => { await downloadEditablePacket(record); return '行程 JSON 已导出，可交给自己的 AI 修改'; })}><Download />导出给 AI 修改</Button>
-                <Button variant="text" disabled={disabled} onClick={() => dataInput.current.click()}><Upload />应用 AI 修改</Button>
-              </div>
             </div>}
           </section>
 
@@ -83,20 +73,6 @@ export default function NotebookOptions({ notebook }) {
             <Trash2 /><span><strong>{armed ? '确认删除整趟行程' : '删除行程'}</strong><small>{armed ? '行程、照片和预订附件都会删除，无法恢复。再点一次删除。' : record?.document.title}</small></span>
           </button>
         </div>
-        <input ref={dataInput} className="sr-only" type="file" accept=".json,application/json" aria-label="选择 AI 修改的行程" onChange={e => { const file = e.target.files[0]; e.target.value = ''; if (file) action(async () => {
-          if (file.size > 5 * 1024 * 1024) throw new Error('行程 JSON 超过 5 MB。');
-          const packet = JSON.parse(await file.text()), current = notebook.current.current;
-          const document = applyEditablePacket(current.document, packet, current.localRevision), changes = summarizeEditableChanges(current.document, document);
-          await notebook.commit(() => document, '应用 AI 修改', [], { source: 'ai' });
-          setExpanded(true);
-          return `已应用 AI 修改：${changes.length} 处变更。需要时可切换回之前的版本。`;
-        }); }} />
-        <input className="sr-only" type="file" accept=".across,application/json" ref={input} aria-label="选择备份" onChange={e => { const file = e.target.files[0]; e.target.value = ''; if (file) action(async () => {
-          const backup = await readBackup(file, record.id);
-          await notebook.commit(() => backup.document, '从备份恢复', backup.files, { source: 'backup' });
-          setExpanded(true);
-          return '已从备份恢复。需要时可切换回之前的版本。';
-        }); }} />
         <FormHint status>{working ? '正在处理…' : message}</FormHint>
         <FormError>{error}</FormError>
       </div>
