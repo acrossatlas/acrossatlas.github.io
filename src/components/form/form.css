@@ -83,8 +83,8 @@
 .form-icon-button:hover { color: var(--ink); background: var(--fill-hover, #e6e9ea); }
 .form-icon-button svg { width: 14px; height: 14px; }
 
-/* In-place confirmation: secondary until armed, then inverted */
-.form-confirm-button.is-armed, .form-confirm-button.is-armed:hover { color: var(--white); background: var(--ink); }
+/* In-place confirmation: secondary until armed, then outlined so it never reads as the primary action */
+.form-confirm-button.is-armed, .form-confirm-button.is-armed:hover { color: var(--ink); background: transparent; box-shadow: inset 0 0 0 1.5px var(--ink); }
 
 /* Messages */
 .form-message { margin: 0; color: var(--text-muted, #737b85); font-size: 12px; line-height: 1.8; }

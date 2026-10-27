@@ -54,18 +54,23 @@ try {
   const doneBox = await page.getByRole('button', { name: '完成', exact: true }).boundingBox();
   assert.ok(Math.abs(removeBox.y + removeBox.height / 2 - doneBox.y - doneBox.height / 2) < 3 && removeBox.x < doneBox.x);
   await page.getByRole('region', { name: '第 1 段行程', exact: true }).getByLabel('出发地', { exact: true }).fill('HKG TEST');
-  await saved(page, record => record.document.days[0].events[0].title === 'HKG TEST - AMS');
-  assert.equal(await page.getByRole('dialog').isVisible(), true);
-  await page.getByLabel('说明', { exact: true }).fill('无需保存按钮，修改后自动保存。');
-  await saved(page, record => record.document.days[0].events[0].detail === '无需保存按钮，修改后自动保存。');
-  await saved(page, record => record.history.length === 1);
+  await page.getByLabel('说明', { exact: true }).fill('修改在点完成时保存。');
+  // Closing never saves: with changes, × turns into an in-place discard confirmation; Escape backs out.
+  await page.getByRole('button', { name: '关闭编辑窗口', exact: true }).click();
+  await page.getByRole('button', { name: '放弃修改并关闭', exact: true }).waitFor();
+  await page.keyboard.press('Escape');
+  await page.getByRole('button', { name: '关闭编辑窗口', exact: true }).waitFor();
   await page.getByRole('dialog').locator('.journey-modal__body').evaluate(element => { element.scrollTop = 0; });
   await page.screenshot({ path: `${output}/desktop-editor.png` });
-  await done(page); await page.reload();
+  await done(page);
+  await saved(page, record => record.document.days[0].events[0].title === 'HKG TEST - AMS' && record.document.days[0].events[0].detail === '修改在点完成时保存。' && record.history.length === 1);
+  await page.reload();
   await titleButton(page, 'HKG TEST - AMS').waitFor();
-  console.log('PASS: card click, native date/time, overnight arrival and coalesced autosave');
+  console.log('PASS: card click, 24-hour times, overnight arrival, discard confirmation and save on 完成');
   await page.getByRole('button', { name: '添加行程', exact: true }).click();
-  assert.equal(await page.getByLabel('名称', { exact: true }).count(), 0);
+  assert.equal(await page.getByRole('tab', { name: '行程', exact: true }).getAttribute('aria-selected'), 'true');
+  await done(page).catch(() => {});
+  assert.equal(await page.getByRole('dialog').getByText('请填写名称', { exact: true }).count(), 1);
   await page.getByRole('tab', { name: '住宿', exact: true }).click();
   await page.getByLabel('名称', { exact: true }).fill('自动保存 · 住宿测试');
 
@@ -93,9 +98,10 @@ try {
   const leg = page.getByRole('region', { name: '第 2 段行程', exact: true });
   await leg.getByLabel('出发地', { exact: true }).fill('Utrecht Centraal');
   await leg.getByLabel('目的地', { exact: true }).fill('Rotterdam Centraal');
+  await page.getByRole('button', { name: '添加预订信息', exact: true }).click();
   await page.getByLabel('上传预订凭证', { exact: true }).setInputFiles({ name: 'booking-test.pdf', mimeType: 'application/pdf', buffer: Buffer.from('%PDF-1.4\n% test booking attachment\n%%EOF') });
-  await saved(page, record => record.document.days.flatMap(day => day.events).some(event => event.title === 'Amsterdam - Rotterdam Centraal' && event.attachments?.length === 1 && event.transport?.segments?.length === 2));
   await done(page);
+  await saved(page, record => record.document.days.flatMap(day => day.events).some(event => event.title === 'Amsterdam - Rotterdam Centraal' && event.attachments?.length === 1 && event.transport?.segments?.length === 2));
   await page.getByRole('link', { name: 'booking-test.pdf', exact: true }).waitFor();
   console.log('PASS: overall transport, editable segments and booking upload');
   await page.goto(`${trip}?date=2026-09-25`, { waitUntil: 'domcontentloaded' });
@@ -168,13 +174,13 @@ try {
   await other.locator('.itinerary-title-button').first().click();
   await other.getByLabel('说明', { exact: true }).fill('来自另一页面的修改'); await done(other);
   await page.getByLabel('说明', { exact: true }).fill('不能覆盖更新的版本');
+  await page.getByRole('dialog').getByRole('button', { name: '完成', exact: true }).click();
   await page.getByRole('dialog').getByRole('alert').waitFor();
-  // Closing with changes that can't be saved turns the × into an in-place discard confirmation.
   await page.getByRole('button', { name: '关闭编辑窗口', exact: true }).click();
   await page.getByRole('button', { name: '放弃修改并关闭', exact: true }).click();
   await page.getByRole('dialog').waitFor({ state: 'hidden' });
   await saved(page, record => record.document.days.find(day => day.date === '2026-09-25').events[0].detail === '来自另一页面的修改');
-  await other.close(); console.log('PASS: autosave preserves conflicts and does not overwrite');
+  await other.close(); console.log('PASS: a stale editor cannot overwrite a newer version');
   await page.goto(`${base}/?log=trip`, { waitUntil: 'domcontentloaded' });
   await page.getByRole('button', { name: '新建旅行', exact: true }).click();
   await page.getByLabel('名称', { exact: true }).fill('新建旅行验证');
@@ -202,6 +208,7 @@ try {
   await page.getByLabel('名称', { exact: true }).fill('重新命名的分隔'); await done(page);
   await page.getByRole('button', { name: '编辑分隔：重新命名的分隔', exact: true }).click();
   await page.getByRole('button', { name: '删除', exact: true }).click();
+  await page.getByRole('button', { name: '确认删除', exact: true }).click();
   await page.getByRole('dialog').waitFor({ state: 'hidden' });
   assert.equal(await page.getByRole('button', { name: '编辑分隔：重新命名的分隔', exact: true }).count(), 0);
   await page.goto(`${base}/?log=trip`, { waitUntil: 'domcontentloaded' });

@@ -10,35 +10,40 @@ always-visible Add action at the bottom of the day's list. Drag a card or its
 small grip to reorder; on touch devices use the grip so page scrolling remains
 available. Keyboard users can focus the grip and use up/down arrows.
 
-New entries start with the four compact type tabs. Card fields are name,
-time, address and description. The selected day supplies the date; native
-time inputs provide the start and end times. An
-unprovided time remains empty; vague source times stay in timeNote. Overnight
-legacy arrival labels are converted to actual end dates when edited.
+New entries start as 行程; the four compact type tabs switch type. Card fields
+are name, time, address and description, each with its label on the left. The
+selected day supplies the date; start and end times share one capsule of 24-hour
+fields (type `930` or `21:30`; arrow keys step 5 minutes). An unprovided time
+remains empty; vague source times stay in timeNote. Overnight legacy arrival
+labels are converted to actual end dates when edited.
 
 Activity, Stay and Dining edit the same fields already visible on a card:
 name, time, address and description. There are no extra room, cuisine, duration
 or other metadata inputs. Older extra-field values are folded into description
 when saved, so removing the inputs does not discard entered text.
 
-Transport starts with exactly one leg: mode, endpoints, time and code.
+Transport starts with exactly one leg, as three capsules split into equal
+halves that line up: route (from → to), time (start — end) and mode · code.
 Add leg creates a second leg; removing it returns to the same single-leg form.
 No separate overall endpoints or duplicate overall time inputs are shown. The
 card title is derived from the first departure and final destination as A - B.
 
-New booking and payment statuses are null. Both are compact native tag
-selects at the top right. The booking link and uploads reuse the existing reservation information rectangle. Existing confirmed source statuses are preserved. Each event supports
+New booking and payment statuses are null. Both are compact tag selects at the
+top right of the editor, beside close. Empty booking details show as a grey
+「添加预订信息」 bar that expands to the link and uploads. Existing confirmed source statuses are preserved. Each event supports
 up to 10 PDF/JPEG/PNG/WebP booking attachments, 20 MB each. Files are retained
 locally and can be opened with the browser. Upload does not parse tickets or
 infer status. Manual entry and JSON exchange use the same event schema.
 
-An editor autosaves valid drafts after a short typing pause and flushes the
-latest draft on Done, Escape or close. Failed/invalid saves remain in the
-editor. While a draft is unsaved, beforeunload protects against an accidental
-page exit. Writes are serialized; all saves from one editor session share one
-undo snapshot. A new untitled entry does not create a blank card.
+Editors save only on 完成, after checking required fields (a name, or a
+transport's first departure and final destination) and showing any problem
+inline. Closing never saves: once anything has changed, including the type, the
+close button turns into 「放弃修改」 in place and a second press discards; Escape
+or further editing backs out. 删除 sits beside 完成 as a secondary button and
+turns into 「确认删除」 in place. While a draft is unsaved, beforeunload
+protects against an accidental page exit. Each save is one undo step.
 
-Checklist text opens the same autosaving editor. Only the separate checkbox
+Checklist text opens the same editor. Only the separate checkbox
 changes the checked state. Small group-header plus buttons add entries. Old
 localStorage selections migrate when the notebook is first created.
 
