@@ -80,6 +80,7 @@
 /* Editor dialogs: one header row for every editor (title or type tabs + close) */
 .notebook-editor__header { align-items: center; gap: 12px; padding-bottom: 20px; }
 .notebook-editor__header > :first-child { flex: 1 1 auto; min-width: 0; }
+.notebook-editor__header > .form-segmented:first-child { flex: 0 1 auto; margin-right: auto; }
 .notebook-editor__header h2 { font-size: 20px; line-height: 1.3; }
 .notebook-editor__header p { margin-bottom: 4px; }
 .notebook-editor__header > .notebook-editor__close { flex: none; width: 34px; height: 34px; transition: width 180ms ease, color 160ms ease, background 160ms ease; }
