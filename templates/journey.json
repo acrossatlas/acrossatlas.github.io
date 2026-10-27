@@ -1,0 +1,650 @@
+{
+  "schemaVersion": 1,
+  "title": "",
+  "destinations": [],
+  "startsOn": null,
+  "endsOn": null,
+  "transport": [
+    {
+      "id": "transport-1",
+      "kind": "",
+      "title": "",
+      "startsOn": null,
+      "endsOn": null,
+      "detail": ""
+    }
+  ],
+  "stays": [
+    {
+      "id": "stay-1",
+      "title": "",
+      "checkIn": null,
+      "checkOut": null,
+      "navigation": "",
+      "detail": ""
+    }
+  ],
+  "days": [
+    {
+      "id": "driving",
+      "template": "driving",
+      "label": "多地点 · 驾车",
+      "date": null,
+      "summary": "驾车路线 · 多站停靠",
+      "focusEventId": "driving-1",
+      "map": {
+        "schematic": true,
+        "stops": [
+          {
+            "id": "stop-1",
+            "name": "出发点",
+            "eventId": "driving-1",
+            "coordinates": null
+          },
+          {
+            "id": "stop-2",
+            "name": "停靠点 A",
+            "eventId": "driving-2",
+            "coordinates": null
+          },
+          {
+            "id": "stop-3",
+            "name": "补给点",
+            "eventId": "driving-3",
+            "coordinates": null
+          },
+          {
+            "id": "stop-4",
+            "name": "目的地",
+            "eventId": "driving-4",
+            "coordinates": null
+          }
+        ],
+        "legs": [
+          {
+            "id": "leg-1",
+            "fromStopId": "stop-1",
+            "toStopId": "stop-2",
+            "mode": "驾车",
+            "distanceKm": null,
+            "durationMinutes": null,
+            "geometry": null
+          },
+          {
+            "id": "leg-2",
+            "fromStopId": "stop-2",
+            "toStopId": "stop-3",
+            "mode": "驾车",
+            "distanceKm": null,
+            "durationMinutes": null,
+            "geometry": null
+          },
+          {
+            "id": "leg-3",
+            "fromStopId": "stop-3",
+            "toStopId": "stop-4",
+            "mode": "驾车",
+            "distanceKm": null,
+            "durationMinutes": null,
+            "geometry": null
+          }
+        ],
+        "preview": {
+          "center": [
+            -73.985,
+            40.748
+          ],
+          "zoom": 11.5,
+          "showConnections": true
+        }
+      },
+      "events": [
+        {
+          "id": "driving-1",
+          "startsAt": "",
+          "endsAt": "",
+          "type": "交通",
+          "title": "出发点",
+          "navigation": "",
+          "detail": "补充出发时间、取车与导航地址。",
+          "reservationStatus": "不适用",
+          "paymentStatus": "不适用",
+          "reservationNote": ""
+        },
+        {
+          "id": "driving-2",
+          "startsAt": "",
+          "endsAt": "",
+          "type": "行程",
+          "title": "停靠点 A",
+          "navigation": "",
+          "detail": "补充停留时长、停车与游览安排。",
+          "reservationStatus": "不适用",
+          "paymentStatus": "不适用",
+          "reservationNote": ""
+        },
+        {
+          "id": "driving-3",
+          "startsAt": "",
+          "endsAt": "",
+          "type": "用餐",
+          "title": "补给点",
+          "navigation": "",
+          "detail": "补充用餐、加油或休息安排。",
+          "reservationStatus": "不适用",
+          "paymentStatus": "不适用",
+          "reservationNote": ""
+        },
+        {
+          "id": "driving-4",
+          "startsAt": "",
+          "endsAt": "",
+          "type": "住宿",
+          "title": "目的地",
+          "navigation": "",
+          "detail": "补充抵达时间与入住安排。",
+          "reservationStatus": "不适用",
+          "paymentStatus": "不适用",
+          "reservationNote": ""
+        }
+      ],
+      "group": "国家 A",
+      "dateLabel": "01.01",
+      "structure": "multi-stop"
+    },
+    {
+      "id": "city",
+      "template": "city",
+      "label": "多地点 · 自由游览",
+      "date": null,
+      "summary": "步行与公交 · 自由组合",
+      "focusEventId": "city-1",
+      "map": {
+        "schematic": true,
+        "stops": [
+          {
+            "id": "stop-1",
+            "name": "出发点",
+            "eventId": "city-1",
+            "coordinates": null
+          },
+          {
+            "id": "stop-2",
+            "name": "活动点 A",
+            "eventId": "city-2",
+            "coordinates": null
+          },
+          {
+            "id": "stop-3",
+            "name": "用餐点",
+            "eventId": "city-3",
+            "coordinates": null
+          },
+          {
+            "id": "stop-4",
+            "name": "活动点 B",
+            "eventId": "city-4",
+            "coordinates": null
+          }
+        ],
+        "legs": [
+          {
+            "id": "leg-1",
+            "fromStopId": "stop-1",
+            "toStopId": "stop-2",
+            "mode": "步行",
+            "distanceKm": null,
+            "durationMinutes": null,
+            "geometry": null
+          },
+          {
+            "id": "leg-2",
+            "fromStopId": "stop-2",
+            "toStopId": "stop-3",
+            "mode": "公交",
+            "distanceKm": null,
+            "durationMinutes": null,
+            "geometry": null
+          },
+          {
+            "id": "leg-3",
+            "fromStopId": "stop-3",
+            "toStopId": "stop-4",
+            "mode": "步行",
+            "distanceKm": null,
+            "durationMinutes": null,
+            "geometry": null
+          }
+        ],
+        "preview": {
+          "center": [
+            -73.985,
+            40.748
+          ],
+          "zoom": 11.5,
+          "showConnections": false
+        }
+      },
+      "events": [
+        {
+          "id": "city-1",
+          "startsAt": "",
+          "endsAt": "",
+          "type": "住宿",
+          "title": "出发点",
+          "navigation": "",
+          "detail": "补充出发时间与所在街区。",
+          "reservationStatus": "不适用",
+          "paymentStatus": "不适用",
+          "reservationNote": ""
+        },
+        {
+          "id": "city-2",
+          "startsAt": "",
+          "endsAt": "",
+          "type": "行程",
+          "title": "活动点 A",
+          "navigation": "",
+          "detail": "补充场馆、预约时段或街区探索。",
+          "reservationStatus": "不适用",
+          "paymentStatus": "不适用",
+          "reservationNote": ""
+        },
+        {
+          "id": "city-3",
+          "startsAt": "",
+          "endsAt": "",
+          "type": "用餐",
+          "title": "用餐点",
+          "navigation": "",
+          "detail": "补充用餐安排或自由时段。",
+          "reservationStatus": "不适用",
+          "paymentStatus": "不适用",
+          "reservationNote": ""
+        },
+        {
+          "id": "city-4",
+          "startsAt": "",
+          "endsAt": "",
+          "type": "行程",
+          "title": "活动点 B",
+          "navigation": "",
+          "detail": "补充可选活动或返回计划。",
+          "reservationStatus": "不适用",
+          "paymentStatus": "不适用",
+          "reservationNote": ""
+        }
+      ],
+      "group": "国家 A",
+      "dateLabel": "01.02",
+      "structure": "multi-stop"
+    },
+    {
+      "id": "transfer",
+      "template": "transfer",
+      "label": "转场",
+      "date": null,
+      "summary": "出发与到达 · 交通衔接",
+      "focusEventId": "transfer-1",
+      "map": {
+        "schematic": true,
+        "stops": [
+          {
+            "id": "stop-1",
+            "name": "退房点",
+            "eventId": "transfer-1",
+            "coordinates": null
+          },
+          {
+            "id": "stop-2",
+            "name": "出发站点",
+            "eventId": "transfer-2",
+            "coordinates": null
+          },
+          {
+            "id": "stop-3",
+            "name": "到达站点",
+            "eventId": "transfer-3",
+            "coordinates": null
+          },
+          {
+            "id": "stop-4",
+            "name": "入住点",
+            "eventId": "transfer-4",
+            "coordinates": null
+          }
+        ],
+        "legs": [
+          {
+            "id": "leg-1",
+            "fromStopId": "stop-1",
+            "toStopId": "stop-2",
+            "mode": "接驳",
+            "distanceKm": null,
+            "durationMinutes": null,
+            "geometry": null
+          },
+          {
+            "id": "leg-2",
+            "fromStopId": "stop-2",
+            "toStopId": "stop-3",
+            "mode": "航班 / 铁路",
+            "distanceKm": null,
+            "durationMinutes": null,
+            "geometry": null
+          },
+          {
+            "id": "leg-3",
+            "fromStopId": "stop-3",
+            "toStopId": "stop-4",
+            "mode": "接驳",
+            "distanceKm": null,
+            "durationMinutes": null,
+            "geometry": null
+          }
+        ],
+        "preview": {
+          "center": [
+            -73.985,
+            40.748
+          ],
+          "zoom": 11.5,
+          "showConnections": false,
+          "countries": [
+            "CN",
+            "US"
+          ],
+          "bounds": [
+            [
+              -130,
+              15
+            ],
+            [
+              137,
+              72
+            ]
+          ],
+          "connectionMode": "flight"
+        }
+      },
+      "events": [
+        {
+          "id": "transfer-1",
+          "startsAt": "",
+          "endsAt": "",
+          "type": "住宿",
+          "title": "退房点",
+          "navigation": "",
+          "detail": "补充退房时间与行李安排。",
+          "reservationStatus": "不适用",
+          "paymentStatus": "不适用",
+          "reservationNote": ""
+        },
+        {
+          "id": "transfer-2",
+          "startsAt": "",
+          "endsAt": "",
+          "type": "交通",
+          "title": "出发站点",
+          "navigation": "",
+          "detail": "补充机场或车站、提前到达时间。",
+          "reservationStatus": "不适用",
+          "paymentStatus": "不适用",
+          "reservationNote": ""
+        },
+        {
+          "id": "transfer-3",
+          "startsAt": "",
+          "endsAt": "",
+          "type": "交通",
+          "title": "到达站点",
+          "navigation": "",
+          "detail": "补充班次、出发与抵达时间、当地时区。",
+          "reservationStatus": "不适用",
+          "paymentStatus": "不适用",
+          "reservationNote": ""
+        },
+        {
+          "id": "transfer-4",
+          "startsAt": "",
+          "endsAt": "",
+          "type": "住宿",
+          "title": "入住点",
+          "navigation": "",
+          "detail": "补充接驳方式与入住时间。",
+          "reservationStatus": "不适用",
+          "paymentStatus": "不适用",
+          "reservationNote": ""
+        }
+      ],
+      "group": "国家 B",
+      "dateLabel": "01.03",
+      "structure": "transfer"
+    },
+    {
+      "id": "outdoor",
+      "template": "outdoor",
+      "label": "单项活动 · 徒步",
+      "date": null,
+      "summary": "活动路线 · 起终点与补给",
+      "focusEventId": "outdoor-1",
+      "map": {
+        "schematic": true,
+        "stops": [
+          {
+            "id": "stop-1",
+            "name": "集合点",
+            "eventId": "outdoor-1",
+            "coordinates": null
+          },
+          {
+            "id": "stop-2",
+            "name": "路线起点",
+            "eventId": "outdoor-2",
+            "coordinates": null
+          },
+          {
+            "id": "stop-3",
+            "name": "休息点",
+            "eventId": "outdoor-3",
+            "coordinates": null
+          },
+          {
+            "id": "stop-4",
+            "name": "路线终点",
+            "eventId": "outdoor-4",
+            "coordinates": null
+          }
+        ],
+        "legs": [
+          {
+            "id": "leg-1",
+            "fromStopId": "stop-1",
+            "toStopId": "stop-2",
+            "mode": "徒步",
+            "distanceKm": null,
+            "durationMinutes": null,
+            "geometry": null
+          },
+          {
+            "id": "leg-2",
+            "fromStopId": "stop-2",
+            "toStopId": "stop-3",
+            "mode": "徒步",
+            "distanceKm": null,
+            "durationMinutes": null,
+            "geometry": null
+          },
+          {
+            "id": "leg-3",
+            "fromStopId": "stop-3",
+            "toStopId": "stop-4",
+            "mode": "徒步",
+            "distanceKm": null,
+            "durationMinutes": null,
+            "geometry": null
+          }
+        ],
+        "preview": {
+          "center": [
+            -73.985,
+            40.748
+          ],
+          "zoom": 11.5,
+          "showConnections": true
+        }
+      },
+      "events": [
+        {
+          "id": "outdoor-1",
+          "startsAt": "",
+          "endsAt": "",
+          "type": "交通",
+          "title": "集合点",
+          "navigation": "",
+          "detail": "补充集合时间与前往起点的方式。",
+          "reservationStatus": "不适用",
+          "paymentStatus": "不适用",
+          "reservationNote": ""
+        },
+        {
+          "id": "outdoor-2",
+          "startsAt": "",
+          "endsAt": "",
+          "type": "行程",
+          "title": "主要活动",
+          "navigation": "",
+          "detail": "填写登山、徒步或其他完整活动的路线、时长、装备和天气要求。",
+          "reservationStatus": "不适用",
+          "paymentStatus": "不适用",
+          "reservationNote": ""
+        },
+        {
+          "id": "outdoor-3",
+          "startsAt": "",
+          "endsAt": "",
+          "type": "行程",
+          "title": "休息点",
+          "navigation": "",
+          "detail": "补充补水、休息与折返条件。",
+          "reservationStatus": "不适用",
+          "paymentStatus": "不适用",
+          "reservationNote": ""
+        },
+        {
+          "id": "outdoor-4",
+          "startsAt": "",
+          "endsAt": "",
+          "type": "交通",
+          "title": "路线终点",
+          "navigation": "",
+          "detail": "补充结束时间与返程安排。",
+          "reservationStatus": "不适用",
+          "paymentStatus": "不适用",
+          "reservationNote": ""
+        }
+      ],
+      "group": "国家 B",
+      "dateLabel": "01.04",
+      "structure": "single-activity"
+    }
+  ],
+  "checklist": [
+    {
+      "title": "证件",
+      "variant": "documents",
+      "items": [
+        {
+          "id": "documents-1",
+          "label": "身份证件",
+          "detail": "补充适用证件与有效期",
+          "emoji": "🛂",
+          "checked": false
+        },
+        {
+          "id": "documents-2",
+          "label": "驾驶文件",
+          "detail": "补充当地驾驶所需材料",
+          "emoji": "🚗",
+          "checked": false
+        },
+        {
+          "id": "documents-3",
+          "label": "补充材料",
+          "detail": "补充出行材料与备份说明",
+          "checked": false
+        }
+      ]
+    },
+    {
+      "title": "行李",
+      "variant": "packing",
+      "groups": [
+        {
+          "id": "carry-on",
+          "title": "随身携带",
+          "items": [
+            {
+              "id": "carry-1",
+              "label": "随身物品",
+              "detail": "补充随身所需物品",
+              "checked": false
+            },
+            {
+              "id": "carry-2",
+              "label": "电子设备",
+              "detail": "补充设备、充电与通信用品",
+              "checked": false
+            },
+            {
+              "id": "carry-3",
+              "label": "支付用品",
+              "detail": "",
+              "checked": false
+            },
+            {
+              "id": "carry-4",
+              "label": "途中用品",
+              "detail": "",
+              "checked": false
+            }
+          ]
+        },
+        {
+          "id": "checked-luggage",
+          "title": "托运行李",
+          "items": [
+            {
+              "id": "pack-1",
+              "label": "衣物",
+              "detail": "按天气与活动补充",
+              "checked": false
+            },
+            {
+              "id": "pack-2",
+              "label": "洗漱用品",
+              "detail": "",
+              "checked": false
+            },
+            {
+              "id": "pack-3",
+              "label": "活动装备",
+              "detail": "按自驾或户外安排补充",
+              "checked": false
+            },
+            {
+              "id": "pack-4",
+              "label": "其他物品",
+              "detail": "",
+              "checked": false
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "album": {
+    "title": "",
+    "url": ""
+  }
+}
