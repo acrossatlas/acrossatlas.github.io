@@ -6,7 +6,7 @@ A personal travel fieldbook for public guides, trip records, map-based memories,
 
 The home page archives completed journeys in two views: Map log groups them by country, while Trip log keeps each journey together. Country pages show regional maps and date-specific links to the shared trip notebook. An ongoing card appears only for an active, unfinished journey; without one, the archive follows directly beneath the title.
 
-The Netherlands–Iceland–Norway journey (2026-09-24–10-07) is archived with its original itinerary, maps, transport, stays, checklist, and album section. Actual visits and skipped stops will be reviewed separately. See [the archive guide](docs/TRAVEL-ARCHIVE.md) for routes and the content structure.
+The Netherlands–Iceland–Norway journey (2026-09-24–10-07) is archived with its original itinerary, maps, transport, stays, checklist, and Travel zine entry. Actual visits and skipped stops will be reviewed separately. See [the archive guide](docs/TRAVEL-ARCHIVE.md) for routes and the content structure.
 
 ## Local preview
 
@@ -16,6 +16,14 @@ npm run dev
 ```
 
 Create a production build with `npm run build`.
+
+## Travel zine
+
+Open **Travel zine → 打开手帐画布** on a journey page, or visit `/trips/2026-netherlands-iceland-norway/journal` in the local preview. The editor uses TN regular pages (110 × 210 mm), with single-page and spread templates, editable text, and grey photo placeholders. Upload photos into the bottom tray, drag them onto a page or an existing frame, then adjust position, crop, rotation, and dimensions in millimetres.
+
+Work saves automatically in the current browser using IndexedDB. Use **导出手帐文件** to keep an editable `.across.json` backup, including the photos; import that file to continue elsewhere.
+
+**导出打印 PDF** creates A4 photo sheets at each frame’s exact size, with photo/page numbers and optional crop marks. In **打印预览**, choose **手帐整页** to export the complete layout as 110 × 210 mm pages instead. A separate CSV lists photo dimensions and positions. Print PDFs at **Actual size / 100%**.
 
 ## Agreed boundaries
 

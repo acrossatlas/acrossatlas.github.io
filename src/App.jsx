@@ -2,7 +2,7 @@ import ChecklistGroup from './components/ChecklistGroup';
 import ThemeToggle from './components/ThemeToggle';
 import { ArrowIcon, CloseIcon, CopyableAddress, CopyableEventTitle, EventFlightDetails, FlightLegCaption, getReservationHeading, ReservationDetails, ReservationModal, useModalBehavior } from './components/JourneyEvents';
 import TemplatesPage from './components/TemplatesPage';
-import { useEffect, useState } from 'react';
+import { lazy, Suspense, useEffect, useState } from 'react';
 import DayItinerary from './components/DayItinerary';
 import DayTabs from './components/DayTabs';
 import { Link, Navigate, Route, Routes, useLocation, useParams, useSearchParams } from 'react-router-dom';
@@ -10,6 +10,9 @@ import { journeys, archiveDateRange, tripUrl, findJourney } from './data/archive
 import { dateFromKey, getJourneyDayCount, resolveJourneyDayIndex } from './lib/journey-dates';
 import { ArchivePanel } from './components/ArchiveCards';
 import CountryArchivePage from './components/CountryArchivePage';
+import JournalEntry from './components/JournalEntry';
+
+const JournalEditor = lazy(() => import('./components/JournalEditor'));
 
 const infoPanels = {
   transport: {
@@ -153,15 +156,6 @@ function StayIcon() {
     </svg>
   );
 }
-
-function LinkIcon() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 24 24">
-      <path d="m9.5 14.5 5-5M7.7 16.3l-1.2 1.2a3.5 3.5 0 0 1-5-5l3-3a3.5 3.5 0 0 1 5 0M16.3 7.7l1.2-1.2a3.5 3.5 0 0 1 5 5l-3 3a3.5 3.5 0 0 1-5 0" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="1.5" />
-    </svg>
-  );
-}
-
 
 function MapPinIcon() {
   return (
@@ -610,15 +604,9 @@ function JourneyPage({ journey }) {
 
           <section className="notebook-section" aria-labelledby="album-title">
             <header className="notebook-section__heading">
-              <h2 id="album-title">Album</h2>
+              <h2 id="album-title">Travel zine</h2>
             </header>
-            <div className="album-empty">
-              <span className="album-empty__icon"><LinkIcon /></span>
-              <div>
-                <h3>尚未添加相册链接</h3>
-                <p>之后可以在这里关联网盘或其他存储地址。</p>
-              </div>
-            </div>
+            <JournalEntry journey={journey} />
           </section>
         </div>
       </main>
@@ -655,14 +643,17 @@ function ScrollToTop() {
 }
 
 function App() {
+  const { pathname } = useLocation();
+  const isJournal = /^\/trips\/[^/]+\/journal\/?$/.test(pathname);
   return (
     <>
       <ScrollToTop />
-      <div className="site-corner"><ThemeToggle /></div>
+      {!isJournal && <div className="site-corner"><ThemeToggle /></div>}
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/ongoing" element={<LegacyJourneyRedirect />} />
         <Route path="/trips/:tripId" element={<TripPage />} />
+        <Route path="/trips/:tripId/journal" element={<Suspense fallback={<div className="zine-loading">正在打开手帐…</div>}><JournalEditor /></Suspense>} />
         <Route path="/countries/:countrySlug" element={<CountryArchivePage />} />
         <Route path="/templates" element={<TemplatesPage />} />
         <Route path="*" element={<HomePage />} />
