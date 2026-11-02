@@ -33,8 +33,8 @@ function TripWorldCover({ countryCodes }) {
   </div>;
 }
 
-function CountryCard({ country }) {
-  const visits = countryVisits(country.code, journeys, countryOnlyVisits);
+function CountryCard({ country, records }) {
+  const visits = countryVisits(country.code, records, countryOnlyVisits);
   const visit = visits[0];
   const hasDates = Boolean(visit.startsOn && visit.endsOn);
   const dayCount = hasDates ? getJourneyDayCount(visit) : null;
@@ -83,16 +83,17 @@ export function TripArchiveCard({ journey, visit }) {
   </Link>;
 }
 
-export function ArchivePanel({ type }) {
-  const countries = archiveCountries.filter(country => countryVisits(country.code, journeys, countryOnlyVisits).length);
+export function ArchivePanel({ type, records = journeys }) {
+  const countries = archiveCountries.filter(country => countryVisits(country.code, records, countryOnlyVisits).length);
+  const trips = [...records, ...tripLogRecords.filter(record => record.countryOnly)].sort((a, b) => b.startsOn.localeCompare(a.startsOn));
   return <div role="tabpanel" id={`${type}-panel`} aria-labelledby={`${type}-tab`} className="archive-panel" tabIndex={0}>
     <section className="archive-group" aria-label={type === 'map' ? 'Travel summary' : 'Trip summary'}>
-      {type === 'map' ? <TravelSummary /> : <TripSummary />}
+      {type === 'map' ? <TravelSummary records={records} /> : <TripSummary records={trips} />}
     </section>
     <section className="archive-group" aria-labelledby={`${type}-records-title`}>
       <h2 className="archive-group__title" id={`${type}-records-title`}>{type === 'map' ? 'Countries' : 'Trips'}</h2>
-      {type === 'map' ? <div className="country-card-grid">{countries.map(country => <CountryCard country={country} key={country.code} />)}</div>
-        : <div className="trip-card-list">{tripLogRecords.map(journey => <TripArchiveCard journey={journey} key={journey.id} />)}</div>}
+      {type === 'map' ? <div className="country-card-grid">{countries.map(country => <CountryCard country={country} records={records} key={country.code} />)}</div>
+        : <div className="trip-card-list">{trips.map(journey => <TripArchiveCard journey={journey} key={journey.id} />)}</div>}
     </section>
   </div>;
 }

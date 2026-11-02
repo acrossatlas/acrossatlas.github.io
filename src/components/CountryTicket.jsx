@@ -43,7 +43,7 @@ function CountryMotif({ code, color, background }) {
 }
 
 const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-const SANS = "'Helvetica Neue', Helvetica, Arial, sans-serif";
+const SANS = "'PingFang SC', 'PingFang TC', 'PingFang HK', 'Noto Sans SC', 'Microsoft YaHei', sans-serif";
 
 function ticketDate(key) {
   if (!key) return null;

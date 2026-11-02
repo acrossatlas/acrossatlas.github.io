@@ -4,7 +4,7 @@ import routes from '../data/golden-circle-routes.json';
 import durations from '../data/golden-circle-durations.json';
 import icelandDays from '../data/iceland-day-routes.json';
 import norwayDays from '../data/norway-day-routes.json';
-import { amsterdamMapDays } from '../data/amsterdam-map';
+import { amsterdamMapDays, amsterdamVisitRoutes } from '../data/amsterdam-map';
 import DayMapStop from './DayMapStop';
 import { numberPlannedStops } from '../lib/route-stop-numbers';
 import savedVisitRoutes from '../data/visit-route-legs.json';
@@ -13,10 +13,14 @@ import sep30Checkout from '../data/sep30-checkout-route.json';
 import { adjacentVisitLegs, pointAlongLeg } from '../lib/visit-route-focus';
 import { nodeFocusZoom } from '../lib/node-focus-zoom';
 import CountryFlag, { countriesForDay } from './CountryFlag';
-import MigrationMap, { migrationDays } from './MigrationMap';
+import MigrationMap, { airports, migrationDays, transferOverview } from './MigrationMap';
 import { countryThemes, overviewForDay, basemapPaint, volcanicPaint } from './map-themes';
 import { countryDayMaps } from '../data/country-day-maps';
 import MapControls from './MapControls';
+import { hasChangedRoute } from '../lib/notebook.js';
+import { journeys } from '../data/archive.js';
+import { buildMapPlan, createMapCatalog, validCoordinates } from '../lib/itinerary-map.js';
+import { useLinkedMap } from '../lib/use-linked-map.js';
 
 const visitRoutes = { ...savedVisitRoutes, '2026-10-03': oct03Optional.legs, '2026-09-30': sep30Checkout.legs };
 const mapDaysByCountry = { NL: amsterdamMapDays, IS: icelandDays, NO: norwayDays };
@@ -53,13 +57,22 @@ const mapStops = stops.map((stop) => {
   return { ...stop, coordinates };
 });
 
+const mapCatalog = createMapCatalog([
+  ...Object.entries(amsterdamMapDays).map(([date, config]) => ({ ...config, country: 'NL', visitRoutes: amsterdamVisitRoutes[date] })),
+  ...Object.values(icelandDays).map(config => ({ ...config, country: 'IS' })),
+  ...Object.values(norwayDays).map(config => ({ ...config, country: 'NO' })),
+  ...Object.values(migrationDays),
+  ...Object.entries(visitRoutes).map(([date, legs]) => ({ ...(date === '2026-09-30' ? sep30Checkout.day : date === '2026-10-03' ? oct03Optional.day : { stops: mapStops, country: 'IS' }), visitRoutes: legs })),
+  ...Object.values(countryDayMaps).flatMap(days => Object.values(days)),
+], journeys.flatMap(journey => Object.values(journey.dayEvents).flat()), airports);
+
 class MapBoundary extends Component {
   state = { failed: false };
   static getDerivedStateFromError() { return { failed: true }; }
   render() { return this.state.failed ? <p className="daily-map__error">地图暂时无法显示，请查看下方行程卡片。</p> : this.props.children; }
 }
 
-function MapTools({ selected, focusedLegs, routeFocus, isGoldenCircle, isIceland, countryTheme, overview, onReset, onRouteClick, clickableLegs, mapStops, routes, bounds, overviewBounds, focusZoom = 8.7 }) {
+function MapTools({ selected, focusedLegs, routeFocus, isGoldenCircle, isIceland, countryTheme, overview, onReset, onRouteClick, clickableLegs, mapStops, routes, bounds, overviewBounds, focusZoom = 8.7, controls = true }) {
   const { map, isLoaded } = useMap();
   const [error, setError] = useState(false);
   function resetView() {
@@ -148,17 +161,83 @@ function MapTools({ selected, focusedLegs, routeFocus, isGoldenCircle, isIceland
   }, [map, isLoaded, routeFocus]);
   return <>
     {error && <p role="status" className="daily-map__error">底图加载失败，请检查网络后重试。下方行程仍可查看。</p>}
-    <MapControls onReset={resetView} onShowAll={overviewBounds ? () => { onReset(); map?.fitBounds(overviewBounds, { ...fitOptions, bearing: 0, pitch: 0 }); } : undefined} />
+    {controls && <MapControls onReset={resetView} onShowAll={overviewBounds ? () => { onReset(); map?.fitBounds(overviewBounds, { ...fitOptions, bearing: 0, pitch: 0 }); } : undefined} />}
   </>;
 }
 
 export default function DayRouteMap(props) {
+  if (props.genericMap || (props.originalEvents && hasChangedRoute(props.events, props.originalEvents))) {
+    const sourceDayKey = props.genericMap ? journeys.flatMap(journey => Object.entries(journey.dayEvents)).map(([key, events]) => ({ key, count: events.filter(event => props.events.some(current => current.id === event.id)).length })).sort((a, b) => b.count - a.count).find(item => item.count)?.key : props.day.key;
+    return <LinkedDayMap key={props.day.key} {...props} sourceDayKey={sourceDayKey} />;
+  }
   return <DayRouteMapContent key={props.day.key} {...props} />;
 }
 
-function DayRouteMapContent({ day, events, country: countryScope }) {
+function dayConfiguration(day, countryScope) {
   const dailyConfig = countryScope ? mapDaysByCountry[countryScope]?.[day.key] : amsterdamMapDays[day.key] || norwayDays[day.key] || icelandDays[day.key];
-  const config = countryDayMaps[countryScope]?.[day.key] || (day.key === '2026-09-30' ? sep30Checkout.day : day.key === '2026-10-03' ? oct03Optional.day : dailyConfig);
+  return countryDayMaps[countryScope]?.[day.key] || (day.key === '2026-09-30' ? sep30Checkout.day : day.key === '2026-10-03' ? oct03Optional.day : dailyConfig);
+}
+
+function LinkedMapViewport({ points, overview }) {
+  const { map, isLoaded } = useMap();
+  const key = JSON.stringify(points.map(point => point.coordinates));
+  const reset = () => {
+    if (!map) return;
+    const coordinates = points.map(point => point.coordinates).filter(validCoordinates);
+    map.stop(); map.resize();
+    if (!coordinates.length) { map.jumpTo({ ...overview, bearing: 0, pitch: 0 }); return; }
+    // Unwrap across the date line to fit the short connection.
+    const xs = coordinates.map(point => { let x = point[0]; while (x - coordinates[0][0] > 180) x -= 360; while (x - coordinates[0][0] < -180) x += 360; return x; });
+    const ys = coordinates.map(point => point[1]);
+    const { clientWidth: width, clientHeight: height } = map.getContainer();
+    map.fitBounds([[Math.min(...xs), Math.min(...ys)], [Math.max(...xs), Math.max(...ys)]], { padding: { top: Math.min(95, height * .2), bottom: Math.min(55, height * .14), left: Math.min(55, width * .12), right: Math.min(85, width * .18) }, maxZoom: 14, bearing: 0, pitch: 0, duration: 0 });
+  };
+  useEffect(() => { if (map && isLoaded) reset(); }, [map, isLoaded, key]);
+  return <MapControls onReset={reset} />;
+}
+
+function LinkedDayMap({ day, events, country: countryScope, genericMap, onEdit, sourceDayKey, onSelectEvent }) {
+  const [selected, setSelected] = useState(null);
+  const [retry, setRetry] = useState(0);
+  const config = sourceDayKey ? dayConfiguration({ key: sourceDayKey }, countryScope) : null;
+  const migration = !countryScope && migrationDays[sourceDayKey];
+  const countries = countryScope ? [countryScope] : sourceDayKey ? countriesForDay(sourceDayKey) : [...new Set(events.map(event => event.country).filter(Boolean))];
+  const country = countries.length === 1 ? countries[0] : undefined, overview = overviewForDay(day.key, country);
+  const defaultMode = config?.legs?.[0]?.mode || (sourceDayKey === '2026-09-29' ? 'driving' : 'connection');
+  const plan = useMemo(() => buildMapPlan(events, mapCatalog.places, { defaultMode, country, center: country ? overview.center : undefined }), [events, country, defaultMode]);
+  const { points, legs, pending, missing } = useLinkedMap(plan, mapCatalog.legs, retry);
+  const color = countryThemes[country]?.route || '#ef9155';
+  const bounds = config?.bounds;
+  const shown = points.filter(point => validCoordinates(point.coordinates));
+  const transfer = migration || (!countryScope && legs.some(leg => leg.isFlight));
+  if (transfer) {
+    const codes = [...new Set(shown.map(point => ['HK', 'TW'].includes(point.country) ? 'CN' : point.country).filter(Boolean))];
+    const overview = transferOverview(codes);
+    const unchangedCountries = migration && JSON.stringify(codes) === JSON.stringify(migration.countries);
+    const transferConfig = { ...migration, countriesOnly: migration?.countriesOnly ?? true, countries: codes,
+      stops: shown.map(point => ({ ...point, eventId: point.eventId, country: ['HK', 'TW'].includes(point.country) ? 'CN' : point.country })),
+      bounds: unchangedCountries ? migration.bounds : overview.bounds, linked: true,
+    };
+    return <MigrationMap day={day} events={events} config={transferConfig} linkedLegs={legs.filter(leg => !leg.schematic || leg.isFlight || ['渡轮', 'ferry'].includes(leg.mode))} onSelectEvent={onSelectEvent} />;
+  }
+  // Follow the template: cities show stops; roads/trails need real geometry.
+  const shownLegs = legs.filter(leg => !leg.schematic || leg.isFlight || ['渡轮', 'ferry'].includes(leg.mode));
+  return <figure className={`day-map daily-map${country === 'IS' ? ' daily-map--volcanic' : countryThemes[country] ? ` daily-map--${countryThemes[country].name}` : ''}`} aria-label={`${day.label} 每日地图`} data-linked-map data-map-points={shown.length} data-map-routes={legs.length}>
+    <div className="daily-map__surface"><MapBoundary><Map theme={country === 'IS' ? 'dark' : 'light'} center={overview.center} zoom={overview.zoom} bounds={bounds} fitBoundsOptions={fitOptions} scrollZoom touchZoomRotate dragPan>
+      {shownLegs.map(leg => <MapRoute key={leg.id} id={`notebook-${leg.id}`} coordinates={leg.coordinates} color={color} width={4} dashArray={leg.schematic ? [3, 3] : undefined} opacity={.95} interactive={false} />)}
+      {shown.map(stop => <DayMapStop key={stop.id} stop={stop} expanded={selected === stop.id} previewed={selected === stop.id} onToggle={event => { event.stopPropagation(); setSelected(current => current === stop.id ? null : stop.id); onSelectEvent?.(selected === stop.id ? null : stop.eventId); }} address={stop.address} />)}
+      <MapTools selected={selected} focusedLegs={[]} mapStops={shown} countryTheme={countryThemes[country]} isIceland={country === 'IS'} onReset={() => setSelected(null)} clickableLegs={[]} controls={false} />
+      <LinkedMapViewport points={shown} overview={overview} />
+    </Map></MapBoundary>
+      <figcaption className="day-map__caption daily-map__caption"><div className="daily-map__countries">{countries.map(country => <CountryFlag key={country} country={country} />)}</div><span className="daily-map__date">{day.label}</span></figcaption>
+      {pending && <p className="daily-map__load-status notebook-map-note" role="status">正在定位…</p>}
+      {!pending && missing.length > 0 && <div className="daily-map__load-status notebook-map-note"><button className="notebook-text-action" type="button" onClick={() => { const event = events.find(event => event.id === missing[0].eventId); if (onEdit && event) onEdit(event); }} title={missing.map(point => point.name).join('、')}>{missing.length} 个地点未定位</button><button className="notebook-text-action" type="button" onClick={() => setRetry(value => value + 1)}>重试</button></div>}
+    </div>
+  </figure>;
+}
+
+function DayRouteMapContent({ day, events, country: countryScope, onSelectEvent }) {
+  const config = dayConfiguration(day, countryScope);
   const visitRouteOptions = config?.visitRoutes || visitRoutes[day.key];
   const dayRoutes = config?.routes || routes;
   const dayStops = config?.stops || mapStops;
@@ -219,7 +298,7 @@ function DayRouteMapContent({ day, events, country: countryScope }) {
   const routeColor = countryTheme?.route || '#ef9155';
   const optionalColor = countryTheme?.optional || '#929b81';
   const overview = overviewForDay(day.key, country);
-  if (!countryScope && migrationDays[day.key]) return <MapBoundary><MigrationMap day={day} events={events} /></MapBoundary>;
+  if (!countryScope && migrationDays[day.key]) return <MapBoundary><MigrationMap day={day} events={events} onSelectEvent={onSelectEvent} /></MapBoundary>;
   return <figure className={`day-map daily-map${isIceland ? ' daily-map--volcanic' : countryTheme ? ` daily-map--${countryTheme.name}` : ''}`}  aria-label={`${day.label} 每日地图`}>
     <div className="daily-map__surface">
       <MapBoundary>
@@ -243,6 +322,7 @@ function DayRouteMapContent({ day, events, country: countryScope }) {
                 setRouteFocus(null);
                 setSelected(expanded ? null : stop.id);
                 setPreviewRoute(expanded ? null : (stop.option || null));
+                onSelectEvent?.(expanded ? null : event?.id);
               };
               return <DayMapStop key={stop.id} stop={stop} dimmed={isFocused && !focusNodeIds.has(stop.id)} expanded={expanded} previewed={previewed} activeRoute={activeRoute} onToggle={toggle} onTogglePlannedStop={togglePlannedStop} address={stop.address || event?.navigation} />;
             })}

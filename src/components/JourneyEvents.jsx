@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 import EventCard from './EventCard';
 import { CopyIcon, CheckIcon } from './CopyIcons';
+import { safeLink } from '../lib/notebook.js';
+import BookingAttachments from './BookingAttachments';
 
 export function ArrowIcon() {
   return (
@@ -65,11 +67,11 @@ function BookingAccess({ access }) {
       <div className="booking-access__header">
         <span>查看预订需要</span>
         <div className="booking-access__links">
-          {access.url && <a href={access.url} rel="noopener noreferrer" target="_blank">
+          {safeLink(access.url) && <a href={safeLink(access.url)} rel="noopener noreferrer" target="_blank">
             查询预订<ArrowIcon />
           </a>}
-          {access.links?.map((link) => (
-            <a href={link.url} key={link.url} rel="noopener noreferrer" target="_blank">
+          {access.links?.filter(link => safeLink(link.url)).map((link) => (
+            <a href={safeLink(link.url)} key={link.url} rel="noopener noreferrer" target="_blank">
               {link.label}<ArrowIcon />
             </a>
           ))}
@@ -135,10 +137,10 @@ async function copyText(text) {
   return false;
 }
 
-export function CopyableEventTitle({ className, event }) {
+export function CopyableEventTitle({ className, event, onEdit }) {
   return (
     <div className={`${className} copyable-title-block`}>
-      <h3>{event.title}</h3>
+      <h3>{onEdit ? <button className="itinerary-title-button" type="button" aria-label={`编辑行程：${event.title}`} onClick={onEdit}>{event.title}</button> : event.title}</h3>
       {event.navigation && (
         <CopyableAddress
           label={event.addressLabel ?? (event.type === '住宿' ? '住宿地址' : '导航地址')}
@@ -164,7 +166,8 @@ export function getReservationHeading() {
   return '预定信息';
 }
 
-export function ReservationDetails({ event, showContext = false }) {
+export function ReservationDetails({ event, showContext = false, children }) {
+  if (children) return <div className="reservation-details is-embedded"><div className="reservation-copy">{children}</div></div>;
   if (!event.reservation) {
     const pending = event.reservationStatus === '未预定';
 
@@ -255,9 +258,12 @@ export function EventFlightDetails({ event }) {
   );
 }
 
-export function DayEventCard({ event, onOpenReservation }) {
-  return <EventCard event={event} onOpenReservation={onOpenReservation}
-    title={<CopyableEventTitle className="day-event-card__title-row" event={event} />}>
-    {event.flightLegs ? <EventFlightDetails event={event} /> : <p className="event-description">{event.detail}</p>}
+export function DayEventCard({ event, onOpenReservation, actions, onEdit, cardProps, dragHandle, dayId, bookId, selected }) {
+  return <EventCard event={event} dayId={dayId} onOpenReservation={onOpenReservation} actions={actions} onEdit={onEdit} cardProps={cardProps} dragHandle={dragHandle} selected={selected}
+    title={<CopyableEventTitle className="day-event-card__title-row" event={event} onEdit={onEdit} />}>
+    {event.flightLegs ? <><EventFlightDetails event={event} />{event.detail && <p className="event-description">{event.detail}</p>}</> : <p className="event-description">{event.detail}</p>}
+    {safeLink(event.bookingUrl) && <a className="reservation-info-trigger notebook-booking-link" href={safeLink(event.bookingUrl)} target="_blank" rel="noopener noreferrer">查看预订 ↗</a>}
+    {event.type === '交通' && event.transport && !event.flightLegs && <div className="notebook-transport-summary"><p>{[event.transport.from, event.transport.to].filter(Boolean).join(' → ')}{event.transport.code ? ` · ${event.transport.code}` : ''}</p>{event.transport.segments.map(segment => <p key={segment.id}>{[segment.from, segment.to].filter(Boolean).join(' → ')}{segment.depart || segment.arrive ? ` · ${segment.depart}–${segment.arrive}` : ''}{segment.code ? ` · ${segment.code}` : ''}</p>)}</div>}
+    {bookId && <BookingAttachments bookId={bookId} attachments={event.attachments} />}
   </EventCard>;
 }

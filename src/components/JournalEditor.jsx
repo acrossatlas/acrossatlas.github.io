@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ArrowDown, ArrowLeft, ArrowUp, Check, ChevronLeft, ChevronRight, Copy, Download, Expand, FileDown, ImageOff, ImagePlus, Layers2, LoaderCircle, Minus, Plus, Redo2, Replace, RotateCcw, Save, Scissors, Sparkles, Trash2, Type, Undo2, Upload, X } from 'lucide-react';
 import { findJourney, tripUrl } from '../data/archive';
+import { useNotebookCatalog } from '../lib/use-notebook-catalog';
 import { applyTemplate, clamp, composePageFrames, createFrame, createJournal, createPage, createSpread, createText, fitFrame, JOURNAL_SPREADS, JOURNAL_TEMPLATES, packPrintSheets, PAPER_COLORS, photoCrop, printItems, roundMm, uid } from '../lib/journal';
 import { loadJournal, readPhotoFile, saveJournal } from '../lib/journal-storage';
 import { exportJournalPdf, exportSizeList } from '../lib/journal-print';
@@ -444,7 +445,7 @@ function JournalWorkspace({ journey }) {
 
   return <main className="zine" aria-label="旅行手帐编辑器">
     <header className="zine-header">
-      <div className="zine-header__identity"><Link className="zine-back" to={`${tripUrl(journey)}#album-title`} aria-label="返回旅行"><ArrowLeft size={17} /></Link><Link to="/" className="zine-brand">across</Link><span className="zine-header__kind">zine</span><span className="zine-header__sep" /><div className="zine-document"><input aria-label="手帐名称" value={project.title} maxLength={60} onChange={event => update(current => ({ ...current, title: event.target.value }))} /><span className={`zine-save-state is-${saveStatus}`}>{saveStatus === 'saved' ? <Check size={11} /> : saveStatus === 'saving' ? <LoaderCircle size={11} className="zine-spin" /> : <span className="zine-save-dot" />}{({ saved: '已保存到浏览器', saving: '保存中', pending: '等待保存', error: '保存未完成' })[saveStatus]}</span></div></div>
+      <div className="zine-header__identity"><Link className="zine-back" to={`${tripUrl(journey)}#journal-title`} aria-label="返回旅行"><ArrowLeft size={17} /></Link><Link to="/" className="zine-brand">across</Link><span className="zine-header__kind">zine</span><span className="zine-header__sep" /><div className="zine-document"><input aria-label="手帐名称" value={project.title} maxLength={60} onChange={event => update(current => ({ ...current, title: event.target.value }))} /><span className={`zine-save-state is-${saveStatus}`}>{saveStatus === 'saved' ? <Check size={11} /> : saveStatus === 'saving' ? <LoaderCircle size={11} className="zine-spin" /> : <span className="zine-save-dot" />}{({ saved: '已保存到浏览器', saving: '保存中', pending: '等待保存', error: '保存未完成' })[saveStatus]}</span></div></div>
       <div className="zine-mode" aria-label="画布模式"><button aria-pressed={!preview} onClick={() => setPreview(false)}>编辑</button><button aria-pressed={preview} onClick={() => { setPreview(true); setSelectedAssetId(null); }}><Scissors size={13} />打印预览</button></div>
       <div className="zine-header__actions"><button className="zine-icon-button" aria-label="撤销" title="撤销（⌘Z）" disabled={!history.current.past.length} onClick={() => undo()}><Undo2 size={16} /></button><button className="zine-icon-button" aria-label="重做" title="重做（⌘⇧Z）" disabled={!history.current.future.length} onClick={() => undo(true)}><Redo2 size={16} /></button><span className="zine-header__divider" /><button className="zine-button zine-button--ghost zine-save-button" onClick={async () => { if (await persist()) setNotice('手帐已保存，可随时回来继续编辑'); }} title="保存手帐（⌘S）"><Save size={15} /><span>保存</span></button><button className="zine-button zine-button--primary" onClick={download} disabled={exporting || (printMode === 'photos' && !items.length)}>{exporting ? <LoaderCircle size={15} className="zine-spin" /> : <Download size={15} />}<span>{exporting ? '正在导出…' : '导出打印 PDF'}</span></button></div>
     </header>
@@ -538,7 +539,10 @@ function JournalWorkspace({ journey }) {
 
 export default function JournalEditor() {
   const { tripId } = useParams();
-  const journey = findJourney(tripId);
+  const catalog = useNotebookCatalog();
+  const deleted = catalog.deletedIds.includes(tripId);
+  const journey = deleted ? null : findJourney(tripId) ?? catalog.journeys.find(item => item.id === tripId);
+  if (!journey && !deleted && catalog.loading) return <div className="zine-loading">正在打开手帐…</div>;
   if (!journey) return <main className="zine-loading"><p>尚未收录这次旅行</p><Link to="/">返回 Across</Link></main>;
   return <JournalWorkspace key={journey.id} journey={journey} />;
 }

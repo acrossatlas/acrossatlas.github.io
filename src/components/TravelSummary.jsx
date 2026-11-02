@@ -6,10 +6,9 @@ import CountryTicketPrinter from './CountryTicketPrinter';
 import { archiveCountries, countryOnlyVisits, countryVisits, journeys } from '../data/archive';
 import { getArchiveSummary } from '../lib/archive-summary';
 
-const summary = getArchiveSummary(journeys, archiveCountries, countryOnlyVisits);
 const CONTINENT_TOTAL = 7;
 
-function WorldSummaryCard() {
+function WorldSummaryCard({ summary }) {
   return <article className="stat-card summary-world" aria-label={`Visited continents: ${summary.continents.join(', ') || 'none'}`}>
     <div className="summary-world__panel">
       <header className="summary-world__header">
@@ -65,12 +64,13 @@ function LatitudeCard({ place, direction }) {
   </Tag>;
 }
 
-export default function TravelSummary() {
+export default function TravelSummary({ records = journeys }) {
   const [ticketsOpen, setTicketsOpen] = useState(false);
-  const countries = archiveCountries.filter(country => countryVisits(country.code, journeys, countryOnlyVisits).length);
+  const summary = getArchiveSummary(records, archiveCountries, countryOnlyVisits);
+  const countries = archiveCountries.filter(country => countryVisits(country.code, records, countryOnlyVisits).length);
 
   return <><section className="travel-summary" aria-label="Travel overview">
-    <WorldSummaryCard />
+    <WorldSummaryCard summary={summary} />
     <div className="travel-summary__details">
       <dl className="summary-stats">
         <StatCard label="Countries" value={summary.countryCount} note="Print tickets" tone="tickets">
