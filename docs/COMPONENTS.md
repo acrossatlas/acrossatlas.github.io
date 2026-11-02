@@ -171,8 +171,8 @@ four kinds × two sizes.
 
 | Size | Height | Text / icon | Where |
 | --- | --- | --- | --- |
-| `lg` (default) | 36px, 0 16px | 13px / 15px (icon-only 16px) | The day-tab row (tabs and + 分隔), the top bar, dialog footers |
-| `sm` (default for ghost) | 30px, 0 11px | 12px / 14px (icon-only 15px) | The trip title toolbar (交通, 住宿, …; search is 30px too), sidebars, the photo tray, extras inside dialogs |
+| `lg` (default) | 36px, 0 16px | 13px / 15px (icon-only 16px) | The trip title toolbar (交通, 住宿, …; search is 36px too), the top bar, dialog footers |
+| `sm` (default for ghost) | 30px, 0 11px | 12px / 14px (icon-only 15px) | The day-tab row (tabs and + 分隔), sidebars, the photo tray, extras inside dialogs |
 
 On a grey container a secondary button takes the colour of the cards beside it
 (添加行程, 继续编辑手帐). Elements that are not `<button>`

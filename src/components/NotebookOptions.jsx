@@ -34,7 +34,7 @@ export default function NotebookOptions({ notebook }) {
   const show = (version, done) => action(async () => { await notebook.switchVersion(version.id); return done; });
   function openDialog() { setOpen(true); setExpanded(Boolean(record?.checkout)); setArmed(false); setError(''); setMessage(''); }
   return <>
-    <button className="btn btn--secondary btn--sm btn--icon notebook-more-button" type="button" aria-label="更多" title="更多" aria-haspopup="dialog" aria-expanded={open} disabled={!record} onClick={openDialog}><MoreHorizontal /></button>
+    <button className="btn btn--secondary btn--lg btn--icon notebook-more-button" type="button" aria-label="更多" title="更多" aria-haspopup="dialog" aria-expanded={open} disabled={!record} onClick={openDialog}><MoreHorizontal /></button>
     {open && <NotebookDialog className="reservation-modal" title="更多" busy={working} onClose={() => setOpen(false)}>
       <div className="journey-modal__body">
         <p className="form-message notebook-options__hint">内容保存在当前浏览器，保留最近 20 个版本，点击版本即可切换。跨设备同步尚未开通，清除网站数据会删除这些内容。</p>

@@ -183,14 +183,6 @@ function MinusIcon() {
   );
 }
 
-function PlusIcon() {
-  return (
-    <svg aria-hidden="true" viewBox="0 0 24 24">
-      <path d="M6 12h12M12 6v12" fill="none" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" />
-    </svg>
-  );
-}
-
 function CurrentJourneyCard({ journey }) {
   const { currentDay, dayCount } = getJourneyProgress(journey);
 
@@ -220,7 +212,7 @@ function HomePage() {
   return (
     <div className={`page home-page${ongoingJourney ? '' : ' home-page--archive'}`}>
       <nav className="home-navigation" aria-label="主导航">
-        <button className="btn btn--ghost btn--lg btn--icon" type="button" aria-label="新建旅行" title="新建旅行" onClick={() => setCreating(true)}><PlusIcon /></button>
+        <button className="btn btn--ghost btn--lg btn--icon home-create-trip" type="button" aria-label="新建旅行" title="新建旅行" onClick={() => setCreating(true)}><Plus strokeWidth={2} aria-hidden="true" /></button>
         <Link className="btn btn--ghost btn--lg btn--icon" to="/components" aria-label="组件与模板" title="组件与模板">
           <Component size={16} strokeWidth={1.8} aria-hidden="true" />
         </Link>
@@ -575,7 +567,7 @@ function JourneyPage({ journey: originalJourney }) {
                 aria-controls="transport-modal"
                 aria-expanded={openPanel === 'transport'}
                 aria-haspopup="dialog"
-                className="btn btn--secondary btn--sm"
+                className="btn btn--secondary btn--lg"
                 onClick={() => setOpenPanel('transport')}
                 type="button"
               >
@@ -587,7 +579,7 @@ function JourneyPage({ journey: originalJourney }) {
                 aria-controls="stay-modal"
                 aria-expanded={openPanel === 'stay'}
                 aria-haspopup="dialog"
-                className="btn btn--secondary btn--sm"
+                className="btn btn--secondary btn--lg"
                 onClick={() => setOpenPanel('stay')}
                 type="button"
               >
@@ -639,7 +631,7 @@ function JourneyPage({ journey: originalJourney }) {
 
           <section className="notebook-section" aria-label="所有行程">
             <SectionHeading>Itinerary</SectionHeading>
-            <div className="notebook-day-nav"><DayTabs days={journeyDates} activeIndex={activeDay} onSelect={setActiveDay} sectionLabels={journeySectionLabels} dividers={journey.sectionDividers} onEditSection={setSectionEditor} /><button className="btn btn--outline btn--lg notebook-section-add" type="button" aria-label="添加日期分隔" title="在当前日期前添加分隔" disabled={!notebook.record || notebook.busy} onClick={() => setSectionEditor(journeyDates[activeDay])}><Plus size={15} aria-hidden="true" /><span>分隔</span></button></div>
+            <div className="notebook-day-nav"><DayTabs days={journeyDates} activeIndex={activeDay} onSelect={setActiveDay} sectionLabels={journeySectionLabels} dividers={journey.sectionDividers} onEditSection={setSectionEditor} /><button className="btn btn--outline btn--sm notebook-section-add" type="button" aria-label="添加日期分隔" title="在当前日期前添加分隔" disabled={!notebook.record || notebook.busy} onClick={() => setSectionEditor(journeyDates[activeDay])}><Plus aria-hidden="true" /><span>分隔</span></button></div>
             {journeyDates.map((day, index) => (
               <section
                 aria-labelledby={`day-${index + 1}-tab`}

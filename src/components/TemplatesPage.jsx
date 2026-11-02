@@ -93,8 +93,8 @@ export function TemplatePreview() {
         <p className="journey-archive-meta">{templateRange}</p>
       </div>
       <div className="journey-tools" aria-label="行程工具">
-        <button className="btn btn--secondary btn--sm" type="button" aria-label="交通" aria-haspopup="dialog" aria-expanded={panel === 'transport'} onClick={() => setPanel('transport')}><CarFront /><span>交通</span></button>
-        <button className="btn btn--secondary btn--sm" type="button" aria-label="住宿" aria-haspopup="dialog" aria-expanded={panel === 'stay'} onClick={() => setPanel('stay')}><House /><span>住宿</span></button>
+        <button className="btn btn--secondary btn--lg" type="button" aria-label="交通" aria-haspopup="dialog" aria-expanded={panel === 'transport'} onClick={() => setPanel('transport')}><CarFront /><span>交通</span></button>
+        <button className="btn btn--secondary btn--lg" type="button" aria-label="住宿" aria-haspopup="dialog" aria-expanded={panel === 'stay'} onClick={() => setPanel('stay')}><House /><span>住宿</span></button>
         <div className="journey-search"><Search /><input aria-label="搜索当日行程" placeholder="搜索当日行程" type="search" value={query} onChange={event => setQuery(event.target.value)} />{query && <button className="journey-search__clear" type="button" aria-label="清空搜索" onClick={() => setQuery('')}><X /></button>}</div>
       </div>
     </header>

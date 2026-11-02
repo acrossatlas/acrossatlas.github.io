@@ -7,7 +7,7 @@ import dottedWorldUrl from '../assets/travel-world-dots.svg';
 import countryDotsUrl from '../assets/travel-country-dots.svg';
 import countryDotBounds from '../data/country-dot-bounds.json';
 import { archiveCountries, archiveDateRange, countryOnlyVisits, countryVisits, journeys, tripLogRecords, tripUrl } from '../data/archive';
-import { getJourneyDayCount } from '../lib/journey-dates';
+import { getJourneyDayCount, getJourneySections } from '../lib/journey-dates';
 import { readableDateRange } from '../lib/date-format';
 
 const countryByCode = new Map(archiveCountries.map(country => [country.code, country]));
@@ -58,7 +58,8 @@ function CountryCard({ country, records }) {
 export function TripArchiveCard({ journey, visit }) {
   const countryCodes = [...new Set(journey.countries)];
   const dayCount = getJourneyDayCount(journey);
-  const stops = journey.visits?.length ? journey.visits : countryCodes.map(country => ({ country }));
+  const sections = getJourneySections(journey);
+  const stops = sections.length ? sections : journey.visits?.length ? journey.visits : countryCodes.map(country => ({ country }));
   // Country-only trips have no itinerary page, so their card opens the country page.
   const to = journey.countryOnly ? `/countries/${journey.countrySlug}` : tripUrl(journey, visit?.startsOn);
   const navigate = useNavigate();
@@ -74,12 +75,12 @@ export function TripArchiveCard({ journey, visit }) {
       </p>
       <h3>{journey.title}</h3>
       <div className="trip-card__footer">
-      <ol className="trip-card__route" aria-label={`${countryCodes.length} ${countryCodes.length === 1 ? 'country' : 'countries'}`}>
+      <ol className="trip-card__route" aria-label="行程分段">
         {stops.map((stop, index) => {
           const country = countryByCode.get(stop.country);
           const days = stop.startsOn && stop.endsOn ? getJourneyDayCount(stop) : null;
-          return <li key={`${stop.country}-${index}`}>
-            <span>{country?.name ?? stop.country}</span>
+          return <li key={`${stop.startsOn ?? stop.country}-${index}`}>
+            <span>{stop.name ?? country?.name ?? stop.country}</span>
             {days !== null && <small>{days}d</small>}
           </li>;
         })}

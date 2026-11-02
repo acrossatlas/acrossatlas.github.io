@@ -339,7 +339,7 @@ textarea {
 :root[data-input="keyboard"] .btn:focus-visible { box-shadow: 0 0 0 2px var(--accent); }
 
 .journey-search {
-  height: 30px;
+  height: 36px;
   color: var(--ink);
   border-radius: 8px;
   background: var(--surface, #ffffff);
@@ -348,8 +348,8 @@ textarea {
 
 .journey-search svg {
   flex: 0 0 auto;
-  width: 14px;
-  height: 14px;
+  width: 15px;
+  height: 15px;
 }
 
 .journey-search {
@@ -603,20 +603,6 @@ body {
 
 .day-tabs::-webkit-scrollbar {
   display: none;
-}
-
-.day-tabs button {
-  flex: 0 0 auto;
-  height: 36px;
-  padding: 0 16px;
-  color: var(--ink);
-  background: var(--fill, #f5f5f7);
-  border: 0;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 13px;
-  font-weight: 600;
-  transition: color 160ms ease, background 160ms ease;
 }
 
 .day-tabs button:not(.is-active):hover {
@@ -1833,8 +1819,8 @@ body {
     margin-top: 26px;
   }
 
-  .journey-tools .btn.btn--sm {
-    width: 30px;
+  .journey-tools .btn.btn--lg {
+    width: 36px;
     padding: 0;
   }
 
@@ -1899,12 +1885,6 @@ body {
   .day-tabs {
     width: calc(100% + 20px);
     padding-right: 20px;
-  }
-
-  .day-tabs button {
-    height: 36px;
-    padding: 0 14px;
-    font-size: 13px;
   }
 
   .day-map {
@@ -2203,7 +2183,7 @@ body {
 
 /* Template page follows the ongoing notebook layout. */
 .home-navigation { position: absolute; top: 32px; right: calc(var(--shell-edge) + 32px); display: flex; align-items: center; gap: 4px; }
-/* Copied from the reference console action: 16px glyph, 32px hover circle. */
+.home-navigation .home-create-trip svg { width: 22px; height: 22px; }
 .template-muted { color: var(--text-muted, #777); font-size: 13px; line-height: 1.8; }
 .template-page .day-event-card.is-selected { box-shadow: inset 0 0 0 2px var(--accent); }
 .template-page .notebook-day-nav .day-tabs { width: 100%; }

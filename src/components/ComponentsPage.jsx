@@ -73,14 +73,14 @@ function ComponentsGuide() {
       <Section id="buttons" title="按钮 Button" intro="四种样式 × 两种尺寸，外加只有图标的方形按钮。全站和 Travel zine 共用。"
         specs={[
           ['样式', '实心主：区域里唯一的主操作 · 实心次：普通操作 · 空心：添加或调整结构 · 无框：附带操作'],
-          ['尺寸', 'lg 36px：日期标签行、顶栏、弹窗底部 · sm 30px：标题工具栏、侧栏、素材栏、弹窗内操作'],
+          ['尺寸', 'lg 36px：标题工具栏、顶栏、弹窗底部 · sm 30px：日期与分隔、侧栏、素材栏、弹窗内操作'],
           ['图标', '文字按钮 15 / 14px，图标按钮 16 / 15px · 顶栏图标用无框 lg，间距 4px'],
           ['灰底容器', '次按钮改用旁边卡片的底色（添加行程、继续编辑手帐）'],
         ]}
         code={`
 <Button variant="primary">完成</Button>
 <Button size="sm"><Plus />添加照片</Button>          // 默认 secondary · lg
-<Button variant="outline"><Plus />分隔</Button>
+<Button variant="outline" size="sm"><Plus />分隔</Button>
 <Button variant="ghost"><Plus />添加一段</Button>     // ghost 默认 sm
 <Button variant="ghost" icon aria-label="新建"><Plus /></Button>
 <Link className="btn btn--secondary btn--lg" to="…">继续编辑手帐</Link>`}>

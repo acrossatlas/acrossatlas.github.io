@@ -1,4 +1,5 @@
 import { Fragment, useEffect, useRef, useState } from 'react';
+import { buttonClass } from './form/Form';
 
 export default function DayTabs({ days, activeIndex, onSelect, sectionLabels = {}, dividers = [], idPrefix = 'day', label = '每日行程', onEditSection }) {
   const tabsRef = useRef(null);
@@ -37,7 +38,7 @@ export default function DayTabs({ days, activeIndex, onSelect, sectionLabels = {
     {days.map((day, index) => <Fragment key={day.id ?? day.key}>
       {sectionLabels[day.key] && <span className="day-tabs__country" role="presentation">{onEditSection ? <button type="button" className="notebook-inline-section" aria-label={`编辑分隔：${sectionLabels[day.key]}`} onClick={() => onEditSection(day)}>{sectionLabels[day.key]}</button> : sectionLabels[day.key]}</span>}
       {dividers.includes(day.key) && <span className="day-tabs__divider" aria-hidden="true" />}
-      <button type="button" role="tab" id={`${idPrefix}-${index + 1}-tab`} aria-controls={`${idPrefix}-${index + 1}-panel`} aria-label={day.tabLabel ?? day.key} aria-selected={activeIndex === index} tabIndex={activeIndex === index ? 0 : -1} className={activeIndex === index ? 'is-active' : ''} onClick={() => onSelect(index)} onKeyDown={event => handleKey(event, index)}>{day.label}</button>
+      <button type="button" role="tab" id={`${idPrefix}-${index + 1}-tab`} aria-controls={`${idPrefix}-${index + 1}-panel`} aria-label={day.tabLabel ?? day.key} aria-selected={activeIndex === index} tabIndex={activeIndex === index ? 0 : -1} className={buttonClass({ variant: activeIndex === index ? 'primary' : 'secondary', size: 'sm', className: activeIndex === index ? 'is-active' : '' })} onClick={() => onSelect(index)} onKeyDown={event => handleKey(event, index)}>{day.label}</button>
     </Fragment>)}
   </div>;
 }

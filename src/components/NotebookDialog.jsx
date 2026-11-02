@@ -15,9 +15,41 @@ export default function NotebookDialog({ title, eyebrow, header, actions, onClos
   useEffect(() => {
     const element = ref.current, opener = document.activeElement;
     const overflow = document.body.style.overflow;
+    const viewport = window.visualViewport;
+    let frame;
+    // The keyboard can shrink and pan the visual viewport without resizing the
+    // layout viewport. Keep the dialog and its focused field inside that area.
+    function fitViewport() {
+      element.style.setProperty('--dialog-viewport-height', `${viewport?.height ?? window.innerHeight}px`);
+      element.style.setProperty('--dialog-viewport-top', `${viewport?.offsetTop ?? 0}px`);
+      const active = document.activeElement;
+      if (!(active instanceof HTMLElement) || !element.contains(active)) return;
+      const body = active.closest('.journey-modal__body');
+      if (!body) return;
+      const bounds = body.getBoundingClientRect();
+      const field = active.getBoundingClientRect();
+      if (field.height > bounds.height - 24) return;
+      if (field.bottom > bounds.bottom - 12) body.scrollTop += field.bottom - bounds.bottom + 12;
+      else if (field.top < bounds.top + 12) body.scrollTop -= bounds.top + 12 - field.top;
+    }
+    function scheduleFit() {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(fitViewport);
+    }
+    fitViewport();
+    viewport?.addEventListener('resize', scheduleFit);
+    viewport?.addEventListener('scroll', scheduleFit);
+    window.addEventListener('resize', scheduleFit);
+    element.addEventListener('focusin', scheduleFit);
     element.showModal(); document.body.style.overflow = 'hidden';
     (element.querySelector('[data-autofocus]') ?? element).focus({ preventScroll: true });
+    scheduleFit();
     return () => {
+      cancelAnimationFrame(frame);
+      viewport?.removeEventListener('resize', scheduleFit);
+      viewport?.removeEventListener('scroll', scheduleFit);
+      window.removeEventListener('resize', scheduleFit);
+      element.removeEventListener('focusin', scheduleFit);
       element.close(); document.body.style.overflow = overflow;
       if (opener instanceof HTMLElement && opener.isConnected) opener.focus({ preventScroll: true });
     };

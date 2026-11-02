@@ -5,11 +5,24 @@
 .ongoing-page .journey-overview { margin-top: 40px; }
 .ongoing-page .journey-heading h1 { line-height: normal; }
 /* Centre the tools on the title line (normal line-height is about 1.4 for this face) */
-@media (min-width: 821px) { .ongoing-page .journey-tools { margin-top: calc((clamp(30px, 3.3vw, 42px) * 1.4 - 30px) / 2); } }
+@media (min-width: 821px) { .ongoing-page .journey-tools { margin-top: calc((clamp(30px, 3.3vw, 42px) * 1.4 - 36px) / 2); } }
 /* The day tabs stand apart from the title block (title + dates) */
 .ongoing-page .notebook-content { margin-top: 48px; }
 .notebook-editor button:disabled, .itinerary-actions button:disabled { opacity: .38; cursor: default; }
-.notebook-editor { margin: auto; border: 0; height: fit-content; min-width: min(320px, calc(100vw - 48px)); max-width: calc(100vw - 48px); min-height: min(220px, calc(100dvh - 48px)); max-height: min(720px, calc(100dvh - 48px)); color: var(--ink); }
+.notebook-editor {
+  position: fixed;
+  inset: auto 0;
+  top: calc(var(--dialog-viewport-top, 0px) + var(--dialog-viewport-height, 100dvh) / 2);
+  margin: 0 auto;
+  transform: translateY(-50%);
+  border: 0;
+  height: auto;
+  min-width: min(320px, calc(100vw - 48px));
+  max-width: calc(100vw - 48px);
+  min-height: min(220px, calc(var(--dialog-viewport-height, 100dvh) - 48px));
+  max-height: min(720px, calc(var(--dialog-viewport-height, 100dvh) - 48px));
+  color: var(--ink);
+}
 .notebook-editor:not([open]) { display: none; }
 .notebook-editor::backdrop { background: rgba(20, 22, 24, .3); }
 .notebook-editor .journey-modal__header > div { min-width: 0; }
@@ -138,12 +151,12 @@ button.info-card.notebook-option:hover:not(:disabled) { background: var(--fill-h
   .notebook-editor__header > .notebook-editor__close { order: 2; margin-left: auto; }
   .notebook-editor__actions { order: 3; flex-basis: 100%; }
   .notebook-editor { padding-bottom: max(20px, env(safe-area-inset-bottom)); }
-  .notebook-editor { inset: auto 0 0; margin: 0; min-width: min(320px, 100vw); max-width: 100%; min-height: min(220px, calc(100dvh - 18px)); max-height: min(720px, calc(100dvh - 18px)); }
+  .notebook-editor { top: calc(var(--dialog-viewport-top, 0px) + var(--dialog-viewport-height, 100dvh)); transform: translateY(-100%); min-width: min(320px, 100vw); max-width: 100%; min-height: min(220px, calc(var(--dialog-viewport-height, 100dvh) - 18px)); max-height: min(720px, calc(var(--dialog-viewport-height, 100dvh) - 18px)); }
+  .notebook-editor :is(input, textarea, select) { font-size: 16px; }
   .notebook-album__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
   .notebook-album { padding: 8px; border-radius: 14px; }
   .notebook-album__day { padding: 8px; }
   .notebook-album__photo { border-radius: 10px; }
-  .notebook-more-button { flex: 0 0 42px; }
 }
 @media (max-width: 560px) {
   .ongoing-page .journey-overview { margin-top: 24px; }
