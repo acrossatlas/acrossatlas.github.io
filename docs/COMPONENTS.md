@@ -2,9 +2,12 @@
 
 The notebook editors (itinerary, checklist, trip dates, new trip, date dividers,
 photo upload) are built from one small set of components in
-`src/components/form/`. The site has a live version of this reference at
-`/components`, linked from the component icon at the top right of the home page;
-every demo there renders the real components.
+`src/components/form/`. The site's live reference is `/components`, the only
+icon link at the top right of the home page besides 新建 and the theme toggle.
+It has two tabs: **组件** (colours, buttons, inputs, selects and tags, groups,
+messages, dialog — each with a live demo, a few spec rows and folded code) and
+**模板** (`?tab=templates`; the trip page filled with `public/templates/journey.json`,
+built from `TemplatePreview` in `TemplatesPage.jsx`). `/templates` redirects there.
 
 | File | Contents |
 | --- | --- |
@@ -25,12 +28,17 @@ every demo there renders the real components.
    press deletes. Moving focus away resets it.
 4. **Validate on 完成.** Required fields show their message under the row; focus
    moves to the first invalid control. Nothing is saved until valid.
-5. **Label left, control right.** Paired values share one capsule split into two
+5. **Label left, control right.** Paired values share one field split into two
    equal halves joined by 「—」, so halves line up from row to row.
-6. **Focus rings for the keyboard only.** Pointer focus only darkens a field slightly.
-7. **Autofocus new entries only.** Editing an existing entry focuses the dialog,
+6. **One control shape, two fills.** Every control is an 8px rounded rectangle.
+   Fields (inputs, search) are hollow: `--surface` with a `--line` hairline that
+   darkens on hover. Tabs and tags are solid. Buttons follow the Button kinds below
+   (primary / secondary / outline / ghost, sizes lg 36px and sm 30px). Large
+   containers use 12–16px corners.
+7. **Focus rings for the keyboard only.** Pointer focus darkens the outline to `--ink`.
+8. **Autofocus new entries only.** Editing an existing entry focuses the dialog,
    so phones don't open the keyboard.
-8. **Tokens only.** Colours come from `styles.css`; both themes switch through them.
+9. **Tokens only.** Colours come from `styles.css`; both themes switch through them.
 
 ## Tokens
 
@@ -40,9 +48,9 @@ every demo there renders the real components.
 | `--muted`, `--text-muted` | Secondary text, labels, icons |
 | `--text-faint` | Placeholders |
 | `--white` | Dialog background (dark in dark mode) |
-| `--surface` | Inputs inside a filled section |
-| `--fill`, `--fill-hover` | Inputs, tags, grey bars; hover |
-| `--line` | Dividers |
+| `--surface` | Fields (inputs, search) |
+| `--fill`, `--fill-hover` | Buttons, tabs, tags, filled sections; hover |
+| `--line`, `--line-strong` | Field outlines, dividers; hover |
 | `--accent` | Keyboard focus ring |
 | `--accent-ink`, `--accent-soft` | Errors, selected status tags, notices |
 
@@ -72,7 +80,7 @@ Same row layout for several controls that each carry their own `aria-label`
 
 ### Split and SplitSelect
 
-One capsule: icon · left — right, halves of equal width.
+One field: icon · left — right, halves of equal width.
 
 ```jsx
 <FieldGroup label="路线" error={error}>
@@ -107,7 +115,7 @@ Mark the invalid half with `aria-invalid`; its text takes the error colour.
 
 ### DateRange and DateField
 
-Native date inputs inside the same capsule; clicking opens the system picker.
+Native date inputs inside the same field; clicking opens the system picker.
 `DateRange` keeps the end date on or after the start date.
 
 ```jsx
@@ -117,7 +125,7 @@ Native date inputs inside the same capsule; clicking opens the system picker.
 
 ### Segmented
 
-Pill tabs for 2–5 short exclusive options (the itinerary type). Width follows content.
+Rounded tabs on a grey track for 2–5 short exclusive options (the itinerary type). Width follows content.
 
 ```jsx
 <Segmented label="行程类型" options={EVENT_TYPES} value={type} onChange={setType} />
@@ -128,9 +136,14 @@ Pill tabs for 2–5 short exclusive options (the itinerary type). Width follows 
 Tag-sized select for whole-entry states (booking, payment). Grey when empty, blue
 when set. Placed at the dialog's top right, beside close (`NotebookDialog actions`).
 
+### FormDivider
+
+A hairline between the required fields and the optional ones (the itinerary
+editor puts it above 说明).
+
 ### FormSection and AddBar
 
-`AddBar` is the empty state of an optional group: a grey capsule in the control
+`AddBar` is the empty state of an optional group: a grey bar in the control
 column with one centred action. Opened, the group becomes a `FormSection` — a
 filled card with a title, whose inputs lift to `--surface`.
 
@@ -145,13 +158,28 @@ and 「添加一段」 sits at the footer's left.
 
 ### Button, ConfirmButton
 
-| Variant | Use |
-| --- | --- |
-| `primary` | The one main action, usually 完成 |
-| `secondary` (default) | Grey pill: 删除, 回到最新 |
-| `text` | Quiet extras: 添加一段, 上传凭证 |
-| `ConfirmButton` | Two-press actions; first press shows `confirmLabel` outlined |
-| `.form-icon-button` | Small icon-only action, e.g. remove a leg |
+One button system for the site and the Travel zine (`.btn` in `styles.css`):
+four kinds × two sizes.
+
+| Kind | Look | Use |
+| --- | --- | --- |
+| `primary` | Solid ink | The one main action in an area: 完成, 导出打印 PDF, 上传照片 |
+| `secondary` (default) | Solid grey | Ordinary actions: 交通, 住宿, 添加照片, 继续编辑手帐, 删除, 回到最新 |
+| `outline` | Hollow, hairline | Structural actions that add or arrange: + 分隔, 自动填满, 照片框, 文字 |
+| `ghost` (`text`) | No frame | Quiet extras: 保存, 添加一段, 上传凭证 |
+| `icon` | Square, usually ghost | Icon-only actions: muted icon, ink + grey fill on hover. The top-bar icons (返回, 新建旅行, 模板, 组件, theme) are ghost · icon · lg, 4px apart; 「…」 is secondary · icon |
+
+| Size | Height | Text / icon | Where |
+| --- | --- | --- | --- |
+| `lg` (default) | 36px, 0 16px | 13px / 15px (icon-only 16px) | The day-tab row (tabs and + 分隔), the top bar, dialog footers |
+| `sm` (default for ghost) | 30px, 0 11px | 12px / 14px (icon-only 15px) | The trip title toolbar (交通, 住宿, …; search is 30px too), sidebars, the photo tray, extras inside dialogs |
+
+On a grey container a secondary button takes the colour of the cards beside it
+(添加行程, 继续编辑手帐). Elements that are not `<button>`
+(a `Link`) use the classes directly: `btn btn--secondary btn--lg`.
+`buttonClass({ variant, size, icon })` returns the class string.
+`ConfirmButton` is a secondary `lg` button for two-press actions; armed, it shows
+`confirmLabel` outlined. `.form-icon-button` is a small icon-only action inside forms.
 
 ### FormFooter
 

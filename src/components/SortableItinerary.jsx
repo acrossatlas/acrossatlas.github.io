@@ -54,7 +54,7 @@ export default function SortableItinerary({ events, busy, onEdit, onReorder, onO
     <ol className="day-event-list" ref={list}>
       {events.map((event, index) => <DayEventCard key={event.id} event={event} dayId={dayId} bookId={bookId} selected={selected === event.id} onOpenReservation={onOpenReservation} onEdit={onEdit ? () => { if (!suppressed.current && !busy) onEdit(event); } : undefined}
         cardProps={{ 'data-sortable-id': event.id, onPointerDown: e => begin(e, event), 'data-dragging': drag?.id === event.id || undefined, 'data-drop': drag?.target === event.id ? drag.position : undefined }}
-        dragHandle={onReorder && events.length > 1 ? <button className="theme-toggle itinerary-drag-handle" type="button" aria-label={`拖动调整${event.title}顺序`} title="拖动排序，键盘可用上下方向键" disabled={busy} onClick={e => e.stopPropagation()} onPointerDown={e => begin(e, event, true)} onKeyDown={e => keyboard(e, event, index)}><GripVertical size={14} /></button> : null} />)}
+        dragHandle={onReorder && events.length > 1 ? <button className="btn btn--ghost btn--sm btn--icon itinerary-drag-handle" type="button" aria-label={`拖动调整${event.title}顺序`} title="拖动排序，键盘可用上下方向键" disabled={busy} onClick={e => e.stopPropagation()} onPointerDown={e => begin(e, event, true)} onKeyDown={e => keyboard(e, event, index)}><GripVertical size={14} /></button> : null} />)}
     </ol>
     {drag && <div className="itinerary-drag-preview" aria-hidden="true" style={{ left: drag.point.x + 12, top: drag.point.y + 12 }}>{drag.title}</div>}
     <span className="sr-only" role="status">{message}</span>

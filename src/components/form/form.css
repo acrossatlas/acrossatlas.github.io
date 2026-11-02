@@ -1,7 +1,8 @@
 /* Notebook form components. Tokens and fallbacks follow styles.css:
    light mode leaves --fill/--surface/--line undefined, dark mode defines them.
-   Focus: text fields show where the caret is with a quiet surface change; the
-   accent ring appears only for keyboard navigation (html[data-input="keyboard"]). */
+   Shape: every control is a rounded rectangle (8px) on the surface with a hairline
+   outline, the same as the Travel zine editor. Focus: the outline darkens to ink;
+   the accent ring appears only for keyboard navigation (html[data-input="keyboard"]). */
 
 .form-fields { display: grid; gap: 12px; min-width: 0; margin: 0; padding: 0; border: 0; }
 
@@ -13,22 +14,22 @@
 .form-field > :not(.form-field__label) { grid-column: 2; }
 .form-field__error { margin: 0; padding-left: 16px; color: var(--accent-ink); font-size: 11px; line-height: 1.5; }
 
-/* Control surface: the journey-search pill */
-.form-control { display: flex; align-items: center; gap: 8px; min-width: 0; height: 42px; padding: 0 16px; color: var(--ink); background: var(--fill, #f5f5f7); border-radius: 999px; transition: background 160ms ease, box-shadow 160ms ease; }
-.form-control:hover { background: var(--fill-hover, #eeeef1); }
-.form-control:focus-within { background: var(--fill-hover, #eeeef1); }
+/* Control surface: outlined rounded rectangle, like journey-search */
+.form-control { display: flex; align-items: center; gap: 8px; min-width: 0; height: 40px; padding: 0 14px; color: var(--ink); background: var(--surface, #ffffff); border-radius: 8px; box-shadow: inset 0 0 0 1px var(--line, #e6eaf0); transition: box-shadow 160ms ease; }
+.form-control:hover { box-shadow: inset 0 0 0 1px var(--line-strong, #d4d4d7); }
+.form-control:focus-within { box-shadow: inset 0 0 0 1px var(--ink), 0 0 0 3px color-mix(in srgb, var(--ink) 7%, transparent); }
 :root[data-input="keyboard"] .form-control:focus-within { box-shadow: inset 0 0 0 2px var(--accent); }
 .form-field.is-invalid .form-control { box-shadow: inset 0 0 0 1px var(--accent-ink); }
 .form-control input, .form-control select, .form-control textarea { flex: 1 1 auto; width: 100%; min-width: 0; padding: 0; margin: 0; border: 0; outline: 0; color: inherit; background: transparent; font: inherit; font-size: 13px; }
 .form-control input::placeholder, .form-control textarea::placeholder { color: var(--text-faint, #b0b0b0); }
-.form-control--multiline { height: auto; align-items: stretch; padding: 12px 16px; border-radius: 20px; }
+.form-control--multiline { height: auto; align-items: stretch; padding: 10px 14px; border-radius: 8px; }
 .form-control > textarea { min-height: calc(1.7em * 3); line-height: 1.7; resize: none; field-sizing: content; max-height: 40vh; }
 .form-control--select { position: relative; padding-right: 36px; }
 .form-control--select > select { appearance: none; -webkit-appearance: none; height: 100%; cursor: pointer; }
 .form-control--select > svg { position: absolute; right: 14px; width: 15px; height: 15px; color: var(--text-muted, #737b85); pointer-events: none; }
 
 /* Split: one capsule, icon + two equal halves, so halves line up from row to row */
-.form-split { display: grid; grid-template-columns: 15px minmax(0, 1fr) 16px minmax(0, 1fr); column-gap: 10px; padding: 0 16px; }
+.form-split { display: grid; grid-template-columns: 15px minmax(0, 1fr) 16px minmax(0, 1fr); column-gap: 10px; padding: 0 14px; }
 .form-split--single { grid-template-columns: 15px minmax(0, 1fr); }
 .form-split__icon { width: 15px; height: 15px; color: var(--text-muted, #737b85); }
 .form-split__half { display: flex; align-items: center; min-width: 0; height: 100%; }
@@ -45,24 +46,24 @@
 .form-date::-webkit-datetime-edit-fields-wrapper { padding: 0; }
 
 /* Tag select: same shape as reservation-info-trigger, with a real chevron */
-.form-tag-select { position: relative; display: inline-flex; align-items: center; flex: none; height: 28px; border-radius: 999px; color: var(--text-muted, #737b85); background: var(--fill, #f5f5f7); transition: background 160ms ease; }
+.form-tag-select { position: relative; display: inline-flex; align-items: center; flex: none; height: 30px; border-radius: 8px; color: var(--text-muted, #737b85); background: var(--fill, #f5f5f7); transition: background 160ms ease; }
 .form-tag-select.has-value { color: var(--accent-ink); background: var(--accent-soft); }
 .form-tag-select:hover { background: var(--fill-hover, #eeeef1); }
 .form-tag-select.has-value:hover { background: var(--accent-tag); }
 :root[data-input="keyboard"] .form-tag-select:focus-within { box-shadow: inset 0 0 0 2px var(--accent); }
-.form-tag-select > select { appearance: none; -webkit-appearance: none; height: 100%; padding: 0 26px 0 11px; border: 0; outline: 0; color: inherit; background: transparent; font: inherit; font-size: 11px; font-weight: 600; cursor: pointer; }
-.form-tag-select > svg { position: absolute; right: 9px; width: 12px; height: 12px; pointer-events: none; }
+.form-tag-select > select { appearance: none; -webkit-appearance: none; height: 100%; padding: 0 28px 0 11px; border: 0; outline: 0; color: inherit; background: transparent; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; }
+.form-tag-select > svg { position: absolute; right: 10px; width: 12px; height: 12px; pointer-events: none; }
 .form-tag-select > select:disabled { cursor: default; }
 
-/* Segmented: compact day-tabs */
-.form-segmented { flex: none; width: fit-content; max-width: 100%; gap: 4px; margin: 0; padding: 3px; border-radius: 999px; background: var(--fill, #f5f5f7); }
-.form-segmented > button { display: inline-flex; align-items: center; flex: none; width: auto; white-space: nowrap; height: 30px; border-radius: 999px; padding: 0 14px; font-size: 12px; background: transparent; }
+/* Segmented: compact day-tabs inside one grey track */
+.form-segmented { flex: none; width: fit-content; max-width: 100%; gap: 2px; margin: 0; padding: 3px; border-radius: 9px; background: var(--fill, #f5f5f7); }
+.form-segmented > button { display: inline-flex; align-items: center; flex: none; width: auto; white-space: nowrap; height: 30px; border: 0; border-radius: 6px; padding: 0 14px; font-size: 12px; background: transparent; }
 .form-segmented > button:not(.is-active):hover { background: var(--fill-hover, #e6e9ea); }
 .form-segmented > button:focus-visible { outline: 0; }
 :root[data-input="keyboard"] .form-segmented > button:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
 
 /* Section: a filled card holding its own rows; nested controls lift to the surface colour */
-.form-section { display: grid; gap: 12px; min-width: 0; padding: 16px; border-radius: 22px; background: var(--fill, #f5f5f7); }
+.form-section { display: grid; gap: 12px; min-width: 0; padding: 16px; border-radius: 12px; background: var(--fill, #f5f5f7); }
 .form-section .form-control { background: var(--surface, #ffffff); }
 .form-section .form-control:hover, .form-section .form-control:focus-within { background: var(--surface, #ffffff); }
 .form-section .form-field { grid-template-columns: 40px minmax(0, 1fr); }
@@ -70,30 +71,33 @@
 .form-section__header h4 { margin: 0; color: var(--ink); font-size: 12px; font-weight: 650; }
 .form-section__header > :last-child:not(h4) { margin-left: auto; }
 
-/* Empty optional section: a grey bar with one centred action */
-.form-add-bar { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; height: 42px; border: 0; border-radius: 999px; color: var(--text-muted, #737b85); background: var(--fill, #f5f5f7); font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; transition: color 160ms ease, background 160ms ease; }
-.form-add-bar:hover { color: var(--ink); background: var(--fill-hover, #eeeef1); }
+/* Empty optional section: a solid grey bar with one centred action (a button, so no outline) */
+.form-add-bar { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; height: 40px; border: 0; border-radius: 8px; color: var(--text-muted, #737b85); background: var(--fill, #f5f5f7); font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; transition: color 160ms ease, background 160ms ease; }
+.form-add-bar:hover { color: var(--ink); background: var(--fill-hover, #e6e9ea); }
+
+/* Divider between the required fields and the optional ones */
+.form-divider { height: 0; margin: 4px 0; border: 0; border-top: 1px solid var(--line, #e6eaf0); }
 .form-add-bar svg { width: 14px; height: 14px; }
 
 /* Text and icon buttons */
 .form-text-button { display: inline-flex; align-items: center; gap: 6px; min-height: 32px; padding: 0 2px; border: 0; color: var(--text-muted, #737b85); background: transparent; font: inherit; font-size: 12px; font-weight: 600; cursor: pointer; transition: color 160ms ease; }
 .form-text-button:hover { color: var(--ink); }
 .form-text-button svg { flex: none; width: 14px; height: 14px; }
-.form-icon-button { display: grid; flex: none; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 50%; color: var(--text-muted, #737b85); background: transparent; cursor: pointer; }
+.form-icon-button { display: grid; flex: none; place-items: center; width: 28px; height: 28px; padding: 0; border: 0; border-radius: 7px; color: var(--text-muted, #737b85); background: transparent; cursor: pointer; }
 .form-icon-button:hover { color: var(--ink); background: var(--fill-hover, #e6e9ea); }
 .form-icon-button svg { width: 14px; height: 14px; }
 
 /* In-place confirmation: secondary until armed, then outlined so it never reads as the primary action */
-.form-confirm-button.is-armed, .form-confirm-button.is-armed:hover { color: var(--ink); background: transparent; box-shadow: inset 0 0 0 1.5px var(--ink); }
+.btn.form-confirm-button.is-armed, .btn.form-confirm-button.is-armed:hover:not(:disabled) { color: var(--ink); background: transparent; box-shadow: inset 0 0 0 1.5px var(--ink); }
 
 /* Messages */
 .form-message { margin: 0; color: var(--text-muted, #737b85); font-size: 12px; line-height: 1.8; }
-.form-message.is-error { padding: 10px 14px; border-radius: 14px; color: var(--accent-ink); background: var(--accent-soft); }
+.form-message.is-error { padding: 10px 14px; border-radius: 8px; color: var(--accent-ink); background: var(--accent-soft); }
 
 /* Footer: actions on the right, secondary then primary */
 .form-footer { display: flex; flex: none; align-items: center; justify-content: flex-end; flex-wrap: wrap; gap: 8px; margin: 20px 18px 0 0; }
 .form-footer__leading { display: flex; align-items: center; margin-right: auto; }
-.form-footer .journey-tool-button { height: 38px; min-width: 76px; padding: 0 18px; }
+.form-footer .btn.btn--lg { min-width: 76px; }
 
 button:disabled.form-text-button, button:disabled.form-icon-button, button:disabled.form-add-bar { opacity: .38; cursor: default; }
 
@@ -103,5 +107,5 @@ button:disabled.form-text-button, button:disabled.form-icon-button, button:disab
   .form-control input, .form-control select, .form-control textarea { font-size: 16px; }
   .form-split { column-gap: 8px; padding: 0 14px; }
   .form-footer { margin-right: 10px; }
-  .form-section { padding: 12px; border-radius: 18px; }
+  .form-section { padding: 12px; border-radius: 10px; }
 }

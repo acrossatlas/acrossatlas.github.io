@@ -2,7 +2,6 @@ import ChecklistGroup from './components/ChecklistGroup';
 import ThemeToggle from './components/ThemeToggle';
 import { ArrowIcon, CloseIcon, CopyableAddress, CopyableEventTitle, EventFlightDetails, FlightLegCaption, getReservationHeading, ReservationDetails, ReservationModal, useModalBehavior } from './components/JourneyEvents';
 import ComponentsPage from './components/ComponentsPage';
-import TemplatesPage from './components/TemplatesPage';
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { Component, Plus } from 'lucide-react';
 import DayItinerary from './components/DayItinerary';
@@ -18,8 +17,8 @@ import { useNotebookCatalog } from './lib/use-notebook-catalog.js';
 import { NewTripDialog, SectionDialog, TripDatesDialog } from './components/TripSettings';
 import { deleteEvent, journeyFromNotebook, reorderEvent, resizeNotebookDates, saveEvent } from './lib/notebook.js';
 import ItineraryEditor from './components/ItineraryEditor';
+import SiteBar from './components/SiteBar';
 import ChecklistEditor from './components/ChecklistEditor';
-import NotebookAlbum from './components/NotebookAlbum';
 import NotebookOptions, { versionName } from './components/NotebookOptions';
 
 const JournalEditor = lazy(() => import('./components/JournalEditor'));
@@ -192,16 +191,6 @@ function PlusIcon() {
   );
 }
 
-function SiteTitle({ linked = false }) {
-  const title = <span>across</span>;
-
-  return (
-    <header className="title-row">
-      {linked ? <Link to="/" aria-label="across home">{title}</Link> : <h1>{title}</h1>}
-    </header>
-  );
-}
-
 function CurrentJourneyCard({ journey }) {
   const { currentDay, dayCount } = getJourneyProgress(journey);
 
@@ -231,11 +220,8 @@ function HomePage() {
   return (
     <div className={`page home-page${ongoingJourney ? '' : ' home-page--archive'}`}>
       <nav className="home-navigation" aria-label="主导航">
-        <button className="theme-toggle" type="button" aria-label="新建旅行" title="新建旅行" onClick={() => setCreating(true)}><PlusIcon /></button>
-        <Link className="home-template-link" to="/templates" aria-label="打开旅行模板" title="模板">
-          <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M10.6663 4C11.4027 4 12.0003 4.5976 12.0003 5.33398V11.334H10.6663V6.27734L4.47198 12.4717L3.52863 11.5283L9.72296 5.33398H4.66632V4H10.6663Z" fill="currentColor" /></svg>
-        </Link>
-        <Link className="home-template-link" to="/components" aria-label="查看组件文档" title="组件">
+        <button className="btn btn--ghost btn--lg btn--icon" type="button" aria-label="新建旅行" title="新建旅行" onClick={() => setCreating(true)}><PlusIcon /></button>
+        <Link className="btn btn--ghost btn--lg btn--icon" to="/components" aria-label="组件与模板" title="组件与模板">
           <Component size={16} strokeWidth={1.8} aria-hidden="true" />
         </Link>
       </nav>
@@ -575,7 +561,7 @@ function JourneyPage({ journey: originalJourney }) {
     <div className={`page ongoing-page${archived ? ' archived-journey-page' : ''}`}>
       <main className="ongoing-shell">
         <header className="notebook-header">
-          <SiteTitle linked />
+          <SiteBar />
           <div className="journey-overview">
             <div className="journey-heading">
               <div className="journey-heading__title">
@@ -589,7 +575,7 @@ function JourneyPage({ journey: originalJourney }) {
                 aria-controls="transport-modal"
                 aria-expanded={openPanel === 'transport'}
                 aria-haspopup="dialog"
-                className="journey-tool-button"
+                className="btn btn--secondary btn--sm"
                 onClick={() => setOpenPanel('transport')}
                 type="button"
               >
@@ -601,7 +587,7 @@ function JourneyPage({ journey: originalJourney }) {
                 aria-controls="stay-modal"
                 aria-expanded={openPanel === 'stay'}
                 aria-haspopup="dialog"
-                className="journey-tool-button"
+                className="btn btn--secondary btn--sm"
                 onClick={() => setOpenPanel('stay')}
                 type="button"
               >
@@ -640,7 +626,7 @@ function JourneyPage({ journey: originalJourney }) {
         {notebook.error && <p className="notebook-editor__error" role="alert">{notebook.error}</p>}
         {notebook.record?.checkout && <div className="notebook-version-notice notebook-version-notice--page" role="status">
           <span>正在查看{versionName(notebook.record.current)}</span>
-          <button className="journey-tool-button" type="button" disabled={notebook.busy} onClick={() => notebook.switchVersion(notebook.record.checkout.latest.id).catch(() => {})}>回到最新</button>
+          <button className="btn btn--secondary btn--sm" type="button" disabled={notebook.busy} onClick={() => notebook.switchVersion(notebook.record.checkout.latest.id).catch(() => {})}>回到最新</button>
         </div>}
         <span className="sr-only" role="status">{notebook.busy ? '正在保存修改' : notebook.record?.updatedAt ? '修改已保存在本机' : ''}</span>
         <div className="notebook-content">
@@ -652,7 +638,8 @@ function JourneyPage({ journey: originalJourney }) {
           </section>}
 
           <section className="notebook-section" aria-label="所有行程">
-            <div className="notebook-day-nav"><DayTabs days={journeyDates} activeIndex={activeDay} onSelect={setActiveDay} sectionLabels={journeySectionLabels} dividers={journey.sectionDividers} onEditSection={setSectionEditor} /><button className="journey-tool-button notebook-section-add" type="button" aria-label="添加日期分隔" title="在当前日期前添加分隔" disabled={!notebook.record || notebook.busy} onClick={() => setSectionEditor(journeyDates[activeDay])}><Plus size={15} aria-hidden="true" /><span>分隔</span></button></div>
+            <SectionHeading>Itinerary</SectionHeading>
+            <div className="notebook-day-nav"><DayTabs days={journeyDates} activeIndex={activeDay} onSelect={setActiveDay} sectionLabels={journeySectionLabels} dividers={journey.sectionDividers} onEditSection={setSectionEditor} /><button className="btn btn--outline btn--lg notebook-section-add" type="button" aria-label="添加日期分隔" title="在当前日期前添加分隔" disabled={!notebook.record || notebook.busy} onClick={() => setSectionEditor(journeyDates[activeDay])}><Plus size={15} aria-hidden="true" /><span>分隔</span></button></div>
             {journeyDates.map((day, index) => (
               <section
                 aria-labelledby={`day-${index + 1}-tab`}
@@ -699,7 +686,6 @@ function JourneyPage({ journey: originalJourney }) {
             </header>
             <JournalEntry journey={journey} />
           </section>
-          <NotebookAlbum book={book} activeDate={journeyDates[activeDay].key} busy={!notebook.record || notebook.busy} onCommit={notebook.commit} />
         </div>
       </main>
       {datesOpen && <TripDatesDialog startsOn={book.startsOn} endsOn={book.endsOn} onClose={() => setDatesOpen(false)} onSave={async (start, end) => { await notebook.commit(book => resizeNotebookDates({ ...book, sectionLabels: book.sectionLabels ?? journey.sectionLabels, sectionDividers: book.sectionDividers ?? journey.sectionDividers }, start, end), '修改旅行日期'); }} />}
@@ -720,8 +706,8 @@ function TripPage() {
   const catalog = useNotebookCatalog();
   if (catalog.deletedIds.includes(tripId)) return <Navigate replace to="/?log=trip" />;
   const journey = findJourney(tripId) ?? catalog.journeys.find(journey => journey.id === tripId);
-  if (!journey && catalog.loading) return <div className="page"><main className="ongoing-shell"><SiteTitle linked /></main></div>;
-  if (!journey) return <div className="page"><main className="ongoing-shell"><SiteTitle linked /><h1>尚未收录这次旅行</h1></main></div>;
+  if (!journey && catalog.loading) return <div className="page"><main className="ongoing-shell"><SiteBar /></main></div>;
+  if (!journey) return <div className="page"><main className="ongoing-shell"><SiteBar /><h1>尚未收录这次旅行</h1></main></div>;
   return <JourneyPage key={journey.id} journey={journey} />;
 }
 
@@ -754,7 +740,7 @@ function App() {
         <Route path="/trips/:tripId" element={<TripPage />} />
         <Route path="/trips/:tripId/journal" element={<Suspense fallback={<div className="zine-loading">正在打开手帐…</div>}><JournalEditor /></Suspense>} />
         <Route path="/countries/:countrySlug" element={<CountryArchivePage />} />
-        <Route path="/templates" element={<TemplatesPage />} />
+        <Route path="/templates" element={<Navigate to="/components?tab=templates" replace />} />
         <Route path="/components" element={<ComponentsPage />} />
         <Route path="*" element={<HomePage />} />
       </Routes>

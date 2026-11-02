@@ -22,7 +22,7 @@ export default function ThemeToggle() {
     setTheme(next);
   };
 
-  return <button className="theme-toggle" type="button" onClick={toggle}
+  return <button className="btn btn--ghost btn--lg btn--icon theme-toggle" type="button" onClick={toggle}
     aria-label={next === 'dark' ? 'Switch to dark mode' : 'Switch to light mode'} title={next === 'dark' ? 'Dark mode' : 'Light mode'}>
     {theme === 'dark' ? <Sun aria-hidden="true" strokeWidth={1.9} /> : <Moon aria-hidden="true" strokeWidth={1.9} />}
   </button>;

@@ -137,6 +137,11 @@ export function Segmented({ label, options, value, onChange, disabled }) {
 }
 
 /** Filled card holding its own rows, e.g. one transport leg or the booking details. */
+/** Hairline between the required fields above and the optional ones below. */
+export function FormDivider() {
+  return <hr className="form-divider" />;
+}
+
 export function FormSection({ title, actions, children, className = '', ...props }) {
   return <section className={`form-section ${className}`} {...props}>
     {(title || actions) && <header className="form-section__header">{title && <h4>{title}</h4>}{actions}</header>}
@@ -165,9 +170,18 @@ export function FormFooter({ leading, children }) {
   return <footer className="form-footer">{leading && <div className="form-footer__leading">{leading}</div>}{children}</footer>;
 }
 
-export function Button({ variant = 'secondary', className = '', type = 'button', children, ...props }) {
-  const base = variant === 'text' ? 'form-text-button' : 'journey-tool-button';
-  return <button type={type} className={`${base}${variant === 'primary' ? ' is-primary' : ''} ${className}`} {...props}>{children}</button>;
+/**
+ * Site button. variant: primary | secondary (default) | outline | ghost ('text' is ghost).
+ * size: lg (36px, default) | sm (30px; default for ghost). icon: icon-only square.
+ * Other elements can use the same classes directly: `btn btn--secondary btn--lg`.
+ */
+export function buttonClass({ variant = 'secondary', size, icon = false, className = '' } = {}) {
+  const kind = variant === 'text' ? 'ghost' : variant;
+  return `btn btn--${kind} btn--${size ?? (kind === 'ghost' ? 'sm' : 'lg')}${icon ? ' btn--icon' : ''} ${className}`.trim();
+}
+
+export function Button({ variant, size, icon, className = '', type = 'button', children, ...props }) {
+  return <button type={type} className={buttonClass({ variant, size, icon, className })} {...props}>{children}</button>;
 }
 
 /**
@@ -176,7 +190,7 @@ export function Button({ variant = 'secondary', className = '', type = 'button',
  */
 export function ConfirmButton({ children, confirmLabel, onConfirm, disabled, className = '' }) {
   const [armed, setArmed] = useState(false), ref = useRef(null);
-  return <button ref={ref} type="button" disabled={disabled} className={`journey-tool-button form-confirm-button${armed ? ' is-armed' : ''} ${className}`}
+  return <button ref={ref} type="button" disabled={disabled} className={`btn btn--secondary btn--lg form-confirm-button${armed ? ' is-armed' : ''} ${className}`}
     onBlur={() => setArmed(false)}
     onKeyDown={e => { if (e.key === 'Escape' && armed) { e.stopPropagation(); e.preventDefault(); setArmed(false); } }}
     onClick={() => { if (armed) { setArmed(false); onConfirm(); } else { setArmed(true); ref.current?.focus(); } }}>

@@ -29,6 +29,8 @@ content/private/
 
 # Local tooling
 .tools/
+.playwright-cli/
+output/
 .idea/
 .vscode/
 *.log

@@ -1,10 +1,11 @@
 import { useMemo, useState } from 'react';
-import { Link, useParams, useSearchParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
 import { archiveCountries, archiveDateRange, countryItineraryDays, countryOnlyVisits, countryVisits, journeys } from '../data/archive';
 import CountryMapCover from './CountryMapCover';
 import { ReservationModal } from './JourneyEvents';
 import DayTabs from './DayTabs';
 import DayItinerary from './DayItinerary';
+import SiteBar from './SiteBar';
 import { useNotebook } from '../lib/use-notebook.js';
 import { useNotebookCatalog } from '../lib/use-notebook-catalog.js';
 
@@ -39,7 +40,7 @@ function CountryArchiveContent({ country }) {
   return <div className="page country-archive-page">
     <main className="ongoing-shell">
       <header className="notebook-header">
-        <div className="title-row"><Link to="/" aria-label="across home">across</Link></div>
+        <SiteBar />
         <div className="country-archive-heading">
           <h1>{country.name}</h1>
           {first && <p>{archiveDateRange(first.startsOn, last.endsOn)}</p>}
@@ -59,6 +60,6 @@ function CountryArchiveContent({ country }) {
 export default function CountryArchivePage() {
   const { countrySlug } = useParams();
   const country = archiveCountries.find(item => item.slug === countrySlug);
-  if (!country) return <div className="page"><main className="ongoing-shell"><div className="title-row"><Link to="/" aria-label="across home">across</Link></div><h1>尚未收录这个国家</h1></main></div>;
+  if (!country) return <div className="page"><main className="ongoing-shell"><SiteBar /><h1>尚未收录这个国家</h1></main></div>;
   return <CountryArchiveContent key={country.code} country={country} />;
 }

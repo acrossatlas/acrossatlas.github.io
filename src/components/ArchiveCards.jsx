@@ -1,4 +1,5 @@
-import { Link } from 'react-router-dom';
+import { ArrowUpRight } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import CountryMapCover from './CountryMapCover';
 import TravelSummary from './TravelSummary';
 import TripSummary from './TripSummary';
@@ -60,6 +61,10 @@ export function TripArchiveCard({ journey, visit }) {
   const stops = journey.visits?.length ? journey.visits : countryCodes.map(country => ({ country }));
   // Country-only trips have no itinerary page, so their card opens the country page.
   const to = journey.countryOnly ? `/countries/${journey.countrySlug}` : tripUrl(journey, visit?.startsOn);
+  const navigate = useNavigate();
+  const zine = journey.countryOnly ? null : `/trips/${journey.id}/journal`;
+  // The card is one link; the zine capsule inside it navigates on its own without following the card.
+  const openZine = event => { event.preventDefault(); event.stopPropagation(); navigate(zine); };
   return <Link className="archive-card trip-card" to={to}>
     <div className="trip-card__body">
       <p className="trip-card__meta">
@@ -68,6 +73,7 @@ export function TripArchiveCard({ journey, visit }) {
         <span>{dayCount} {dayCount === 1 ? 'day' : 'days'}</span>
       </p>
       <h3>{journey.title}</h3>
+      <div className="trip-card__footer">
       <ol className="trip-card__route" aria-label={`${countryCodes.length} ${countryCodes.length === 1 ? 'country' : 'countries'}`}>
         {stops.map((stop, index) => {
           const country = countryByCode.get(stop.country);
@@ -78,6 +84,8 @@ export function TripArchiveCard({ journey, visit }) {
           </li>;
         })}
       </ol>
+      {zine && <span className="trip-card__zine" role="link" tabIndex={0} aria-label={`打开 ${journey.title} 的 Travel zine`} onClick={openZine} onKeyDown={event => { if (event.key === 'Enter' || event.key === ' ') openZine(event); }}>Travel zine<ArrowUpRight aria-hidden="true" /></span>}
+      </div>
     </div>
     <TripWorldCover countryCodes={countryCodes} />
   </Link>;

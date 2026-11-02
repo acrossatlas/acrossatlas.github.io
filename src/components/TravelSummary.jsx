@@ -13,7 +13,6 @@ function WorldSummaryCard({ summary }) {
     <div className="summary-world__panel">
       <header className="summary-world__header">
         <h3>Continents visited</h3>
-        <span className="summary-world__count">{summary.continentCount}<small> / {CONTINENT_TOTAL}</small></span>
       </header>
       <div className="summary-world__art" aria-hidden="true">
         <DottedWorldMap continents={summary.continents} landClassName="summary-world__unvisited" highlightClassName="summary-world__visited" />

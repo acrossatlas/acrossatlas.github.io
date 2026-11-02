@@ -31,7 +31,7 @@ export default function ChecklistGroup({ groups, items = [], title, variant, sto
     </div> : <label className={`checklist-item${checked ? ' is-checked' : ''}`} key={item.id}><input type="checkbox" checked={checked} disabled={disabled} onChange={e => toggle(item.id, e.target.checked)} /><span aria-hidden="true" className="checklist-box"><CheckIcon /></span><span className="checklist-copy">{copy(item)}</span></label>;
   })}</div>;
   return <section className={`checklist-group checklist-group--${variant}`}>
-    {onAdd && !groups ? <div className="notebook-checklist-heading"><h3>{title}</h3><button className="theme-toggle" type="button" aria-label={`添加${title}条目`} disabled={disabled} onClick={() => onAdd()}><Plus size={15} /></button></div> : <h3>{title}</h3>}
-    {groups ? groups.map(group => <section className="checklist-subgroup" key={group.id}>{onAdd ? <div className="notebook-checklist-heading"><h4>{group.title}</h4><button className="theme-toggle" type="button" aria-label={`添加${group.title}条目`} disabled={disabled} onClick={() => onAdd(group.id)}><Plus size={15} /></button></div> : <h4>{group.title}</h4>}{renderItems(group.items, group.id)}</section>) : renderItems(items)}
+    {onAdd && !groups ? <div className="notebook-checklist-heading"><h3>{title}</h3><button className="btn btn--ghost btn--sm btn--icon" type="button" aria-label={`添加${title}条目`} disabled={disabled} onClick={() => onAdd()}><Plus size={15} /></button></div> : <h3>{title}</h3>}
+    {groups ? groups.map(group => <section className="checklist-subgroup" key={group.id}>{onAdd ? <div className="notebook-checklist-heading"><h4>{group.title}</h4><button className="btn btn--ghost btn--sm btn--icon" type="button" aria-label={`添加${group.title}条目`} disabled={disabled} onClick={() => onAdd(group.id)}><Plus size={15} /></button></div> : <h4>{group.title}</h4>}{renderItems(group.items, group.id)}</section>) : renderItems(items)}
   </section>;
 }

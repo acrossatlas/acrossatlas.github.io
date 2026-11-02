@@ -42,9 +42,10 @@ function clipRing(ring, bounds) {
 }
 
 // Light and dark palettes share geometry; the site swaps sprites with the theme.
+// Solid blue water (no fade), neutral near-white land, the visited country in soft green.
 const palettes = {
-  light: { waterFrom: '#a9d8ec', waterTo: '#dff1f8', landFrom: '#eaf5ee', landTo: '#d8ecdf', border: '#f3fcf7', selected: '#c4e3cf', lakes: '#b8dcec', label: '#73998c' },
-  dark: { waterFrom: '#1b2b35', waterTo: '#22343f', landFrom: '#2b3631', landTo: '#26302b', border: '#3a4741', selected: '#3d5a48', lakes: '#1e3240', label: '#8aa496' },
+  light: { waterFrom: '#c8e7f4', waterTo: '#c8e7f4', landFrom: '#fbfbfa', landTo: '#f2f2f0', border: '#d3d8de', selected: '#c4e3cf', lakes: '#c8e7f4', label: '#6b7177' },
+  dark: { waterFrom: '#1b2b35', waterTo: '#1b2b35', landFrom: '#33383c', landTo: '#2c3135', border: '#454b50', selected: '#3d5a48', lakes: '#1e3240', label: '#a3a9ad' },
 };
 
 function createCover(country, palette) {
@@ -84,7 +85,7 @@ function createCover(country, palette) {
 <g fill="url(#cover-land)" stroke="${palette.border}" stroke-width=".7" fill-rule="evenodd">${paths.map(({ path }) => `<path d="${path}"/>`).join('')}</g>
 <path d="${selected.path}" fill="${palette.selected}" fill-rule="evenodd"/>
 <path d="${water}" fill="${palette.lakes}" fill-rule="evenodd"/>
-<g font-family="'PingFang SC','PingFang TC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" text-anchor="middle" fill="${palette.label}" opacity=".7">${labels.join('')}</g>
+<g font-family="'PingFang SC','PingFang TC','Noto Sans SC','Microsoft YaHei',sans-serif" font-size="8.5" text-anchor="middle" fill="${palette.label}" opacity=".85">${labels.join('')}</g>
 </g>`;
 }
 

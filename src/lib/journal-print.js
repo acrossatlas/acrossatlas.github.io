@@ -1,4 +1,4 @@
-import { composePageFrames, packPrintSheets, photoCrop, printItems, TN_PAGE } from './journal.js';
+import { composePageFrames, journalPageTexts, packPrintSheets, photoCrop, printItems, TN_PAGE } from './journal.js';
 
 const imageCache = new Map();
 async function loadImage(src) {
@@ -128,7 +128,7 @@ export async function buildJournalPdf(project, { mode = 'photos', marks = true }
           }
           context.restore();
         }
-        for (const text of page.texts ?? []) drawText(context, text);
+        for (const text of journalPageTexts(page)) drawText(context, text);
         pdf.addImage(canvas, 'JPEG', 0, 0, TN_PAGE.width, TN_PAGE.height, undefined, 'MEDIUM');
       }
     }

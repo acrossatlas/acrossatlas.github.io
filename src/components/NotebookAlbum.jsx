@@ -55,7 +55,7 @@ export default function NotebookAlbum({ book, activeDate, busy, onCommit }) {
   function openUpload() { setDate(activeDate); setFiles([]); setError(''); setUpload(true); }
   return <section className="notebook-section" aria-labelledby="album-title">
     <header className="notebook-section__heading notebook-section__heading--actions"><h2 id="album-title">Album</h2>
-      {<button className="journey-tool-button" type="button" disabled={busy || working} onClick={openUpload}><Plus size={16} /><span>添加照片</span></button>}
+      {<button className="btn btn--secondary btn--lg" type="button" disabled={busy || working} onClick={openUpload}><Plus /><span>添加照片</span></button>}
     </header>
     {!photoDays.length ? <div className="album-empty"><span className="album-empty__icon"><ImagePlus /></span><div><h3>尚未添加照片</h3><p>添加照片，按旅行日期保存在这里。</p></div></div>
       : <div className="notebook-album">{photoDays.map(day => <section key={day.id} className="notebook-album__day" aria-label={`${day.date} 的照片`}><h3 className="info-card__date">{day.date.replaceAll('-', '.')}<span>{day.photos.length} 张</span></h3><div className="notebook-album__grid">{day.photos.map(photo => <AlbumPhoto key={photo.id} bookId={book.id} photo={photo} onOpen={value => { setOpened(value); setError(''); }} />)}</div></section>)}</div>}

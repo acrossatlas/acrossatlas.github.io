@@ -25,7 +25,7 @@ Create a production build with `npm run build`.
 
 Open **Travel zine → 打开手帐画布** on a journey page, or visit `/trips/2026-netherlands-iceland-norway/journal` in the local preview. The editor uses TN regular pages (110 × 210 mm), with single-page and spread templates, editable text, and grey photo placeholders. Upload photos into the bottom tray, drag them onto a page or an existing frame, then adjust position, crop, rotation, and dimensions in millimetres.
 
-Work saves automatically in the current browser using IndexedDB. Use **导出手帐文件** to keep an editable `.across.json` backup, including the photos; import that file to continue elsewhere.
+Work saves automatically in the current browser using IndexedDB, including uploaded photos. New journals start with empty photo frames and no demo assets. Photos are stored on this device only; there is no cloud upload or cross-device sync, and local development and the live site have separate storage. The left sidebar selects templates; the right sidebar edits the selected page, photo, or text. Page controls include paper color, adding content, duplication, and deletion.
 
 **导出打印 PDF** creates A4 photo sheets at each frame’s exact size, with photo/page numbers and optional crop marks. In **打印预览**, choose **手帐整页** to export the complete layout as 110 × 210 mm pages instead. A separate CSV lists photo dimensions and positions. Print PDFs at **Actual size / 100%**.
 

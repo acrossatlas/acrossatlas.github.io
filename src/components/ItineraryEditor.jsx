@@ -1,7 +1,7 @@
 import { useRef, useState } from 'react';
 import { MapPin, Paperclip, Plus, Ticket, Trash2 } from 'lucide-react';
 import NotebookDialog from './NotebookDialog';
-import { AddBar, Button, ConfirmButton, Field, FieldGroup, FormError, FormFooter, FormSection, Segmented, Split, SplitSelect, TagSelect, TimeRange } from './form/Form';
+import { AddBar, Button, ConfirmButton, Field, FieldGroup, FormDivider, FormError, FormFooter, FormSection, Segmented, Split, SplitSelect, TagSelect, TimeRange } from './form/Form';
 import BookingAttachments from './BookingAttachments';
 import { EVENT_TYPES, PAYMENT_STATES, RESERVATION_STATES, TRANSPORT_MODES, compactEventDetail, eventSchedule } from '../lib/notebook.js';
 import { useUnsavedGuard } from '../lib/use-unsaved-guard.js';
@@ -124,6 +124,7 @@ export default function ItineraryEditor({ selection, book, onSave, onDelete, onC
           <TimeRange startsAt={draft.schedule.startsAt} endsAt={draft.schedule.endsAt} onChange={time => setDraft(draft => ({ ...draft, schedule: { ...draft.schedule, ...time } }))} />
           <Field label="地址"><input maxLength={2000} placeholder="用于导航和地图定位" {...field('navigation')} /></Field>
         </>}
+        <FormDivider />
         <Field label="说明"><textarea rows={3} maxLength={10000} {...field('detail')} /></Field>
         {bookingOpen
           ? <FormSection title="预订信息" className="notebook-booking">

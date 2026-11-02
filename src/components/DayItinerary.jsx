@@ -22,7 +22,7 @@ export default function DayItinerary({ day, events, originalEvents, country, sea
       <SortableItinerary dayId={day.key} bookId={bookId} events={visibleEvents} selected={selected} busy={busy} onEdit={onEdit} onReorder={query ? undefined : onReorder} onOpenReservation={onOpenReservation} />
       {query && !visibleEvents.length && <p className="journey-search-empty" role="status">当天没有匹配的行程。</p>}
       {!query && !events.length && <p className="journey-search-empty">当天尚未安排行程。</p>}
-      {onEdit && <div className="itinerary-add"><button className="journey-tool-button" type="button" onClick={() => onEdit(null)} disabled={busy}><Plus size={15} />添加行程</button></div>}
+      {onEdit && <div className="itinerary-add"><button className="btn btn--secondary btn--lg" type="button" onClick={() => onEdit(null)} disabled={busy}><Plus size={15} />添加行程</button></div>}
     </section>
   </div>;
 }

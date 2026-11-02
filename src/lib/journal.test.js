@@ -1,7 +1,22 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { applyTemplate, composePageFrames, createFrame, createJournal, createSpread, fitFrame, JOURNAL_SPREADS, JOURNAL_TEMPLATES, packPrintSheets, photoCrop, printItems } from './journal.js';
+import { applyTemplate, composePageFrames, createFrame, createJournal, createSpread, fitFrame, JOURNAL_SPREADS, JOURNAL_TEMPLATES, packPrintSheets, photoCrop, printItems, stripJournalDemoAssets } from './journal.js';
 import { buildJournalPdf } from './journal-print.js';
+
+test('new journals have no demo photos and legacy cleanup preserves uploaded photos and layout', () => {
+  const project = createJournal('test');
+  assert.deepEqual(project.assets, []);
+  const photo = { id: 'upload-1', src: 'data:image/png;base64,photo', width: 1000, height: 1500 };
+  project.assets = [{ id: 'demo-1', demo: true }, photo];
+  project.pages[0].frames[0].assetId = 'demo-1';
+  project.pages[1].frames[0].assetId = photo.id;
+  const cleaned = stripJournalDemoAssets(project);
+  assert.deepEqual(cleaned.assets, [photo]);
+  assert.deepEqual(cleaned.pages[0].frames[0], { ...project.pages[0].frames[0], assetId: null });
+  assert.deepEqual(cleaned.pages[1], project.pages[1]);
+  assert.equal(project.pages[0].frames[0].assetId, 'demo-1');
+  assert.equal(stripJournalDemoAssets(cleaned), cleaned);
+});
 
 test('templates and spread photos stay inside their physical notebook bounds', () => {
   const pages = [...JOURNAL_TEMPLATES.map(template => applyTemplate({ frames: [] }, template.id)), ...JOURNAL_SPREADS.flatMap(template => createSpread(template.id))];

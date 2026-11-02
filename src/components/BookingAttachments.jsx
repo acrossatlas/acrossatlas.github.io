@@ -12,7 +12,7 @@ function Attachment({ bookId, attachment, pending, onRemove }) {
     }).catch(error => { if (live) setError(error.message); });
     return () => { live = false; if (url) URL.revokeObjectURL(url); };
   }, [bookId, attachment.id, pending]);
-  return <li className="booking-attachment">{url ? <a href={url} target="_blank" rel="noopener noreferrer">{attachment.name}</a> : <span>{error || attachment.name}</span>}{onRemove && <button type="button" className="theme-toggle" aria-label={`移除附件 ${attachment.name}`} onClick={() => onRemove(attachment.id)}><CloseIcon /></button>}</li>;
+  return <li className="booking-attachment">{url ? <a href={url} target="_blank" rel="noopener noreferrer">{attachment.name}</a> : <span>{error || attachment.name}</span>}{onRemove && <button type="button" className="btn btn--ghost btn--sm btn--icon" aria-label={`移除附件 ${attachment.name}`} onClick={() => onRemove(attachment.id)}><CloseIcon /></button>}</li>;
 }
 
 export default function BookingAttachments({ bookId, attachments = [], pending, onRemove }) {
