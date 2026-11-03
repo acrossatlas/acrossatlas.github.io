@@ -11,6 +11,7 @@ import { getJourneyDayCount, getJourneySections } from '../lib/journey-dates';
 import { readableDateRange } from '../lib/date-format';
 
 const countryByCode = new Map(archiveCountries.map(country => [country.code, country]));
+const countryByName = new Map(archiveCountries.flatMap(country => [country.name, country.label, country.code].map(name => [name.toLowerCase(), country])));
 
 // Crops the dotted world map to the visited countries, padded so neighbors give context.
 function tripViewBox(countryCodes) {
@@ -77,10 +78,10 @@ export function TripArchiveCard({ journey, visit }) {
       <div className="trip-card__footer">
       <ol className="trip-card__route" aria-label="行程分段">
         {stops.map((stop, index) => {
-          const country = countryByCode.get(stop.country);
+          const country = countryByCode.get(stop.country) ?? countryByName.get(stop.name?.toLowerCase());
           const days = stop.startsOn && stop.endsOn ? getJourneyDayCount(stop) : null;
           return <li key={`${stop.startsOn ?? stop.country}-${index}`}>
-            <span>{stop.name ?? country?.name ?? stop.country}</span>
+            <span>{country?.name ?? stop.name ?? stop.country}</span>
             {days !== null && <small>{days}d</small>}
           </li>;
         })}

@@ -2494,7 +2494,10 @@ a.summary-latitude:focus-visible { outline: 2px solid var(--accent); outline-off
   .trip-card__map { order: -1; min-height: 0; aspect-ratio: 16 / 9; border-radius: 11px; }
   .trip-card__body { padding: 14px 12px 12px; }
   .trip-card__body h3 { font-size: 20px; }
-  .trip-card__route { padding-top: 16px; }
+  .trip-card__footer { flex-wrap: nowrap; padding-top: 16px; padding-bottom: 3px; overflow-x: auto; scrollbar-width: none; }
+  .trip-card__footer::-webkit-scrollbar { display: none; }
+  .trip-card__route { flex: none; flex-wrap: nowrap; padding-top: 0; }
+  .trip-card__zine { flex: none; }
 }
 
 @media (max-width: 560px) {
